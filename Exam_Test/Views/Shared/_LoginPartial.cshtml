@@ -1,0 +1,93 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+
+<style>
+    /* MATCH YOUR NAV BUTTON STYLE */
+    .auth-btn {
+        display: inline-block;
+        padding: 9px 14px;
+        margin-left: 8px;
+        border-radius: 10px;
+        font-size: 13px;
+        font-weight: 500;
+        text-decoration: none;
+        border: none;
+        cursor: pointer;
+        transition: 0.2s ease;
+    }
+
+    /* LOGIN / REGISTER (same as nav-btn but slightly soft) */
+    .auth-link {
+        background: #4f46e5;
+        color: #fff !important;
+    }
+
+        .auth-link:hover {
+            background: #3730a3;
+            color: #fff !important;
+        }
+
+    /* LOGOUT BUTTON */
+    .auth-logout {
+        background: #4f46e5;
+        color: #fff !important;
+    }
+
+        .auth-logout:hover {
+            background: #3730a3;
+            color: #fff !important;
+        }
+
+    /* text cleanup */
+    .auth-text {
+        color: #111827;
+        font-weight: 500;
+        margin-right: 10px;
+        font-size: 14px;
+    }
+
+    .auth-wrap {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+</style>
+
+<ul class="navbar-nav">
+
+    @if (SignInManager.IsSignedIn(User))
+    {
+        <li class="nav-item auth-wrap">
+
+            <!-- LOGOUT ONLY (NO HELLO TEXT) -->
+            <form asp-area="Identity"
+                  asp-page="/Account/Logout"
+                  asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })"
+                  method="post"
+                  class="d-inline">
+
+                <button type="submit" class="auth-btn auth-logout">
+                    Logout
+                </button>
+
+            </form>
+
+        </li>
+    }
+    else
+    {
+        <li class="nav-item auth-wrap">
+
+            <a class="auth-btn auth-link" asp-area="Identity" asp-page="/Account/Register">
+                Register
+            </a>
+
+            <a class="auth-btn auth-link" asp-area="Identity" asp-page="/Account/Login">
+                Login
+            </a>
+
+        </li>
+    }
+
+</ul>

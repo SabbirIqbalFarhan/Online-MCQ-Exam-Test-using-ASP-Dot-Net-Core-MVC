@@ -1,0 +1,185 @@
+﻿@model List<Exam_Test.Models.Result>
+
+@{
+    ViewData["Title"] = "Exam Results";
+}
+
+<style>
+    body {
+        margin: 0;
+        font-family: "Segoe UI", Roboto, Arial, sans-serif;
+        background: #f4f6ff;
+        color: #111827;
+    }
+
+    .page {
+        max-width: 1100px;
+        margin: auto;
+        padding: 40px 20px;
+    }
+
+    /* HEADER */
+    .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 18px;
+    }
+
+        .header h2 {
+            font-size: 22px;
+            font-weight: 700;
+            margin: 0;
+        }
+
+    .badge {
+        background: #eef2ff;
+        color: #4f46e5;
+        padding: 5px 10px;
+        border-radius: 999px;
+        font-size: 12px;
+        font-weight: 500;
+    }
+
+    /* FILTER BOX */
+    .filter-box {
+        background: #fff;
+        border: 1px solid #e5e7eb;
+        border-radius: 14px;
+        padding: 14px;
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
+    select {
+        padding: 9px 12px;
+        border-radius: 10px;
+        border: 1px solid #e5e7eb;
+        font-size: 13px;
+        outline: none;
+    }
+
+        select:focus {
+            border-color: #4f46e5;
+            box-shadow: 0 0 0 3px rgba(79,70,229,0.12);
+        }
+
+    .btn {
+        padding: 9px 14px;
+        border-radius: 10px;
+        background: #4f46e5;
+        color: #fff;
+        font-size: 13px;
+        font-weight: 500;
+        border: none;
+        cursor: pointer;
+        transition: 0.2s;
+    }
+
+        .btn:hover {
+            background: #3730a3;
+        }
+
+    /* GRID */
+    .grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .card {
+        background: #fff;
+        border: 1px solid #e5e7eb;
+        border-radius: 14px;
+        padding: 16px;
+        display: grid;
+        grid-template-columns: 1.5fr 1fr 1fr 1fr 1fr;
+        gap: 10px;
+        align-items: center;
+        transition: 0.2s;
+    }
+
+        .card:hover {
+            box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+            transform: translateY(-2px);
+        }
+
+    .label {
+        font-size: 11px;
+        color: #6b7280;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .value {
+        font-size: 13px;
+        font-weight: 500;
+        color: #111827;
+    }
+
+    /* HEADER ROW */
+    .table-head {
+        display: grid;
+        grid-template-columns: 1.5fr 1fr 1fr 1fr 1fr;
+        padding: 10px 16px;
+        font-size: 11px;
+        color: #6b7280;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+</style>
+
+<div class="page">
+
+    <div class="header">
+        <div>
+            <h2>Exam Results</h2>
+            <span class="badge">Performance Dashboard</span>
+        </div>
+    </div>
+
+    <!-- FILTER -->
+    <form method="get" class="filter-box">
+
+        <select name="moduleId">
+            <option value="">All Modules</option>
+            <option value="1">Module 1</option>
+            <option value="2">Module 2</option>
+            <option value="3">Module 3</option>
+        </select>
+
+        <button type="submit" class="btn">Filter</button>
+
+    </form>
+
+    <!-- TABLE HEADER -->
+    <div class="table-head">
+        <div>User</div>
+        <div>Module</div>
+        <div>Correct</div>
+        <div>Wrong</div>
+        <div>Date</div>
+    </div>
+
+    <!-- DATA -->
+    <div class="grid">
+
+        @foreach (var r in Model)
+        {
+            <div class="card">
+
+                <div class="value">@r.UserId</div>
+                <div class="value">@r.ModuleId</div>
+                <div class="value" style="color:#16a34a;">@r.Correct</div>
+                <div class="value" style="color:#dc2626;">@r.Wrong</div>
+                <div class="value">@r.ExamDate</div>
+
+            </div>
+        }
+
+    </div>
+
+</div>

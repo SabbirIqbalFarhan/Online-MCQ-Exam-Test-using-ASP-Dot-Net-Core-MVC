@@ -1,0 +1,137 @@
+﻿@model Microsoft.AspNetCore.Identity.IdentityUser
+
+@{
+    ViewData["Title"] = "User Details";
+}
+
+<style>
+    body {
+        margin: 0;
+        font-family: "Segoe UI", Roboto, Arial, sans-serif;
+        background: #f4f6ff;
+        color: #111827;
+    }
+
+    .page {
+        max-width: 700px;
+        margin: auto;
+        padding: 40px 20px;
+    }
+
+    .header {
+        margin-bottom: 18px;
+    }
+
+        .header h2 {
+            font-size: 22px;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .header p {
+            font-size: 13px;
+            color: #6b7280;
+            margin-top: 5px;
+        }
+
+    /* CARD */
+    .card {
+        background: #fff;
+        border: 1px solid #e5e7eb;
+        border-radius: 16px;
+        padding: 22px;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.04);
+    }
+
+    .info {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .row {
+        display: flex;
+        justify-content: space-between;
+        padding: 10px 12px;
+        border-radius: 10px;
+        background: #f8f9ff;
+        border: 1px solid #e5e7eb;
+    }
+
+    .label {
+        font-size: 12px;
+        color: #6b7280;
+        font-weight: 500;
+    }
+
+    .value {
+        font-size: 13px;
+        font-weight: 600;
+        color: #111827;
+    }
+
+    /* ROLES */
+    .roles {
+        margin-top: 16px;
+    }
+
+    .role-title {
+        font-size: 12px;
+        font-weight: 600;
+        color: #4f46e5;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 10px;
+    }
+
+    .badge {
+        display: inline-block;
+        background: #eef2ff;
+        color: #4f46e5;
+        padding: 5px 10px;
+        border-radius: 999px;
+        font-size: 12px;
+        font-weight: 500;
+        margin: 4px 6px 0 0;
+    }
+
+</style>
+
+<div class="page">
+
+    <div class="header">
+        <h2>👤 User Profile</h2>
+        <p>Detailed account information</p>
+    </div>
+
+    <div class="card">
+
+        <div class="info">
+
+            <div class="row">
+                <span class="label">Email</span>
+                <span class="value">@Model.Email</span>
+            </div>
+
+            <div class="row">
+                <span class="label">Username</span>
+                <span class="value">@Model.UserName</span>
+            </div>
+
+        </div>
+
+        <!-- ROLES -->
+        <div class="roles">
+
+            <div class="role-title">Roles</div>
+
+            @foreach (var role in ViewBag.Roles)
+            {
+                <span class="badge">@role</span>
+            }
+
+        </div>
+
+    </div>
+
+</div>

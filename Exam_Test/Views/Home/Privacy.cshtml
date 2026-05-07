@@ -1,0 +1,217 @@
+﻿@{
+    ViewData["Title"] = "Privacy Policy";
+}
+
+<style>
+    body {
+        font-family: 'DM Sans', 'Segoe UI', sans-serif;
+        background: #f6f8fc;
+        color: #111827;
+        margin: 0;
+    }
+
+    /* ================= HEADER (UNCHANGED) ================= */
+    .pp-header {
+        background: #4f46e5;
+        text-align: center;
+        padding: 32px 18px;
+        border-bottom: 1px solid rgba(255,255,255,0.12);
+    }
+
+    .pp-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: rgba(255,255,255,0.14);
+        border: 1px solid rgba(255,255,255,0.25);
+        border-radius: 999px;
+        padding: 4px 12px;
+        font-size: 10px;
+        font-weight: 500;
+        color: #fff;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 8px;
+    }
+
+    .pp-title {
+        font-family: 'Instrument Serif', serif;
+        font-size: 32px;
+        font-weight: 400;
+        color: #fff;
+        margin: 0;
+    }
+
+    .pp-sub {
+        font-size: 13px;
+        color: rgba(255,255,255,0.75);
+        max-width: 460px;
+        margin: 6px auto 0;
+        line-height: 1.4;
+    }
+
+    .pp-pills {
+        margin-top: 10px;
+        display: flex;
+        justify-content: center;
+        gap: 6px;
+        flex-wrap: wrap;
+    }
+
+    .pp-pill {
+        font-size: 10px;
+        padding: 4px 10px;
+        border-radius: 999px;
+        border: 1px solid rgba(255,255,255,0.25);
+        background: rgba(255,255,255,0.12);
+        color: #fff;
+    }
+
+    /* ================= BODY (MATCH ADMIN DASHBOARD TEXT SIZE) ================= */
+    .pp-wrap {
+        max-width: 760px;
+        margin: 26px auto 60px;
+        padding: 0 16px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .pp-section-label {
+        font-size: 12px; /* increased to match admin feel */
+        font-weight: 600;
+        color: #4f46e5;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        margin-bottom: 8px;
+    }
+
+    .pp-card {
+        background: #ffffff;
+        border: 1px solid #eceff5;
+        border-radius: 12px;
+        padding: 14px 14px;
+        display: flex;
+        gap: 12px;
+        align-items: flex-start;
+        transition: 0.2s;
+    }
+
+        .pp-card:hover {
+            border-color: #d7dcff;
+            box-shadow: 0 6px 16px rgba(79,70,229,0.06);
+        }
+
+    .pp-icon {
+        width: 36px;
+        height: 36px;
+        background: #4f46e5;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font-size: 15px;
+        flex-shrink: 0;
+    }
+
+    /* 🔥 MATCH ADMIN DASHBOARD TEXT SIZE */
+    .pp-content h3 {
+        margin: 0 0 4px;
+        font-size: 15px; /* IMPORTANT CHANGE */
+        font-weight: 600;
+        color: #111827;
+    }
+
+    .pp-content p {
+        margin: 0;
+        font-size: 13.5px; /* IMPORTANT CHANGE */
+        color: #4b5563;
+        line-height: 1.6;
+    }
+
+    .pp-note {
+        margin-top: 6px;
+        font-size: 12px;
+        color: #4f46e5;
+        font-weight: 500;
+    }
+
+    .pp-footer {
+        margin-top: 14px;
+        text-align: center;
+        font-size: 11px;
+        color: #6b7280;
+    }
+</style>
+
+<!-- HEADER -->
+<div class="pp-header">
+
+    <div class="pp-tag">🔐 Legal</div>
+
+    <div class="pp-title">Privacy Policy</div>
+
+    <p class="pp-sub">
+        We protect your data with secure systems and transparent policies
+    </p>
+
+    <div class="pp-pills">
+        <span class="pp-pill">Secure</span>
+        <span class="pp-pill">Private</span>
+        <span class="pp-pill">Safe</span>
+    </div>
+
+</div>
+
+<!-- BODY -->
+<div class="pp-wrap">
+
+    <div class="pp-section-label">Our commitments</div>
+
+    <div class="pp-card">
+        <div class="pp-icon">🔒</div>
+        <div class="pp-content">
+            <h3>Data Protection</h3>
+            <p>
+                Your personal information is securely stored and used only for authentication and exam tracking.
+            </p>
+            <div class="pp-note">We never sell or misuse data.</div>
+        </div>
+    </div>
+
+    <div class="pp-card">
+        <div class="pp-icon">👤</div>
+        <div class="pp-content">
+            <h3>User Responsibility</h3>
+            <p>
+                Keep your login credentials safe and do not share them with others.
+            </p>
+        </div>
+    </div>
+
+    <div class="pp-card">
+        <div class="pp-icon">📊</div>
+        <div class="pp-content">
+            <h3>Data Usage</h3>
+            <p>
+                Data is used only for exams, results, and system improvement.
+            </p>
+        </div>
+    </div>
+
+    <div class="pp-card">
+        <div class="pp-icon">⚖️</div>
+        <div class="pp-content">
+            <h3>Policy Agreement</h3>
+            <p>
+                By using this system, you agree to our privacy policy and terms.
+            </p>
+        </div>
+    </div>
+
+    <div class="pp-footer">
+        Last updated: 2026
+    </div>
+
+</div>

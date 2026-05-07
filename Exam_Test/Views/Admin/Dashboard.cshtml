@@ -1,0 +1,185 @@
+﻿@{
+    ViewData["Title"] = "Admin Panel";
+}
+
+<style>
+    body {
+        margin: 0;
+        font-family: "Segoe UI", Roboto, Arial, sans-serif;
+        background: #f6f8fc;
+        color: #111827;
+    }
+
+    .page {
+        max-width: 1100px;
+        margin: auto;
+        padding: 40px 20px;
+    }
+
+    .topbar h2 {
+        margin: 0;
+        font-size: 26px;
+        font-weight: 700;
+    }
+
+    .topbar p {
+        margin-top: 5px;
+        font-size: 14px;
+        color: #6b7280;
+    }
+
+    .stats {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 16px;
+        margin: 30px 0;
+    }
+
+    .stat {
+        flex: 1 1 200px;
+        background: #fff;
+        border: 1px solid #e5e7eb;
+        border-radius: 14px;
+        padding: 16px;
+    }
+
+        .stat h3 {
+            margin: 0;
+            font-size: 17px;
+        }
+
+        .stat span {
+            font-size: 13px;
+            color: #6b7280;
+        }
+
+    .grid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 18px;
+    }
+
+    .card {
+        flex: 1 1 320px;
+        background: #fff;
+        border: 1px solid #e5e7eb;
+        border-radius: 16px;
+        padding: 22px;
+        transition: 0.2s ease;
+        display: flex; /* ✅ ADDED */
+        flex-direction: column; /* ✅ ADDED */
+    }
+
+        .card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.06);
+        }
+
+    .label {
+        font-size: 11px;
+        font-weight: 600;
+        color: #6366f1;
+        text-transform: uppercase;
+        letter-spacing: 0.6px;
+    }
+
+    .card h3 {
+        margin: 10px 0 6px;
+        font-size: 18px;
+    }
+
+    .card p {
+        font-size: 13px;
+        color: #6b7280;
+        margin-bottom: 0; /* ✅ CHANGED: removed bottom margin */
+        line-height: 1.5;
+        flex: 1; /* ✅ ADDED: fills remaining space, pushes button down */
+    }
+
+    .btn {
+        display: inline-block;
+        padding: 9px 14px;
+        border-radius: 10px;
+        font-size: 13px;
+        font-weight: 500;
+        text-decoration: none;
+        background: #4f46e5;
+        color: #fff !important;
+        transition: 0.2s ease;
+        border: none;
+    }
+
+        .btn:hover {
+            background: #3730a3;
+            color: #fff !important;
+        }
+
+    .module-btns {
+        margin-top: 16px; /* ✅ CHANGED: matches single-button top spacing */
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        align-items: center;
+    }
+
+</style>
+
+<div class="page">
+
+    <div class="topbar">
+        <h2>Admin Panel</h2>
+        <p>Manage users, questions, and exam results</p>
+    </div>
+
+    <div class="stats">
+
+        <div class="stat">
+            <h3>Users</h3>
+            <span>Manage registered users</span>
+        </div>
+
+        <div class="stat">
+            <h3>Questions</h3>
+            <span>Module-based exam content</span>
+        </div>
+
+        <div class="stat">
+            <h3>Reports</h3>
+            <span>Performance tracking</span>
+        </div>
+
+    </div>
+
+    <div class="grid">
+
+        <!-- USERS -->
+        <div class="card">
+            <div class="label">Management</div>
+            <h3>User Control</h3>
+            <p>View and manage all registered users in the system.</p>
+            <a class="btn" href="/AdminUser">Open Users</a>
+        </div>
+
+        <!-- MODULES -->
+        <div class="card">
+            <div class="label">Content</div>
+            <h3>Question Modules</h3>
+            <p>Organize exam questions into structured modules.</p>
+            <div class="module-btns">
+                <a class="btn" href="/Admin/Questions?moduleId=1">Module 1</a>
+                <a class="btn" href="/Admin/Questions?moduleId=2">Module 2</a>
+                <a class="btn" href="/Admin/Questions?moduleId=3">Module 3</a>
+            </div>
+        </div>
+
+        <!-- RESULTS -->
+        <div class="card">
+            <div class="label">Analytics</div>
+            <h3>Exam Reports</h3>
+            <p>View student performance and exam results.</p>
+            <a class="btn" href="/AdminResult">View Reports</a>
+        </div>
+
+    </div>
+
+</div>
