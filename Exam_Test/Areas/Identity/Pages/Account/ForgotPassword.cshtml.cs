@@ -49,8 +49,12 @@ namespace Exam_Test.Areas.Identity.Pages.Account
             public string Email { get; set; }
         }
 
+        public IActionResult OnGet() => NotFound();
+
         public async Task<IActionResult> OnPostAsync()
         {
+            return NotFound();
+
             if (ModelState.IsValid)
             {
                 var user = await _userManager.FindByEmailAsync(Input.Email);

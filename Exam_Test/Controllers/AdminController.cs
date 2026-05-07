@@ -2,7 +2,6 @@
 using Exam_Test.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace Exam_Test.Controllers
 {
@@ -18,17 +17,11 @@ namespace Exam_Test.Controllers
             _env = env;
         }
 
-        // =========================
-        // ADMIN DASHBOARD
-        // =========================
         public IActionResult Dashboard()
         {
             return View();
         }
 
-        // =========================
-        // LIST QUESTIONS
-        // =========================
         public IActionResult Questions(int moduleId = 1)
         {
             var questions = _context.Questions
@@ -36,28 +29,43 @@ namespace Exam_Test.Controllers
                 .ToList();
 
             ViewBag.ModuleId = moduleId;
+            ViewBag.QuestionCount = questions.Count;
+            ViewBag.CanAdd = questions.Count < 30;
             return View(questions);
         }
 
-        // =========================
-        // ADD QUESTION (GET)
-        // =========================
+        // ADD QUESTION GET
+        [HttpGet]
         public IActionResult AddQuestion(int moduleId)
         {
             ViewBag.ModuleId = moduleId;
             return View();
         }
 
-        // =========================
-        // ADD QUESTION (POST)
-        // =========================
+        // ADD QUESTION POST
         [HttpPost]
-        public async Task<IActionResult> AddQuestion(Question model, IFormFile? imageFile)
+        public async Task<IActionResult> AddQuestion(int ModuleId, string? QuestionText, string? OptionA, string? OptionB, string? OptionC, string? OptionD, string? CorrectAnswer, IFormFile? imageFile)
         {
+            var existingCount = _context.Questions.Count(q => q.ModuleId == ModuleId);
+
+            if (existingCount >= 30)
+                return RedirectToAction("Questions", new { moduleId = ModuleId });
+
+            var model = new Question
+            {
+                ModuleId = ModuleId,
+                QuestionText = QuestionText,
+                OptionA = OptionA,
+                OptionB = OptionB,
+                OptionC = OptionC,
+                OptionD = OptionD,
+                CorrectAnswer = CorrectAnswer
+            };
+
             if (imageFile != null)
             {
                 string folder = Path.Combine(_env.WebRootPath, "images");
-                string fileName = Guid.NewGuid().ToString() + Path.GetFileName(imageFile.FileName);
+                string fileName = Guid.NewGuid().ToString() + Path.GetExtension(imageFile.FileName);
                 string filePath = Path.Combine(folder, fileName);
 
                 using (var stream = new FileStream(filePath, FileMode.Create))
@@ -71,21 +79,19 @@ namespace Exam_Test.Controllers
             _context.Questions.Add(model);
             await _context.SaveChangesAsync();
 
-            return RedirectToAction("Questions", new { moduleId = model.ModuleId });
+            return RedirectToAction("Questions", new { moduleId = ModuleId });
         }
 
-        // =========================
-        // EDIT QUESTION (GET)
-        // =========================
+        // EDIT QUESTION GET
+        [HttpGet]
         public IActionResult EditQuestion(int id)
         {
             var question = _context.Questions.Find(id);
+            if (question == null) return NotFound();
             return View(question);
         }
 
-        // =========================
-        // EDIT QUESTION (POST)
-        // =========================
+        // EDIT QUESTION POST
         [HttpPost]
         public async Task<IActionResult> EditQuestion(Question model, IFormFile? imageFile)
         {
@@ -103,8 +109,15 @@ namespace Exam_Test.Controllers
 
             if (imageFile != null)
             {
+                if (!string.IsNullOrEmpty(question.ImagePath))
+                {
+                    string oldPath = Path.Combine(_env.WebRootPath, "images", question.ImagePath);
+                    if (System.IO.File.Exists(oldPath))
+                        System.IO.File.Delete(oldPath);
+                }
+
                 string folder = Path.Combine(_env.WebRootPath, "images");
-                string fileName = Guid.NewGuid().ToString() + Path.GetFileName(imageFile.FileName);
+                string fileName = Guid.NewGuid().ToString() + Path.GetExtension(imageFile.FileName);
                 string filePath = Path.Combine(folder, fileName);
 
                 using (var stream = new FileStream(filePath, FileMode.Create))
@@ -120,20 +133,26 @@ namespace Exam_Test.Controllers
             return RedirectToAction("Questions", new { moduleId = model.ModuleId });
         }
 
-        // =========================
         // DELETE QUESTION
-        // =========================
         public IActionResult DeleteQuestion(int id)
         {
             var question = _context.Questions.Find(id);
 
-            if (question != null)
+            if (question == null) return NotFound();
+
+            if (!string.IsNullOrEmpty(question.ImagePath))
             {
-                _context.Questions.Remove(question);
-                _context.SaveChanges();
+                string oldPath = Path.Combine(_env.WebRootPath, "images", question.ImagePath);
+                if (System.IO.File.Exists(oldPath))
+                    System.IO.File.Delete(oldPath);
             }
 
-            return RedirectToAction("Questions", new { moduleId = question.ModuleId });
+            int moduleId = question.ModuleId;
+
+            _context.Questions.Remove(question);
+            _context.SaveChanges();
+
+            return RedirectToAction("Questions", new { moduleId = moduleId });
         }
     }
 }

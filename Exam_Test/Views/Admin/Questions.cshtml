@@ -2,48 +2,82 @@
 
 @{
     ViewData["Title"] = "Questions";
+    int count = ViewBag.QuestionCount;
+    bool canAdd = ViewBag.CanAdd;
 }
 
 <style>
-    body {
-        margin: 0;
-        font-family: "Segoe UI", Roboto, Arial, sans-serif;
-        background: #f4f6ff;
-        color: #111827;
-    }
-
     .page {
-        max-width: 1000px;
+        max-width: 1100px;
         margin: auto;
-        padding: 40px 20px;
+        padding: 30px 20px;
     }
 
-    .header {
+    .topbar {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-bottom: 18px;
+        margin-bottom: 16px;
     }
 
-        .header h2 {
-            font-size: 22px;
+        .topbar h2 {
+            font-size: 20px;
             font-weight: 700;
             margin: 0;
         }
 
-    .badge {
-        background: #eef2ff;
-        color: #4f46e5;
-        padding: 5px 10px;
-        border-radius: 999px;
-        font-size: 12px;
-        font-weight: 500;
+    .meta {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-top: 6px;
+        flex-wrap: wrap;
     }
 
-    /* ADD BUTTON */
+    .module-badge {
+        background: #eef2ff;
+        color: #4f46e5;
+        padding: 4px 10px;
+        border-radius: 999px;
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+    .count-badge {
+        background: #f0fdf4;
+        color: #166534;
+        padding: 4px 10px;
+        border-radius: 999px;
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+        .count-badge.full {
+            background: #fef2f2;
+            color: #991b1b;
+        }
+
+    .progress-wrap {
+        background: #e5e7eb;
+        border-radius: 999px;
+        height: 7px;
+        width: 160px;
+        overflow: hidden;
+    }
+
+    .progress-fill {
+        height: 7px;
+        border-radius: 999px;
+        background: #4f46e5;
+    }
+
+        .progress-fill.full {
+            background: #ef4444;
+        }
+
     .add-btn {
         display: inline-block;
-        padding: 9px 14px;
+        padding: 9px 16px;
         border-radius: 10px;
         background: #4f46e5;
         color: #fff;
@@ -51,128 +85,261 @@
         font-size: 13px;
         font-weight: 500;
         transition: 0.2s;
+        white-space: nowrap;
     }
 
         .add-btn:hover {
             background: #3730a3;
         }
 
-    /* GRID */
-    .grid {
-        display: grid;
-        grid-template-columns: 1fr;
-        gap: 12px;
+        .add-btn.disabled {
+            background: #9ca3af;
+            pointer-events: none;
+        }
+
+    .limit-msg {
+        background: #fef2f2;
+        border: 1px solid #fecaca;
+        color: #991b1b;
+        border-radius: 10px;
+        padding: 10px 14px;
+        font-size: 13px;
+        margin-bottom: 14px;
     }
 
+    /* GRID - 5 per row */
+    .grid {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 10px;
+    }
+
+    /* COMPACT CARD */
     .card {
         background: #fff;
         border: 1px solid #e5e7eb;
-        border-radius: 14px;
-        padding: 16px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.04);
         transition: 0.2s;
+        display: flex;
+        flex-direction: column;
     }
 
         .card:hover {
-            box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+            box-shadow: 0 6px 18px rgba(0,0,0,0.09);
             transform: translateY(-2px);
         }
 
+    .card-top {
+        padding: 10px;
+        flex: 1;
+    }
+
+    .serial-row {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        margin-bottom: 8px;
+    }
+
+    .serial {
+        width: 24px;
+        height: 24px;
+        background: #4f46e5;
+        color: #fff;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 11px;
+        font-weight: 700;
+        flex-shrink: 0;
+    }
+
+    .correct-pill {
+        background: #dcfce7;
+        color: #166534;
+        border-radius: 999px;
+        padding: 2px 8px;
+        font-size: 10px;
+        font-weight: 600;
+    }
+
+    .q-image img {
+        width: 100%;
+        height: auto;
+        max-height: 120px;
+        object-fit: contain;
+        border-radius: 8px;
+        margin-bottom: 7px;
+        border: 1px solid #e5e7eb;
+        background: #f9fafb;
+    }
+
     .q-text {
-        font-size: 14px;
-        font-weight: 500;
+        font-size: 11px;
+        font-weight: 600;
+        color: #111827;
+        line-height: 1.4;
+        margin-bottom: 7px;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    .options-list {
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
         margin-bottom: 4px;
     }
 
-    .answer {
-        font-size: 12px;
-        color: #6b7280;
+    .opt {
+        font-size: 10px;
+        padding: 3px 7px;
+        border-radius: 6px;
+        background: #f9fafb;
+        border: 1px solid #e5e7eb;
+        color: #374151;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 
-    /* ACTION BUTTONS */
-    .actions {
+        .opt.correct {
+            background: #dcfce7;
+            border-color: #bbf7d0;
+            color: #166534;
+            font-weight: 600;
+        }
+
+    /* ACTION ROW */
+    .card-actions {
         display: flex;
-        gap: 8px;
+        border-top: 1px solid #e5e7eb;
     }
 
     .btn {
-        padding: 7px 10px;
-        border-radius: 8px;
-        font-size: 12px;
-        font-weight: 500;
+        flex: 1;
+        padding: 8px 4px;
+        font-size: 11px;
+        font-weight: 600;
         text-decoration: none;
-        color: #fff;
+        text-align: center;
         transition: 0.2s;
+        color: #fff;
     }
 
-    .edit {
-        background: #4f46e5;
+    .btn-edit {
+        background: #0891b2;
     }
 
-        .edit:hover {
-            background: #3730a3;
+        .btn-edit:hover {
+            background: #0e7490;
+            color: #fff;
         }
 
-    .delete {
-        background: #ef4444;
+    .btn-delete {
+        background: #f97316;
     }
 
-        .delete:hover {
-            background: #b91c1c;
+        .btn-delete:hover {
+            background: #ea580c;
+            color: #fff;
         }
 
-    /* EMPTY STATE */
     .empty {
         text-align: center;
-        padding: 40px;
-        color: #6b7280;
+        padding: 60px;
+        color: #9ca3af;
+        font-size: 14px;
     }
-
 </style>
 
 <div class="page">
 
-    <div class="header">
+    <div class="topbar">
         <div>
             <h2>Questions</h2>
-            <span class="badge">Module @ViewBag.ModuleId</span>
+            <div class="meta">
+                <span class="module-badge">Module @ViewBag.ModuleId</span>
+                <span class="count-badge @(count >= 30 ? "full" : "")">
+                    @count / 30
+                </span>
+                <div class="progress-wrap">
+                    <div class="progress-fill @(count >= 30 ? "full" : "")"
+                         style="width: @(count * 100 / 30)%"></div>
+                </div>
+            </div>
         </div>
 
-        <a class="add-btn" href="/Admin/AddQuestion?moduleId=@ViewBag.ModuleId">
+        <a class="add-btn @(!canAdd ? "disabled" : "")"
+               href="/Admin/AddQuestion?moduleId=@ViewBag.ModuleId">
             + Add Question
         </a>
     </div>
 
+    @if (count >= 30)
+    {
+        <div class="limit-msg">
+            ⚠️ Maximum 30 questions reached. Delete one to add a new question.
+        </div>
+    }
+
     @if (Model != null && Model.Count > 0)
     {
         <div class="grid">
-
+            @{
+                int serial = 1;
+            }
             @foreach (var q in Model)
             {
                 <div class="card">
 
-                    <div>
-                        <div class="q-text">@q.QuestionText</div>
-                        <div class="answer">Correct Answer: @q.CorrectAnswer</div>
+                    <div class="card-top">
+
+                        <div class="serial-row">
+                            <div class="serial">@serial</div>
+                            <span class="correct-pill">Ans: @q.CorrectAnswer</span>
+                        </div>
+
+                        @if (!string.IsNullOrEmpty(q.ImagePath))
+                        {
+                            <div class="q-image">
+                                <img src="~/images/@q.ImagePath" />
+                            </div>
+                        }
+
+                        @if (!string.IsNullOrEmpty(q.QuestionText))
+                        {
+                            <div class="q-text">@q.QuestionText</div>
+                        }
+
+                        <div class="options-list">
+                            <div class="opt @(q.CorrectAnswer == "A" ? "correct" : "")">A. @q.OptionA</div>
+                            <div class="opt @(q.CorrectAnswer == "B" ? "correct" : "")">B. @q.OptionB</div>
+                            <div class="opt @(q.CorrectAnswer == "C" ? "correct" : "")">C. @q.OptionC</div>
+                            <div class="opt @(q.CorrectAnswer == "D" ? "correct" : "")">D. @q.OptionD</div>
+                        </div>
+
                     </div>
 
-                    <div class="actions">
-                        <a class="btn edit" href="/Admin/EditQuestion/@q.Id">Edit</a>
-                        <a class="btn delete" href="/Admin/DeleteQuestion/@q.Id">Delete</a>
+                    <div class="card-actions">
+                        <a class="btn btn-edit" href="/Admin/EditQuestion/@q.Id">Edit</a>
+                        <a class="btn btn-delete" href="/Admin/DeleteQuestion/@q.Id">Delete</a>
                     </div>
 
                 </div>
-            }
 
+                serial++;
+            }
         </div>
     }
     else
     {
-        <div class="empty">
-            No questions found in this module.
-        </div>
+        <div class="empty">📭 No questions added yet for this module.</div>
     }
 
 </div>

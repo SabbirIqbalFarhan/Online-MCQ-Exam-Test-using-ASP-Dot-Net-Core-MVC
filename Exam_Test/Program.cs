@@ -58,6 +58,19 @@ using (var scope = app.Services.CreateScope())
 
     await RoleSeeder.SeedRoles(services);
     await AdminSeeder.SeedAdmin(services);
+
+    // Seed Modules
+    var context = services.GetRequiredService<ApplicationDbContext>();
+
+    if (!context.Modules.Any())
+    {
+        context.Modules.AddRange(
+            new Exam_Test.Models.Module { Name = "Module 1" },
+            new Exam_Test.Models.Module { Name = "Module 2" },
+            new Exam_Test.Models.Module { Name = "Module 3" }
+        );
+        await context.SaveChangesAsync();
+    }
 }
 
 app.Run();
