@@ -18,50 +18,42 @@ namespace Exam_Test.Controllers
             _userManager = userManager;
         }
 
-        // =========================
-        // USER DASHBOARD
-        // =========================
         public async Task<IActionResult> Dashboard()
         {
             var user = await _userManager.GetUserAsync(User);
+            if (user == null) return RedirectToAction("Login", "Account");
 
-            if (user == null)
-                return RedirectToAction("Login", "Account");
-
-            var totalResults = _context.Results
-                .Where(r => r.UserId == user.Id)
-                .ToList();
-
-            var permission = _context.ExamPermissions
-                .FirstOrDefault(p => p.UserId == user.Id);
-
-            var examRequest = _context.ExamRequests
-                .FirstOrDefault(r => r.UserId == user.Id);
+            var totalResults = _context.Results.Where(r => r.UserId == user.Id).ToList();
+            var permission = _context.ExamPermissions.FirstOrDefault(p => p.UserId == user.Id);
+            var examRequest = _context.ExamRequests.FirstOrDefault(r => r.UserId == user.Id);
+            var activeSession = _context.ExamSessions.FirstOrDefault(s => s.IsActive);
+            var profile = _context.UserProfiles.FirstOrDefault(p => p.UserId == user.Id);
 
             ViewBag.UserName = user.UserName;
             ViewBag.TotalAttempts = totalResults.Count;
             ViewBag.Permission = permission;
             ViewBag.ExamRequest = examRequest;
+            ViewBag.ActiveSession = activeSession;
+            ViewBag.Profile = profile;
 
-            if (TempData["Error"] != null)
-                ViewBag.Error = TempData["Error"];
+            if (TempData["Error"] != null) ViewBag.Error = TempData["Error"];
+            if (TempData["ModuleResult"] != null) ViewBag.ModuleResult = TempData["ModuleResult"];
+            if (TempData["ExamDone"] != null)
+            {
+                ViewBag.ExamDone = true;
+                ViewBag.FinalCorrect = TempData["FinalCorrect"];
+                ViewBag.FinalWrong = TempData["FinalWrong"];
+            }
 
             return View();
         }
 
-        // =========================
-        // REQUEST EXAM ACCESS
-        // =========================
         public async Task<IActionResult> RequestExamAccess()
         {
             var user = await _userManager.GetUserAsync(User);
+            if (user == null) return RedirectToAction("Login", "Account");
 
-            if (user == null)
-                return RedirectToAction("Login", "Account");
-
-            // Check if already requested
-            var existing = _context.ExamRequests
-                .FirstOrDefault(r => r.UserId == user.Id);
+            var existing = _context.ExamRequests.FirstOrDefault(r => r.UserId == user.Id);
 
             if (existing == null)
             {
@@ -77,24 +69,16 @@ namespace Exam_Test.Controllers
             return RedirectToAction("Dashboard");
         }
 
-        // =========================
-        // MODULES PAGE
-        // =========================
         public IActionResult Modules()
         {
             var modules = _context.Modules.ToList();
             return View(modules);
         }
 
-        // =========================
-        // USER RESULTS PAGE
-        // =========================
         public async Task<IActionResult> Results()
         {
             var user = await _userManager.GetUserAsync(User);
-
-            if (user == null)
-                return RedirectToAction("Login", "Account");
+            if (user == null) return RedirectToAction("Login", "Account");
 
             var results = _context.Results
                 .Where(r => r.UserId == user.Id)
@@ -104,29 +88,16 @@ namespace Exam_Test.Controllers
             return View(results);
         }
 
-        // =========================
-        // CHANGE PASSWORD
-        // =========================
-        public IActionResult ChangePassword()
-        {
-            return View();
-        }
+        public IActionResult ChangePassword() => View();
 
         [HttpPost]
         public async Task<IActionResult> ChangePassword(string currentPassword, string newPassword)
         {
             var user = await _userManager.GetUserAsync(User);
-
-            if (user == null)
-                return RedirectToAction("Login", "Account");
+            if (user == null) return RedirectToAction("Login", "Account");
 
             var result = await _userManager.ChangePasswordAsync(user, currentPassword, newPassword);
-
-            if (result.Succeeded)
-                ViewBag.Message = "Password changed successfully!";
-            else
-                ViewBag.Message = "Failed to change password!";
-
+            ViewBag.Message = result.Succeeded ? "Password changed successfully!" : "Failed to change password!";
             return View();
         }
     }

@@ -19,9 +19,6 @@ namespace Exam_Test.Controllers
             _userManager = userManager;
         }
 
-        // =========================
-        // START EXAM - CHECK PERMISSION
-        // =========================
         public async Task<IActionResult> Start(int moduleId)
         {
             var user = await _userManager.GetUserAsync(User);
@@ -31,54 +28,64 @@ namespace Exam_Test.Controllers
 
             if (permission == null)
             {
-                TempData["Error"] = "You do not have permission to take the exam. Please request access from your dashboard.";
+                TempData["Error"] = "You do not have permission to take the exam.";
+                return RedirectToAction("Dashboard", "User");
+            }
+
+            var session = _context.ExamSessions.FirstOrDefault(s => s.IsActive);
+
+            if (session == null)
+            {
+                TempData["Error"] = "No active exam session at the moment. Please wait for the admin to start a session.";
+                return RedirectToAction("Dashboard", "User");
+            }
+
+            if (DateTime.Now < session.StartTime)
+            {
+                TempData["Error"] = $"The exam session has not started yet. It will begin at {session.StartTime:dd MMM yyyy, hh:mm tt}.";
+                return RedirectToAction("Dashboard", "User");
+            }
+
+            if (DateTime.Now > session.EndTime)
+            {
+                TempData["Error"] = "The exam session has ended.";
                 return RedirectToAction("Dashboard", "User");
             }
 
             var questions = _context.Questions
                 .Where(q => q.ModuleId == moduleId)
-                .Take(30)
                 .ToList();
 
             ViewBag.ModuleId = moduleId;
+            ViewBag.SessionId = session.Id;
+            ViewBag.SessionTitle = session.Title;
 
             return View(questions);
         }
 
-        // =========================
-        // SUBMIT EXAM
-        // =========================
         [HttpPost]
-        public async Task<IActionResult> Submit(int moduleId, Dictionary<int, string> answers)
+        public async Task<IActionResult> Submit(int moduleId, int sessionId, Dictionary<int, string> answers)
         {
             var user = await _userManager.GetUserAsync(User);
 
-            // Double check permission on submit too
             var permission = _context.ExamPermissions
                 .FirstOrDefault(p => p.UserId == user.Id && p.IsPermitted == true);
 
             if (permission == null)
-            {
                 return RedirectToAction("Dashboard", "User");
-            }
 
             var questions = await _context.Questions
                 .Where(q => q.ModuleId == moduleId)
                 .ToListAsync();
 
-            int correct = 0;
-            int wrong = 0;
-
-            List<UserAnswer> userAnswers = new List<UserAnswer>();
+            int correct = 0, wrong = 0;
+            var userAnswers = new List<UserAnswer>();
 
             foreach (var q in questions)
             {
                 answers.TryGetValue(q.Id, out string selected);
-
                 bool isCorrect = selected == q.CorrectAnswer;
-
-                if (isCorrect) correct++;
-                else wrong++;
+                if (isCorrect) correct++; else wrong++;
 
                 userAnswers.Add(new UserAnswer
                 {
@@ -92,29 +99,32 @@ namespace Exam_Test.Controllers
             }
 
             _context.UserAnswers.AddRange(userAnswers);
-
-            var result = new Result
+            _context.Results.Add(new Result
             {
                 UserId = user.Id,
                 ModuleId = moduleId,
                 Correct = correct,
                 Wrong = wrong,
-                ExamDate = DateTime.Now
-            };
+                ExamDate = DateTime.Now,
+                SessionId = sessionId
+            });
 
-            _context.Results.Add(result);
             await _context.SaveChangesAsync();
 
-            ViewBag.Correct = correct;
-            ViewBag.Wrong = wrong;
-            ViewBag.ModuleId = moduleId;
+            int nextModule = moduleId + 1;
 
-            return View("Result");
+            if (nextModule <= 3)
+            {
+                TempData["ModuleResult"] = $"✅ Module {moduleId} completed! Correct: {correct}, Wrong: {wrong}. Now starting Module {nextModule}...";
+                return RedirectToAction("Start", new { moduleId = nextModule });
+            }
+
+            TempData["ExamDone"] = $"true";
+            TempData["FinalCorrect"] = correct.ToString();
+            TempData["FinalWrong"] = wrong.ToString();
+            return RedirectToAction("Dashboard", "User");
         }
 
-        // =========================
-        // REVIEW ANSWERS
-        // =========================
         public async Task<IActionResult> Review(int moduleId, bool onlyWrong = false)
         {
             var user = await _userManager.GetUserAsync(User);
@@ -123,19 +133,12 @@ namespace Exam_Test.Controllers
                 .Include(a => a.Question)
                 .Where(a => a.UserId == user.Id && a.ModuleId == moduleId);
 
-            if (onlyWrong)
-            {
-                query = query.Where(a => !a.IsCorrect);
-            }
+            if (onlyWrong) query = query.Where(a => !a.IsCorrect);
 
             var answers = await query.ToListAsync();
-
             return View(answers);
         }
 
-        // =========================
-        // RESULT HISTORY
-        // =========================
         public async Task<IActionResult> History()
         {
             var user = await _userManager.GetUserAsync(User);

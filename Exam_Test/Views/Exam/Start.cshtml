@@ -1,160 +1,439 @@
 ﻿@model List<Exam_Test.Models.Question>
 
 @{
-    ViewData["Title"] = "Module Exam";
+    ViewData["Title"] = "Exam";
+    int moduleId = ViewBag.ModuleId;
+    int sessionId = ViewBag.SessionId;
+    string sessionTitle = ViewBag.SessionTitle;
 }
 
 <style>
-    body {
-        margin: 0;
-        font-family: "Segoe UI", Roboto, Arial, sans-serif;
-        background: #f4f6ff;
-        color: #111827;
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: "Segoe UI", Arial, sans-serif; background: #f4f6ff; }
+
+    .exam-header {
+        background: #1e2a3a;
+        color: #fff;
+        padding: 14px 24px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: sticky;
+        top: 0;
+        z-index: 100;
     }
 
-    .page {
-        max-width: 900px;
-        margin: auto;
-        padding: 40px 20px;
+    .exam-header .left h3 { font-size: 15px; font-weight: 700; }
+    .exam-header .left p { font-size: 12px; color: rgba(255,255,255,0.6); margin-top: 2px; }
+
+    .timer {
+        background: #ef4444;
+        color: #fff;
+        padding: 8px 16px;
+        border-radius: 999px;
+        font-size: 14px;
+        font-weight: 700;
+        letter-spacing: 1px;
     }
 
-    .header {
-        margin-bottom: 18px;
+    /* QUESTION NUMBER STRIP */
+    .q-strip-wrap {
+        background: #fff;
+        border-bottom: 1px solid #e5e7eb;
+        padding: 10px 20px;
+        overflow-x: auto;
+        white-space: nowrap;
     }
 
-        .header h2 {
-            font-size: 22px;
-            font-weight: 700;
-            margin: 0;
-        }
+    .q-strip {
+        display: inline-flex;
+        gap: 6px;
+    }
 
-        .header p {
-            font-size: 13px;
-            color: #6b7280;
-            margin-top: 5px;
-        }
+    .q-num {
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
+        border: 2px solid #e5e7eb;
+        background: #fff;
+        color: #374151;
+        font-size: 12px;
+        font-weight: 700;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: 0.2s;
+        flex-shrink: 0;
+    }
+
+    .q-num:hover { border-color: #6366f1; color: #6366f1; }
+    .q-num.active { background: #6366f1; border-color: #6366f1; color: #fff; }
+    .q-num.answered { background: #10b981; border-color: #10b981; color: #fff; }
+
+    /* MAIN CONTENT */
+    .exam-body {
+        display: flex;
+        max-width: 1100px;
+        margin: 20px auto;
+        gap: 20px;
+        padding: 0 20px;
+    }
 
     /* QUESTION CARD */
-    .card {
+    .q-card {
+        flex: 1;
         background: #fff;
         border: 1px solid #e5e7eb;
         border-radius: 16px;
-        padding: 18px;
+        padding: 28px;
+        box-shadow: 0 4px 14px rgba(0,0,0,0.05);
+    }
+
+    .q-badge {
+        display: inline-block;
+        background: #eef2ff;
+        color: #4f46e5;
+        padding: 4px 12px;
+        border-radius: 999px;
+        font-size: 11px;
+        font-weight: 700;
         margin-bottom: 14px;
-        box-shadow: 0 8px 20px rgba(0,0,0,0.04);
     }
 
-    .question {
-        font-size: 15px;
+    .q-text {
+        font-size: 16px;
         font-weight: 600;
-        margin-bottom: 10px;
+        color: #111827;
+        line-height: 1.6;
+        margin-bottom: 16px;
     }
 
-    .image img {
-        max-width: 220px;
+    .q-image {
+        width: 100%;
+        max-height: 280px;
+        object-fit: contain;
         border-radius: 10px;
         border: 1px solid #e5e7eb;
-        margin: 10px 0;
+        background: #f9fafb;
+        margin-bottom: 20px;
     }
 
-    /* OPTIONS */
-    .option {
+    .options {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin-bottom: 24px;
+    }
+
+    .option-label {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 14px 16px;
+        border: 2px solid #e5e7eb;
+        border-radius: 12px;
+        cursor: pointer;
+        transition: 0.2s;
+        font-size: 14px;
+        color: #374151;
+    }
+
+    .option-label:hover { border-color: #6366f1; background: #f5f3ff; }
+
+    .option-label input[type="radio"] { display: none; }
+
+    .option-label.selected {
+        border-color: #6366f1;
+        background: #eef2ff;
+        color: #4f46e5;
+        font-weight: 600;
+    }
+
+    .opt-letter {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        background: #f3f4f6;
+        color: #374151;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 13px;
+        flex-shrink: 0;
+        transition: 0.2s;
+    }
+
+    .option-label.selected .opt-letter {
+        background: #6366f1;
+        color: #fff;
+    }
+
+    .nav-btns {
+        display: flex;
+        gap: 10px;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .btn {
+        padding: 11px 22px;
+        border-radius: 10px;
+        font-size: 13px;
+        font-weight: 600;
+        border: none;
+        cursor: pointer;
+        transition: 0.2s;
+    }
+
+    .btn-prev { background: #f3f4f6; color: #374151; }
+    .btn-prev:hover { background: #e5e7eb; }
+    .btn-next { background: #6366f1; color: #fff; }
+    .btn-next:hover { background: #4f46e5; }
+    .btn-submit { background: #10b981; color: #fff; }
+    .btn-submit:hover { background: #059669; }
+
+    /* SIDEBAR */
+    .q-sidebar {
+        width: 220px;
+        flex-shrink: 0;
+    }
+
+    .sidebar-card {
+        background: #fff;
+        border: 1px solid #e5e7eb;
+        border-radius: 14px;
+        padding: 18px;
+        margin-bottom: 14px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+
+    .sidebar-card h4 {
+        font-size: 12px;
+        font-weight: 700;
+        color: #6b7280;
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+        margin-bottom: 12px;
+    }
+
+    .legend-item {
         display: flex;
         align-items: center;
         gap: 8px;
-        padding: 8px 10px;
-        border-radius: 10px;
-        border: 1px solid #e5e7eb;
-        margin: 6px 0;
-        cursor: pointer;
-        transition: 0.2s;
+        font-size: 12px;
+        color: #374151;
+        margin-bottom: 6px;
+    }
+
+    .dot {
+        width: 14px;
+        height: 14px;
+        border-radius: 4px;
+        flex-shrink: 0;
+    }
+
+    .dot-answered { background: #10b981; }
+    .dot-active { background: #6366f1; }
+    .dot-unanswered { background: #e5e7eb; border: 1px solid #d1d5db; }
+
+    .progress-info {
         font-size: 13px;
+        color: #374151;
+        margin-bottom: 6px;
     }
 
-        .option:hover {
-            background: #f8f9ff;
-            border-color: #c7d2fe;
-        }
-
-    input[type="radio"] {
-        accent-color: #4f46e5;
-        cursor: pointer;
+    .progress-bar-wrap {
+        background: #e5e7eb;
+        border-radius: 999px;
+        height: 8px;
+        overflow: hidden;
     }
 
-    /* SUBMIT BUTTON */
-    .btn {
-        display: inline-block;
-        margin-top: 20px;
-        padding: 12px 18px;
-        border-radius: 10px;
-        font-size: 13px;
-        font-weight: 500;
-        border: none;
-        background: #4f46e5;
-        color: #fff;
-        cursor: pointer;
-        transition: 0.2s;
+    .progress-bar-fill {
+        height: 8px;
+        border-radius: 999px;
+        background: #10b981;
+        transition: width 0.3s;
     }
-
-        .btn:hover {
-            background: #3730a3;
-        }
-
 </style>
 
-<div class="page">
+<form method="post" action="/Exam/Submit" id="examForm">
+    <input type="hidden" name="moduleId" value="@moduleId" />
+    <input type="hidden" name="sessionId" value="@sessionId" />
 
-    <div class="header">
-        <h2>📝 Module Exam</h2>
-        <p>Choose the correct answers carefully before submitting</p>
+    <!-- HEADER -->
+    <div class="exam-header">
+        <div class="left">
+            <h3>📋 Module @moduleId Exam</h3>
+            <p>@sessionTitle &nbsp;|&nbsp; Answer all questions before submitting</p>
+        </div>
+        <div class="timer" id="timer">--:--</div>
     </div>
 
-    <form method="post" action="/Exam/Submit">
+    <!-- QUESTION NUMBER STRIP -->
+    <div class="q-strip-wrap">
+        <div class="q-strip" id="qStrip">
+            @for (int i = 0; i < Model.Count; i++)
+            {
+                <div class="q-num @(i == 0 ? "active" : "")" id="qnum-@i" onclick="goToQuestion(@i)">@(i + 1)</div>
+            }
+        </div>
+    </div>
 
-        <input type="hidden" name="moduleId" value="@ViewBag.ModuleId" />
+    <!-- BODY -->
+    <div class="exam-body">
 
-        @foreach (var q in Model)
-        {
-            <div class="card">
+        <!-- QUESTIONS -->
+        <div style="flex:1;">
+            @for (int i = 0; i < Model.Count; i++)
+            {
+                var q = Model[i];
+                <div class="q-card" id="qcard-@i" style="@(i == 0 ? "" : "display:none;")">
 
-                <div class="question">
-                    @q.QuestionText
-                </div>
+                    <div class="q-badge">Question @(i + 1) of @Model.Count</div>
 
-                @if (q.ImagePath != null)
-                {
-                    <div class="image">
-                        <img src="~/images/@q.ImagePath" />
+                    @if (!string.IsNullOrEmpty(q.ImagePath))
+                    {
+                        <img class="q-image" src="~/images/@q.ImagePath" />
+                    }
+
+                    @if (!string.IsNullOrEmpty(q.QuestionText))
+                    {
+                        <div class="q-text">@q.QuestionText</div>
+                    }
+
+                    <div class="options">
+                        <label class="option-label" id="opt-@i-A" onclick="selectOption(@i, 'A', this)">
+                            <input type="radio" name="answers[@q.Id]" value="A" />
+                            <div class="opt-letter">A</div>
+                            @q.OptionA
+                        </label>
+                        <label class="option-label" id="opt-@i-B" onclick="selectOption(@i, 'B', this)">
+                            <input type="radio" name="answers[@q.Id]" value="B" />
+                            <div class="opt-letter">B</div>
+                            @q.OptionB
+                        </label>
+                        <label class="option-label" id="opt-@i-C" onclick="selectOption(@i, 'C', this)">
+                            <input type="radio" name="answers[@q.Id]" value="C" />
+                            <div class="opt-letter">C</div>
+                            @q.OptionC
+                        </label>
+                        <label class="option-label" id="opt-@i-D" onclick="selectOption(@i, 'D', this)">
+                            <input type="radio" name="answers[@q.Id]" value="D" />
+                            <div class="opt-letter">D</div>
+                            @q.OptionD
+                        </label>
                     </div>
-                }
 
-                <label class="option">
-                    <input type="radio" name="answers[@q.Id]" value="A" />
-                    @q.OptionA
-                </label>
+                    <div class="nav-btns">
+                        @if (i > 0)
+                        {
+                            <button type="button" class="btn btn-prev" onclick="goToQuestion(@(i - 1))">← Previous</button>
+                        }
+                        else
+                        {
+                            <span></span>
+                        }
 
-                <label class="option">
-                    <input type="radio" name="answers[@q.Id]" value="B" />
-                    @q.OptionB
-                </label>
+                        @if (i < Model.Count - 1)
+                        {
+                            <button type="button" class="btn btn-next" onclick="goToQuestion(@(i + 1))">Next →</button>
+                        }
+                        else
+                        {
+                            <button type="submit" class="btn btn-submit" onclick="return confirmSubmit()">✅ Submit Module @moduleId</button>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
 
-                <label class="option">
-                    <input type="radio" name="answers[@q.Id]" value="C" />
-                    @q.OptionC
-                </label>
-
-                <label class="option">
-                    <input type="radio" name="answers[@q.Id]" value="D" />
-                    @q.OptionD
-                </label>
-
+        <!-- SIDEBAR -->
+        <div class="q-sidebar">
+            <div class="sidebar-card">
+                <h4>Progress</h4>
+                <div class="progress-info" id="progressText">0 / @Model.Count answered</div>
+                <div class="progress-bar-wrap">
+                    <div class="progress-bar-fill" id="progressBar" style="width:0%"></div>
+                </div>
             </div>
+
+            <div class="sidebar-card">
+                <h4>Legend</h4>
+                <div class="legend-item"><div class="dot dot-answered"></div> Answered</div>
+                <div class="legend-item"><div class="dot dot-active"></div> Current</div>
+                <div class="legend-item"><div class="dot dot-unanswered"></div> Not Answered</div>
+            </div>
+        </div>
+
+    </div>
+</form>
+
+<script>
+    let currentQ = 0;
+    let totalQ = @Model.Count;
+    let answered = new Array(totalQ).fill(false);
+
+    function goToQuestion(index) {
+        document.getElementById('qcard-' + currentQ).style.display = 'none';
+        document.getElementById('qnum-' + currentQ).classList.remove('active');
+
+        currentQ = index;
+
+        document.getElementById('qcard-' + currentQ).style.display = 'block';
+
+        let numEl = document.getElementById('qnum-' + currentQ);
+        numEl.classList.remove('answered');
+        numEl.classList.add('active');
+
+        if (answered[currentQ]) {
+            numEl.classList.add('answered');
         }
 
-        <button type="submit" class="btn">
-            🚀 Submit Exam
-        </button>
+        updateProgress();
+    }
 
-    </form>
+    function selectOption(qIndex, option, labelEl) {
+        // Remove selected from siblings
+        let card = document.getElementById('qcard-' + qIndex);
+        card.querySelectorAll('.option-label').forEach(l => l.classList.remove('selected'));
+        labelEl.classList.add('selected');
+        labelEl.querySelector('input[type="radio"]').checked = true;
 
-</div>
+        answered[qIndex] = true;
+
+        let numEl = document.getElementById('qnum-' + qIndex);
+        if (qIndex !== currentQ) {
+            numEl.classList.remove('active');
+        }
+        numEl.classList.add('answered');
+
+        updateProgress();
+    }
+
+    function updateProgress() {
+        let count = answered.filter(a => a).length;
+        document.getElementById('progressText').innerText = count + ' / ' + totalQ + ' answered';
+        document.getElementById('progressBar').style.width = (count / totalQ * 100) + '%';
+    }
+
+    function confirmSubmit() {
+        let count = answered.filter(a => a).length;
+        let unanswered = totalQ - count;
+        if (unanswered > 0) {
+            return confirm('You have ' + unanswered + ' unanswered question(s). Are you sure you want to submit?');
+        }
+        return true;
+    }
+
+    // Timer - counts up
+    let seconds = 0;
+    setInterval(function () {
+        seconds++;
+        let m = Math.floor(seconds / 60).toString().padStart(2, '0');
+        let s = (seconds % 60).toString().padStart(2, '0');
+        document.getElementById('timer').innerText = m + ':' + s;
+    }, 1000);
+</script>

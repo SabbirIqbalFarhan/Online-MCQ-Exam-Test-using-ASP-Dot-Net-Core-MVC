@@ -16,5 +16,7 @@ namespace Exam_Test.Data
         public DbSet<Result> Results { get; set; }
         public DbSet<ExamPermission> ExamPermissions { get; set; }
         public DbSet<ExamRequest> ExamRequests { get; set; }
+        public DbSet<ExamSession> ExamSessions { get; set; }
+        public DbSet<UserProfile> UserProfiles { get; set; }
     }
 }

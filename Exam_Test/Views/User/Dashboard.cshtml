@@ -1,241 +1,98 @@
 ﻿@{
-    ViewData["Title"] = "User Dashboard";
+    ViewData["Title"] = "Dashboard";
     var permission = ViewBag.Permission as Exam_Test.Models.ExamPermission;
     var examRequest = ViewBag.ExamRequest as Exam_Test.Models.ExamRequest;
+    var activeSession = ViewBag.ActiveSession as Exam_Test.Models.ExamSession;
+    var profile = ViewBag.Profile as Exam_Test.Models.UserProfile;
     bool isPermitted = permission != null && permission.IsPermitted;
 }
 
 <style>
-    body {
-        margin: 0;
-        font-family: "Segoe UI", Roboto, Arial, sans-serif;
-        background: #f4f6ff;
-        color: #111827;
-    }
+    body { font-family: "Segoe UI", Arial, sans-serif; background: #f4f6ff; }
+    .page { max-width: 900px; margin: auto; padding: 40px 20px; }
+    .header { margin-bottom: 24px; }
+    .header h2 { font-size: 24px; font-weight: 700; margin: 0; }
+    .header p { font-size: 13px; color: #6b7280; margin-top: 5px; }
+    .student-id-badge { display: inline-block; background: #1e2a3a; color: #fff; padding: 4px 14px; border-radius: 999px; font-size: 12px; font-weight: 700; margin-top: 8px; letter-spacing: 1px; }
 
-    .page {
-        max-width: 900px;
-        margin: auto;
-        padding: 40px 20px;
-    }
+    .alert { border-radius: 14px; padding: 16px 20px; margin-bottom: 20px; }
+    .alert-error { background: #fee2e2; border: 1px solid #fecaca; color: #991b1b; }
+    .alert-success { background: #dcfce7; border: 1px solid #bbf7d0; color: #166534; }
+    .alert-info { background: #eff6ff; border: 1px solid #bfdbfe; color: #1e40af; }
 
-    .header {
-        margin-bottom: 24px;
-    }
+    .banner { border-radius: 14px; padding: 20px 24px; margin-bottom: 24px; display: flex; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; gap: 14px; }
+    .banner.permitted { background: #dcfce7; border: 1px solid #bbf7d0; }
+    .banner.not-permitted { background: #fef9c3; border: 1px solid #fde68a; }
+    .banner.pending { background: #eff6ff; border: 1px solid #bfdbfe; }
+    .banner.rejected { background: #fee2e2; border: 1px solid #fecaca; }
+    .banner-text h3 { margin: 0 0 4px; font-size: 15px; font-weight: 700; }
+    .banner-text p { margin: 0; font-size: 13px; color: #374151; line-height: 1.6; }
 
-        .header h2 {
-            font-size: 24px;
-            font-weight: 700;
-            margin: 0;
-        }
+    .btn-request { display: inline-block; padding: 10px 18px; border-radius: 10px; font-size: 13px; font-weight: 600; text-decoration: none; background: #4f46e5; color: #fff; transition: 0.2s; white-space: nowrap; margin-top: 4px; }
+    .btn-request:hover { background: #3730a3; color: #fff; }
 
-        .header p {
-            font-size: 13px;
-            color: #6b7280;
-            margin-top: 5px;
-        }
+    .session-box { background: #fff; border: 1px solid #e5e7eb; border-radius: 14px; padding: 18px 22px; margin-bottom: 24px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
+    .session-box .s-title { font-size: 14px; font-weight: 700; color: #111827; }
+    .session-box .s-time { font-size: 12px; color: #6b7280; margin-top: 3px; }
+    .badge-live { background: #dcfce7; color: #166534; padding: 4px 12px; border-radius: 999px; font-size: 12px; font-weight: 700; }
+    .badge-soon { background: #fef9c3; color: #854d0e; padding: 4px 12px; border-radius: 999px; font-size: 12px; font-weight: 700; }
+    .badge-ended { background: #fee2e2; color: #991b1b; padding: 4px 12px; border-radius: 999px; font-size: 12px; font-weight: 700; }
 
-    /* PERMISSION BANNER */
-    .banner {
-        border-radius: 14px;
-        padding: 18px 22px;
-        margin-bottom: 24px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        flex-wrap: wrap;
-        gap: 12px;
-    }
+    .stats { display: flex; gap: 16px; margin-bottom: 24px; flex-wrap: wrap; }
+    .stat-card { flex: 1 1 180px; background: #fff; border: 1px solid #e5e7eb; border-radius: 14px; padding: 18px 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
+    .stat-card .s-label { font-size: 11px; font-weight: 600; color: #6b7280; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 8px; }
+    .stat-card .s-value { font-size: 28px; font-weight: 700; color: #4f46e5; }
 
-        .banner.permitted {
-            background: #dcfce7;
-            border: 1px solid #bbf7d0;
-        }
-
-        .banner.not-permitted {
-            background: #fef9c3;
-            border: 1px solid #fde68a;
-        }
-
-        .banner.pending {
-            background: #eff6ff;
-            border: 1px solid #bfdbfe;
-        }
-
-    .banner-text h3 {
-        margin: 0 0 4px;
-        font-size: 15px;
-        font-weight: 700;
-    }
-
-    .banner-text p {
-        margin: 0;
-        font-size: 13px;
-        color: #374151;
-    }
-
-    .btn-request {
-        display: inline-block;
-        padding: 10px 18px;
-        border-radius: 10px;
-        font-size: 13px;
-        font-weight: 600;
-        text-decoration: none;
-        background: #4f46e5;
-        color: #fff;
-        transition: 0.2s;
-        white-space: nowrap;
-    }
-
-        .btn-request:hover {
-            background: #3730a3;
-            color: #fff;
-        }
-
-    /* ERROR ALERT */
-    .alert-error {
-        background: #fee2e2;
-        border: 1px solid #fecaca;
-        color: #991b1b;
-        border-radius: 12px;
-        padding: 14px 18px;
-        margin-bottom: 20px;
-        font-size: 13px;
-        font-weight: 500;
-    }
-
-    /* STATS ROW */
-    .stats {
-        display: flex;
-        gap: 16px;
-        margin-bottom: 24px;
-        flex-wrap: wrap;
-    }
-
-    .stat-card {
-        flex: 1 1 180px;
-        background: #fff;
-        border: 1px solid #e5e7eb;
-        border-radius: 14px;
-        padding: 18px 20px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-    }
-
-        .stat-card .s-label {
-            font-size: 11px;
-            font-weight: 600;
-            color: #6b7280;
-            text-transform: uppercase;
-            letter-spacing: 0.8px;
-            margin-bottom: 8px;
-        }
-
-        .stat-card .s-value {
-            font-size: 28px;
-            font-weight: 700;
-            color: #4f46e5;
-        }
-
-    /* MODULE CARDS */
-    .section-title {
-        font-size: 15px;
-        font-weight: 700;
-        color: #111827;
-        margin-bottom: 14px;
-    }
-
-    .grid {
-        display: flex;
-        gap: 16px;
-        flex-wrap: wrap;
-    }
-
-    .card {
-        flex: 1 1 250px;
-        background: #fff;
-        border: 1px solid #e5e7eb;
-        border-radius: 16px;
-        padding: 22px;
-        box-shadow: 0 4px 14px rgba(0,0,0,0.04);
-        transition: 0.2s;
-        display: flex;
-        flex-direction: column;
-    }
-
-        .card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
-        }
-
-        .card .label {
-            font-size: 11px;
-            font-weight: 600;
-            color: #4f46e5;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 8px;
-        }
-
-        .card h3 {
-            margin: 0 0 6px;
-            font-size: 17px;
-        }
-
-        .card p {
-            font-size: 13px;
-            color: #6b7280;
-            margin-bottom: 16px;
-            flex: 1;
-        }
-
-    .btn {
-        display: inline-block;
-        padding: 10px 14px;
-        border-radius: 10px;
-        font-size: 13px;
-        font-weight: 600;
-        text-decoration: none;
-        text-align: center;
-        background: #4f46e5;
-        color: #fff;
-        transition: 0.2s;
-    }
-
-        .btn:hover {
-            background: #3730a3;
-            color: #fff;
-        }
-
-    .btn-disabled {
-        background: #d1d5db;
-        color: #9ca3af;
-        cursor: not-allowed;
-        pointer-events: none;
-    }
+    .section-title { font-size: 15px; font-weight: 700; color: #111827; margin-bottom: 14px; }
+    .grid { display: flex; gap: 16px; flex-wrap: wrap; }
+    .card { flex: 1 1 250px; background: #fff; border: 1px solid #e5e7eb; border-radius: 16px; padding: 22px; box-shadow: 0 4px 14px rgba(0,0,0,0.04); transition: 0.2s; display: flex; flex-direction: column; }
+    .card:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,0.08); }
+    .card .label { font-size: 11px; font-weight: 600; color: #4f46e5; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+    .card h3 { margin: 0 0 6px; font-size: 17px; }
+    .card p { font-size: 13px; color: #6b7280; margin-bottom: 16px; flex: 1; }
+    .btn { display: inline-block; padding: 10px 14px; border-radius: 10px; font-size: 13px; font-weight: 600; text-decoration: none; text-align: center; background: #4f46e5; color: #fff; transition: 0.2s; }
+    .btn:hover { background: #3730a3; color: #fff; }
+    .btn-disabled { background: #d1d5db; color: #9ca3af; cursor: not-allowed; pointer-events: none; }
 </style>
 
 <div class="page">
 
     <div class="header">
         <h2>🎓 Welcome, @ViewBag.UserName</h2>
-        <p>Your personal exam dashboard</p>
+        @if (profile != null && !string.IsNullOrEmpty(profile.StudentId))
+        {
+            <div class="student-id-badge">🪪 Student ID: @profile.StudentId</div>
+        }
+        <p style="margin-top:8px;">Your personal exam dashboard</p>
     </div>
 
-    <!-- ERROR MESSAGE -->
+    @* ERROR *@
     @if (ViewBag.Error != null)
     {
-        <div class="alert-error">
-            ⚠️ @ViewBag.Error
+        <div class="alert alert-error">⚠️ @ViewBag.Error</div>
+    }
+
+    @* MODULE COMPLETED *@
+    @if (ViewBag.ModuleResult != null)
+    {
+        <div class="alert alert-success">@ViewBag.ModuleResult</div>
+    }
+
+    @* ALL MODULES DONE *@
+    @if (ViewBag.ExamDone != null)
+    {
+        <div class="alert alert-success">
+            🎉 <strong>Exam Completed!</strong> You have successfully completed all modules. Final Module — Correct: @ViewBag.FinalCorrect, Wrong: @ViewBag.FinalWrong
         </div>
     }
 
-    <!-- PERMISSION BANNER -->
+    @* PERMISSION BANNER *@
     @if (isPermitted)
     {
         <div class="banner permitted">
             <div class="banner-text">
                 <h3>✅ Exam Access Granted</h3>
-                <p>You are permitted to take exams. Choose a module below to start.</p>
+                <p>Your access has been approved by the administrator. You may proceed to take the exam when the session is active.</p>
             </div>
         </div>
     }
@@ -243,21 +100,19 @@
     {
         <div class="banner pending">
             <div class="banner-text">
-                <h3>⏳ Request Pending</h3>
-                <p>Your exam access request has been submitted. Please wait for admin approval.</p>
+                <h3>⏳ Access Request Under Review</h3>
+                <p>Your exam access request has been received and is currently being reviewed by the administrator. You will be notified once a decision has been made. Please check back later.</p>
             </div>
         </div>
     }
     else if (examRequest != null && examRequest.Status == "Rejected")
     {
-        <div class="banner not-permitted">
+        <div class="banner rejected">
             <div class="banner-text">
-                <h3>❌ Request Rejected</h3>
-                <p>Your request was rejected. Contact your admin for more information.</p>
+                <h3>❌ Access Request Declined</h3>
+                <p>Unfortunately, your exam access request was not approved at this time. Please contact your administrator for further clarification or submit a new request.</p>
             </div>
-            <a class="btn-request" href="/User/RequestExamAccess">
-                🔄 Request Again
-            </a>
+            <a class="btn-request" href="/User/RequestExamAccess">🔄 Request Again</a>
         </div>
     }
     else
@@ -265,15 +120,48 @@
         <div class="banner not-permitted">
             <div class="banner-text">
                 <h3>🔒 Exam Access Required</h3>
-                <p>You need admin permission to take exams. Click the button to send a request.</p>
+                <p>You currently do not have permission to take the exam. Please submit an access request and await administrator approval before proceeding.</p>
             </div>
-            <a class="btn-request" href="/User/RequestExamAccess">
-                📩 Request Exam Access
-            </a>
+            <a class="btn-request" href="/User/RequestExamAccess">📩 Request Exam Access</a>
         </div>
     }
 
-    <!-- STATS -->
+    @* ACTIVE SESSION BOX *@
+    @if (activeSession != null)
+    {
+        <div class="session-box">
+            <div>
+                <div class="s-title">📅 @activeSession.Title</div>
+                <div class="s-time">
+                    Start: @activeSession.StartTime.ToString("dd MMM yyyy, hh:mm tt") &nbsp;|&nbsp;
+                    End: @activeSession.EndTime.ToString("dd MMM yyyy, hh:mm tt")
+                </div>
+            </div>
+            @if (DateTime.Now < activeSession.StartTime)
+            {
+                <span class="badge-soon">⏰ Starting Soon</span>
+            }
+            else if (DateTime.Now > activeSession.EndTime)
+            {
+                <span class="badge-ended">🔴 Session Ended</span>
+            }
+            else
+            {
+                <span class="badge-live">🟢 Live Now</span>
+            }
+        </div>
+    }
+    else if (isPermitted)
+    {
+        <div class="session-box">
+            <div>
+                <div class="s-title">No Active Session</div>
+                <div class="s-time">The administrator has not started an exam session yet. Please wait for further instructions.</div>
+            </div>
+        </div>
+    }
+
+    @* STATS *@
     <div class="stats">
         <div class="stat-card">
             <div class="s-label">Total Attempts</div>
@@ -282,30 +170,27 @@
         <div class="stat-card">
             <div class="s-label">Exam Status</div>
             <div class="s-value" style="font-size:16px; padding-top:6px;">
-                @if (isPermitted)
-                {
-                    <span style="color:#10b981;">✅ Active</span>
-                }
-                else
-                {
-                    <span style="color:#f59e0b;">🔒 Locked</span>
-                }
+                @if (isPermitted) { <span style="color:#10b981;">✅ Active</span> }
+                else { <span style="color:#f59e0b;">🔒 Locked</span> }
             </div>
         </div>
     </div>
 
-    <!-- MODULE CARDS -->
+    @* MODULE CARDS *@
     <div class="section-title">📚 Exam Modules</div>
-
     <div class="grid">
+        @{
+            bool sessionLive = activeSession != null && DateTime.Now >= activeSession.StartTime && DateTime.Now <= activeSession.EndTime;
+            bool canStart = isPermitted && sessionLive;
+        }
 
         <div class="card">
-            <div class="label">Module</div>
+            <div class="label">Module 1</div>
             <h3>Module 1</h3>
-            <p>Basic level questions for practice and learning.</p>
-            @if (isPermitted)
+            <p>First module of the exam. Complete this before proceeding to Module 2.</p>
+            @if (canStart)
             {
-                <a class="btn" href="/Exam/Start?moduleId=1">Start Exam</a>
+                <a class="btn" href="/Exam/Start?moduleId=1">Start Module 1</a>
             }
             else
             {
@@ -314,12 +199,12 @@
         </div>
 
         <div class="card">
-            <div class="label">Module</div>
+            <div class="label">Module 2</div>
             <h3>Module 2</h3>
-            <p>Intermediate level questions for skill improvement.</p>
-            @if (isPermitted)
+            <p>Second module of the exam. Available after completing Module 1.</p>
+            @if (canStart)
             {
-                <a class="btn" href="/Exam/Start?moduleId=2">Start Exam</a>
+                <a class="btn" href="/Exam/Start?moduleId=2">Start Module 2</a>
             }
             else
             {
@@ -328,19 +213,18 @@
         </div>
 
         <div class="card">
-            <div class="label">Module</div>
+            <div class="label">Module 3</div>
             <h3>Module 3</h3>
-            <p>Advanced level questions for final evaluation.</p>
-            @if (isPermitted)
+            <p>Final module of the exam. Available after completing Module 2.</p>
+            @if (canStart)
             {
-                <a class="btn" href="/Exam/Start?moduleId=3">Start Exam</a>
+                <a class="btn" href="/Exam/Start?moduleId=3">Start Module 3</a>
             }
             else
             {
                 <span class="btn btn-disabled">🔒 Locked</span>
             }
         </div>
-
     </div>
 
 </div>

@@ -21,15 +21,13 @@ namespace Exam_Test.Controllers
         public IActionResult Index()
         {
             var users = _userManager.Users.ToList();
-
-            // Get all permissions
             var permissions = _context.ExamPermissions.ToList();
-
-            // Get all pending requests
             var requests = _context.ExamRequests.ToList();
+            var profiles = _context.UserProfiles.ToList();
 
             ViewBag.Permissions = permissions;
             ViewBag.Requests = requests;
+            ViewBag.Profiles = profiles;
 
             return View(users);
         }
@@ -44,6 +42,9 @@ namespace Exam_Test.Controllers
 
             var permission = _context.ExamPermissions.FirstOrDefault(p => p.UserId == id);
             ViewBag.Permission = permission;
+
+            var profile = _context.UserProfiles.FirstOrDefault(p => p.UserId == id);
+            ViewBag.Profile = profile;
 
             return View(user);
         }
@@ -94,7 +95,49 @@ namespace Exam_Test.Controllers
             return RedirectToAction("Details", new { id = id });
         }
 
-        // GRANT EXAM PERMISSION
+        [HttpGet]
+        public async Task<IActionResult> AssignStudentId(string id)
+        {
+            var user = await _userManager.FindByIdAsync(id);
+            if (user == null) return NotFound();
+
+            var profile = _context.UserProfiles.FirstOrDefault(p => p.UserId == id);
+
+            ViewBag.UserId = id;
+            ViewBag.UserEmail = user.Email;
+            ViewBag.CurrentStudentId = profile?.StudentId;
+            ViewBag.CurrentFullName = profile?.FullName;
+
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AssignStudentId(string id, string studentId, string fullName)
+        {
+            var user = await _userManager.FindByIdAsync(id);
+            if (user == null) return NotFound();
+
+            var profile = _context.UserProfiles.FirstOrDefault(p => p.UserId == id);
+
+            if (profile == null)
+            {
+                _context.UserProfiles.Add(new UserProfile
+                {
+                    UserId = id,
+                    StudentId = studentId,
+                    FullName = fullName
+                });
+            }
+            else
+            {
+                profile.StudentId = studentId;
+                profile.FullName = fullName;
+            }
+
+            _context.SaveChanges();
+            return RedirectToAction("Details", new { id = id });
+        }
+
         [HttpGet]
         public IActionResult GrantPermission(string id)
         {
@@ -115,34 +158,21 @@ namespace Exam_Test.Controllers
                 existing.GrantedAt = DateTime.Now;
             }
 
-            // Update request status if any
             var request = _context.ExamRequests.FirstOrDefault(r => r.UserId == id);
-            if (request != null)
-            {
-                request.Status = "Approved";
-            }
+            if (request != null) request.Status = "Approved";
 
             _context.SaveChanges();
             return RedirectToAction("Index");
         }
 
-        // REVOKE EXAM PERMISSION
         [HttpGet]
         public IActionResult RevokePermission(string id)
         {
             var existing = _context.ExamPermissions.FirstOrDefault(p => p.UserId == id);
+            if (existing != null) existing.IsPermitted = false;
 
-            if (existing != null)
-            {
-                existing.IsPermitted = false;
-            }
-
-            // Update request status
             var request = _context.ExamRequests.FirstOrDefault(r => r.UserId == id);
-            if (request != null)
-            {
-                request.Status = "Rejected";
-            }
+            if (request != null) request.Status = "Rejected";
 
             _context.SaveChanges();
             return RedirectToAction("Index");
