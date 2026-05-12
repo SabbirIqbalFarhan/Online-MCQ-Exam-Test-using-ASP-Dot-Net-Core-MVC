@@ -1,229 +1,212 @@
 ﻿@page
 @model LogoutModel
 @{
-    ViewData["Title"] = "Log out";
+    ViewData["Title"] = "Sign Out";
 }
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
-
 <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    body {
-        font-family: 'DM Sans', sans-serif;
-        background: #f5f3ef;
-        min-height: 100vh;
+    .logout-wrap {
+        min-height: calc(100vh - 60px);
         display: flex;
         align-items: center;
         justify-content: center;
-        position: relative;
-    }
-
-    body::before {
-        content: '';
-        position: fixed;
-        inset: 0;
-        background-image:
-            linear-gradient(rgba(0,0,0,0.03) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(0,0,0,0.03) 1px, transparent 1px);
-        background-size: 32px 32px;
-        pointer-events: none;
-        z-index: 0;
+        padding: 40px 20px;
+        background: linear-gradient(135deg, #f1f4fb 0%, #e8ecf8 100%);
     }
 
     .logout-card {
-        position: relative;
-        z-index: 1;
-        background: #fff;
-        border: 1px solid #dddbd6;
-        border-radius: 12px;
-        padding: 52px 48px;
         width: 100%;
-        max-width: 440px;
+        max-width: 420px;
+        background: #fff;
+        border-radius: 20px;
+        box-shadow: 0 20px 60px rgba(26,34,54,0.12);
+        border: 1px solid #e5e9f2;
+        overflow: hidden;
         text-align: center;
+    }
+
+    .logout-header {
+        background: #1a2236;
+        padding: 36px 32px;
     }
 
     .logout-icon {
         width: 56px;
         height: 56px;
-        background: #0c0c0e;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin: 0 auto 28px;
-    }
-
-    .logout-icon svg {
-        width: 22px;
-        height: 22px;
-        stroke: #fff;
-        fill: none;
-        stroke-width: 2;
-        stroke-linecap: round;
-        stroke-linejoin: round;
-    }
-
-    .logout-icon.success {
-        background: #f5f3ef;
-        border: 1px solid #dddbd6;
-    }
-
-    .logout-icon.success svg { stroke: #0c0c0e; }
-
-    .brand {
-        font-family: 'Playfair Display', serif;
-        font-size: 13px;
-        color: #8a8d97;
-        letter-spacing: 0.08em;
-        margin-bottom: 10px;
-    }
-
-    .brand span { color: #e8845c; }
-
-    .logout-title {
-        font-family: 'Playfair Display', serif;
-        font-size: 26px;
-        color: #0c0c0e;
-        font-weight: 700;
-        margin-bottom: 10px;
-    }
-
-    .logout-desc {
-        font-size: 13.5px;
-        color: #8a8d97;
-        line-height: 1.65;
-        margin-bottom: 36px;
-    }
-
-    .divider {
-        width: 36px;
-        height: 1px;
-        background: #e8845c;
-        margin: 0 auto 28px;
-    }
-
-    .btn-logout {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        gap: 8px;
-        width: 100%;
-        height: 48px;
-        background: #0c0c0e;
-        border: none;
-        border-radius: 6px;
+        border-radius: 14px;
+        display: grid;
+        place-items: center;
+        font-size: 22px;
         color: #fff;
-        font-family: 'DM Sans', sans-serif;
-        font-size: 14px;
-        font-weight: 500;
-        letter-spacing: 0.04em;
-        cursor: pointer;
-        text-decoration: none;
-        transition: background 0.2s, transform 0.15s;
+        margin: 0 auto 16px;
     }
 
-    .btn-logout:hover { background: #1e1e22; color: #fff; }
-    .btn-logout:active { transform: scale(0.99); }
+        .logout-icon.warning {
+            background: #ef4444;
+            box-shadow: 0 6px 20px rgba(239,68,68,0.4);
+        }
 
-    .btn-logout svg {
-        width: 16px;
-        height: 16px;
-        stroke: #fff;
-        fill: none;
-        stroke-width: 2;
-        stroke-linecap: round;
-        stroke-linejoin: round;
-        opacity: 0.5;
+        .logout-icon.success {
+            background: #10b981;
+            box-shadow: 0 6px 20px rgba(16,185,129,0.4);
+        }
+
+    .logout-header h2 {
+        font-size: 20px;
+        font-weight: 800;
+        color: #fff;
+        margin: 0 0 4px;
     }
 
-    .btn-home {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        gap: 6px;
-        width: 100%;
-        height: 44px;
-        background: transparent;
-        border: 1px solid #dddbd6;
-        border-radius: 6px;
-        color: #4a4d57;
-        font-family: 'DM Sans', sans-serif;
+    .logout-header p {
         font-size: 13px;
-        cursor: pointer;
-        text-decoration: none;
-        margin-top: 10px;
-        transition: border-color 0.2s, color 0.2s;
+        color: rgba(255,255,255,0.5);
+        margin: 0;
     }
 
-    .btn-home:hover { border-color: #0c0c0e; color: #0c0c0e; }
+    .logout-body {
+        padding: 32px;
+    }
+
+        .logout-body p {
+            font-size: 14px;
+            color: #64748b;
+            line-height: 1.7;
+            margin-bottom: 24px;
+        }
+
+    .btn-signout {
+        width: 100%;
+        background: #ef4444;
+        border: none;
+        padding: 12px;
+        border-radius: 10px;
+        color: #fff;
+        font-weight: 700;
+        font-size: 14px;
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        cursor: pointer;
+        transition: 0.2s;
+        box-shadow: 0 4px 14px rgba(239,68,68,0.3);
+        margin-bottom: 10px;
+    }
+
+        .btn-signout:hover {
+            background: #dc2626;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(239,68,68,0.4);
+        }
+
+    .btn-back {
+        width: 100%;
+        background: transparent;
+        border: 1.5px solid #e2e8f0;
+        padding: 11px;
+        border-radius: 10px;
+        color: #64748b;
+        font-weight: 600;
+        font-size: 13.5px;
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        cursor: pointer;
+        transition: 0.18s;
+        text-decoration: none;
+        display: block;
+    }
+
+        .btn-back:hover {
+            border-color: #635bff;
+            color: #635bff;
+            background: rgba(99,91,255,0.04);
+        }
+
+    .btn-signin {
+        width: 100%;
+        background: #635bff;
+        border: none;
+        padding: 12px;
+        border-radius: 10px;
+        color: #fff;
+        font-weight: 700;
+        font-size: 14px;
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        cursor: pointer;
+        transition: 0.2s;
+        box-shadow: 0 4px 14px rgba(99,91,255,0.35);
+        text-decoration: none;
+        display: block;
+        margin-bottom: 10px;
+    }
+
+        .btn-signin:hover {
+            background: #4f46e5;
+            color: #fff;
+            transform: translateY(-1px);
+        }
 
     .footer-note {
-        margin-top: 28px;
-        font-size: 11px;
-        color: #c0bdb7;
-        letter-spacing: 0.04em;
+        padding: 16px;
+        border-top: 1px solid #f1f5f9;
+        font-size: 11.5px;
+        color: #cbd5e1;
     }
 </style>
 
-<div class="logout-card">
+<div class="logout-wrap">
+    <div class="logout-card">
 
-    @if (User.Identity?.IsAuthenticated ?? false)
-    {
-        <div class="logout-icon">
-            <svg viewBox="0 0 24 24">
-                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
-                <polyline points="16 17 21 12 16 7"/>
-                <line x1="21" y1="12" x2="9" y2="12"/>
-            </svg>
-        </div>
+        @if (User.Identity?.IsAuthenticated ?? false)
+        {
+            <div class="logout-header">
+                <div class="logout-icon warning">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                </div>
+                <h2>Sign Out?</h2>
+                <p>You are currently signed in</p>
+            </div>
 
-        <div class="brand">Exam<span>.</span>System</div>
-        <h1 class="logout-title">Sign out?</h1>
-        <p class="logout-desc">You're currently signed in. Click below to securely end your session.</p>
+            <div class="logout-body">
+                <p>Are you sure you want to sign out? You will need to sign in again to access your account.</p>
 
-        <div class="divider"></div>
+                <form asp-area="Identity" asp-page="/Account/Logout"
+                      asp-route-returnUrl="@Url.Page("/", new { area = "" })" method="post">
+                    <button type="submit" class="btn-signout">
+                        <i class="fa-solid fa-right-from-bracket" style="margin-right:7px;"></i>
+                        Yes, Sign Out
+                    </button>
+                </form>
 
-        <form asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/", new { area = "" })" method="post">
-            <button type="submit" class="btn-logout">
-                Sign Out
-                <svg viewBox="0 0 24 24">
-                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
-                    <polyline points="16 17 21 12 16 7"/>
-                    <line x1="21" y1="12" x2="9" y2="12"/>
-                </svg>
-            </button>
-        </form>
+                <a href="/" class="btn-back">
+                    <i class="fa-solid fa-arrow-left" style="margin-right:6px;"></i>
+                    Go Back
+                </a>
+            </div>
+        }
+        else
+        {
+            <div class="logout-header">
+                <div class="logout-icon success">
+                    <i class="fa-solid fa-check"></i>
+                </div>
+                <h2>Signed Out</h2>
+                <p>Your session has been ended securely</p>
+            </div>
 
-        <a href="/" class="btn-home">← Go back</a>
-    }
-    else
-    {
-        <div class="logout-icon success">
-            <svg viewBox="0 0 24 24">
-                <polyline points="20 6 9 17 4 12"/>
-            </svg>
-        </div>
+            <div class="logout-body">
+                <p>You have been successfully signed out. Thank you for using the Exam System.</p>
 
-        <div class="brand">Exam<span>.</span>System</div>
-        <h1 class="logout-title">See you soon</h1>
-        <p class="logout-desc">You've been successfully signed out. Your session has been cleared securely.</p>
+                <a asp-area="Identity" asp-page="/Account/Login" class="btn-signin">
+                    <i class="fa-solid fa-right-to-bracket" style="margin-right:7px;"></i>
+                    Sign Back In
+                </a>
 
-        <div class="divider"></div>
+                <a href="/" class="btn-back">
+                    <i class="fa-solid fa-house" style="margin-right:6px;"></i>
+                    Back to Home
+                </a>
+            </div>
+        }
 
-        <a asp-area="Identity" asp-page="/Account/Login" class="btn-logout">
-            Sign back in
-            <svg viewBox="0 0 24 24" style="transform:rotate(180deg)">
-                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
-                <polyline points="16 17 21 12 16 7"/>
-                <line x1="21" y1="12" x2="9" y2="12"/>
-            </svg>
-        </a>
+        <div class="footer-note">© @DateTime.Now.Year Exam System</div>
 
-        <a href="/" class="btn-home">← Back to home</a>
-    }
-
-    <div class="footer-note">© @DateTime.Now.Year Exam System</div>
+    </div>
 </div>

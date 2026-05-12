@@ -10,253 +10,247 @@
     .admin-wrap {
         display: flex;
         min-height: calc(100vh - 60px);
-        background: #f0f2f8;
+        background: #f1f4fb;
     }
 
-    .sidebar {
+    .dash-sidebar {
         width: 230px;
-        background: #1e2a3a;
-        color: #fff;
+        background: #1a2236;
+        flex-shrink: 0;
+        padding: 24px 0;
         display: flex;
         flex-direction: column;
-        padding: 24px 0;
-        flex-shrink: 0;
     }
 
-    .sidebar-brand {
-        font-size: 16px;
+    .nav-section-label {
+        font-size: 9.5px;
         font-weight: 700;
-        color: #fff;
-        padding: 0 20px 24px;
-        border-bottom: 1px solid rgba(255,255,255,0.08);
-        margin-bottom: 16px;
-    }
-
-        .sidebar-brand span {
-            color: #6366f1;
-        }
-
-    .sidebar-label {
-        font-size: 10px;
-        font-weight: 600;
-        color: rgba(255,255,255,0.35);
+        color: rgba(240,244,255,0.35);
         text-transform: uppercase;
-        letter-spacing: 1.2px;
-        padding: 0 20px;
-        margin: 10px 0 6px;
+        letter-spacing: 1.4px;
+        padding: 14px 20px 6px;
     }
 
-    .sidebar a {
+    .sidebar-link {
         display: flex;
         align-items: center;
-        gap: 10px;
-        padding: 10px 20px;
-        color: rgba(255,255,255,0.7);
+        gap: 11px;
+        padding: 9px 20px;
+        color: rgba(240,244,255,0.62);
         text-decoration: none;
         font-size: 13px;
         font-weight: 500;
         border-left: 3px solid transparent;
-        transition: 0.2s;
+        transition: all 0.18s;
     }
 
-        .sidebar a:hover, .sidebar a.active {
-            background: rgba(99,102,241,0.12);
-            color: #fff;
-            border-left-color: #6366f1;
-        }
+    .sidebar-link:hover {
+        color: #fff;
+        background: rgba(99,91,255,0.1);
+        border-left-color: rgba(99,91,255,0.5);
+    }
 
-        .sidebar a .icon {
-            font-size: 15px;
-            width: 20px;
-            text-align: center;
-        }
+    .sidebar-link.active {
+        color: #fff;
+        background: rgba(99,91,255,0.15);
+        border-left-color: #635bff;
+    }
 
-    .main {
+    .sidebar-link .s-icon {
+        width: 30px;
+        height: 30px;
+        border-radius: 8px;
+        display: grid;
+        place-items: center;
+        font-size: 14px;
+        flex-shrink: 0;
+        background: rgba(255,255,255,0.06);
+        transition: 0.18s;
+    }
+
+    .sidebar-link:hover .s-icon,
+    .sidebar-link.active .s-icon {
+        background: rgba(99,91,255,0.25);
+    }
+
+    .dash-main {
         flex: 1;
         padding: 28px;
         overflow-y: auto;
     }
 
-    .page-title {
-        font-size: 22px;
-        font-weight: 700;
-        color: #111827;
-        margin-bottom: 4px;
+    .page-header {
+        margin-bottom: 24px;
     }
 
-    .page-sub {
+    .page-header h2 {
+        font-size: 22px;
+        font-weight: 800;
+        color: #1a2236;
+        margin: 0 0 4px;
+    }
+
+    .page-header p {
         font-size: 13px;
-        color: #6b7280;
-        margin-bottom: 24px;
+        color: #64748b;
+        margin: 0;
     }
 
     .table-card {
         background: #fff;
-        border: 1px solid #e5e7eb;
-        border-radius: 14px;
+        border: 1px solid #e5e9f2;
+        border-radius: 16px;
         overflow: hidden;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        box-shadow: 0 2px 8px rgba(26,34,54,0.04);
     }
 
-    table {
+    .table-card table {
         width: 100%;
         border-collapse: collapse;
     }
 
-    thead {
-        background: #1e2a3a;
-        color: #fff;
+    .table-card thead {
+        background: #1a2236;
     }
 
-    th, td {
+    .table-card th {
         padding: 13px 16px;
-        font-size: 13px;
+        font-size: 11px;
+        font-weight: 700;
+        color: rgba(240,244,255,0.6);
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
         text-align: left;
     }
 
-    tbody tr {
-        border-bottom: 1px solid #f3f4f6;
-        transition: 0.2s;
+    .table-card td {
+        padding: 14px 16px;
+        font-size: 13px;
+        color: #374151;
+        text-align: left;
     }
 
-        tbody tr:hover {
-            background: #f8f9ff;
-        }
+    .table-card tbody tr {
+        border-bottom: 1px solid #f1f5f9;
+        transition: 0.18s;
+    }
 
-    .badge-green {
-        background: #dcfce7;
-        color: #166534;
-        padding: 4px 10px;
-        border-radius: 999px;
-        font-size: 11px;
+    .table-card tbody tr:last-child {
+        border-bottom: none;
+    }
+
+    .table-card tbody tr:hover {
+        background: #f8f9ff;
+    }
+
+    .user-cell {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .user-avatar {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: rgba(99,91,255,0.12);
+        display: grid;
+        place-items: center;
+        font-size: 12px;
+        font-weight: 800;
+        color: #635bff;
+        flex-shrink: 0;
+    }
+
+    .user-email {
+        font-size: 13px;
         font-weight: 600;
+        color: #1a2236;
     }
 
-    .badge-red {
-        background: #fee2e2;
-        color: #991b1b;
-        padding: 4px 10px;
-        border-radius: 999px;
-        font-size: 11px;
-        font-weight: 600;
+    .badge-green   { background: #dcfce7; color: #166534; padding: 4px 12px; border-radius: 999px; font-size: 11.5px; font-weight: 700; }
+    .badge-red     { background: #fee2e2; color: #991b1b; padding: 4px 12px; border-radius: 999px; font-size: 11.5px; font-weight: 700; }
+    .badge-yellow  { background: #fef9c3; color: #854d0e; padding: 4px 12px; border-radius: 999px; font-size: 11.5px; font-weight: 700; }
+    .badge-gray    { background: #f1f5f9; color: #64748b; padding: 4px 12px; border-radius: 999px; font-size: 11.5px; font-weight: 700; }
+
+    .actions-cell {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        flex-wrap: wrap;
     }
 
-    .badge-yellow {
-        background: #fef9c3;
-        color: #854d0e;
-        padding: 4px 10px;
-        border-radius: 999px;
-        font-size: 11px;
-        font-weight: 600;
-    }
-
-    .badge-gray {
-        background: #f3f4f6;
-        color: #6b7280;
-        padding: 4px 10px;
-        border-radius: 999px;
-        font-size: 11px;
-        font-weight: 600;
-    }
-
-    .btn-grant {
-        display: inline-block;
+    .btn-action {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
         padding: 6px 12px;
         border-radius: 8px;
         font-size: 12px;
-        font-weight: 600;
+        font-weight: 700;
         text-decoration: none;
-        background: #10b981;
         color: #fff;
-        margin-right: 6px;
-        transition: 0.2s;
+        transition: 0.18s;
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        white-space: nowrap;
     }
 
-        .btn-grant:hover {
-            background: #059669;
-            color: #fff;
-        }
+    .btn-grant  { background: #10b981; }
+    .btn-grant:hover  { background: #059669; color: #fff; }
 
-    .btn-revoke {
-        display: inline-block;
-        padding: 6px 12px;
-        border-radius: 8px;
-        font-size: 12px;
-        font-weight: 600;
-        text-decoration: none;
-        background: #ef4444;
-        color: #fff;
-        margin-right: 6px;
-        transition: 0.2s;
-    }
+    .btn-revoke { background: #ef4444; }
+    .btn-revoke:hover { background: #dc2626; color: #fff; }
 
-        .btn-revoke:hover {
-            background: #dc2626;
-            color: #fff;
-        }
-
-    .btn-view {
-        display: inline-block;
-        padding: 6px 12px;
-        border-radius: 8px;
-        font-size: 12px;
-        font-weight: 600;
-        text-decoration: none;
-        background: #6366f1;
-        color: #fff;
-        transition: 0.2s;
-    }
-
-        .btn-view:hover {
-            background: #4f46e5;
-            color: #fff;
-        }
+    .btn-view   { background: #635bff; }
+    .btn-view:hover   { background: #4f46e5; color: #fff; }
 </style>
 
 <div class="admin-wrap">
 
-    <!-- SIDEBAR -->
-    <div class="sidebar">
-        <div class="sidebar-brand">TVDE <span>Admin</span></div>
-
-        <div class="sidebar-label">Main</div>
-        <a href="/Admin/Dashboard">
-            <span class="icon">📊</span> Dashboard
+    <div class="dash-sidebar">
+        <div class="nav-section-label">Main</div>
+        <a class="sidebar-link" href="/Admin/Dashboard">
+            <span class="s-icon">📊</span><span>Dashboard</span>
         </a>
-
-        <div class="sidebar-label">Users</div>
-        <a href="/AdminUser" class="active">
-            <span class="icon">👥</span> All Users
+        <div class="nav-section-label">Users</div>
+        <a class="sidebar-link active" href="/AdminUser">
+            <span class="s-icon">👥</span><span>All Users</span>
         </a>
-
-        <div class="sidebar-label">Questions</div>
-        <a href="/Admin/Questions?moduleId=1">
-            <span class="icon">📝</span> Module 1
+        <div class="nav-section-label">Questions</div>
+        <a class="sidebar-link" href="/Admin/Questions?moduleId=1">
+            <span class="s-icon">📝</span><span>Module 1</span>
         </a>
-        <a href="/Admin/Questions?moduleId=2">
-            <span class="icon">📝</span> Module 2
+        <a class="sidebar-link" href="/Admin/Questions?moduleId=2">
+            <span class="s-icon">📝</span><span>Module 2</span>
         </a>
-        <a href="/Admin/Questions?moduleId=3">
-            <span class="icon">📝</span> Module 3
+        <a class="sidebar-link" href="/Admin/Questions?moduleId=3">
+            <span class="s-icon">📝</span><span>Module 3</span>
         </a>
-
-        <div class="sidebar-label">Reports</div>
-        <a href="/AdminResult">
-            <span class="icon">📈</span> Exam Results
+        <div class="nav-section-label">Sessions</div>
+        <a class="sidebar-link" href="/AdminSession">
+            <span class="s-icon">🕐</span><span>Exam Sessions</span>
+        </a>
+        <div class="nav-section-label">Reports</div>
+        <a class="sidebar-link" href="/AdminResult">
+            <span class="s-icon">📈</span><span>Exam Results</span>
         </a>
     </div>
 
-    <!-- MAIN -->
-    <div class="main">
+    <div class="dash-main">
 
-        <div class="page-title">👥 All Users</div>
-        <div class="page-sub">Manage registered users and exam permissions</div>
+        <div class="page-header">
+            <h2>
+                <i class="fa-solid fa-users" style="color:#635bff;margin-right:8px;"></i>
+                All Users
+            </h2>
+            <p>Manage registered users and exam permissions</p>
+        </div>
 
         <div class="table-card">
             <table>
                 <thead>
                     <tr>
-                        <th>Email</th>
+                        <th>User</th>
                         <th>Username</th>
                         <th>Request Status</th>
                         <th>Exam Permission</th>
@@ -267,12 +261,18 @@
                     @foreach (var user in Model)
                     {
                         var perm = permissions?.FirstOrDefault(p => p.UserId == user.Id);
-                        var req = requests?.FirstOrDefault(r => r.UserId == user.Id);
+                        var req  = requests?.FirstOrDefault(r => r.UserId == user.Id);
 
                         <tr>
-                            <td>@user.Email</td>
-                            <td>@user.UserName</td>
-
+                            <td>
+                                <div class="user-cell">
+                                    <div class="user-avatar">
+                                        @user.Email?.Substring(0, 1).ToUpper()
+                                    </div>
+                                    <span class="user-email">@user.Email</span>
+                                </div>
+                            </td>
+                            <td style="color:#64748b;">@user.UserName</td>
                             <td>
                                 @if (req == null)
                                 {
@@ -291,7 +291,6 @@
                                     <span class="badge-red">❌ Rejected</span>
                                 }
                             </td>
-
                             <td>
                                 @if (perm != null && perm.IsPermitted)
                                 {
@@ -302,23 +301,24 @@
                                     <span class="badge-red">🚫 Not Permitted</span>
                                 }
                             </td>
-
                             <td>
-                                @if (perm == null || !perm.IsPermitted)
-                                {
-                                    <a class="btn-grant" href="/AdminUser/GrantPermission?id=@user.Id">
-                                        ✅ Grant
+                                <div class="actions-cell">
+                                    @if (perm == null || !perm.IsPermitted)
+                                    {
+                                        <a class="btn-action btn-grant" href="/AdminUser/GrantPermission?id=@user.Id">
+                                            <i class="fa-solid fa-circle-check"></i> Grant
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                        <a class="btn-action btn-revoke" href="/AdminUser/RevokePermission?id=@user.Id">
+                                            <i class="fa-solid fa-ban"></i> Revoke
+                                        </a>
+                                    }
+                                    <a class="btn-action btn-view" href="/AdminUser/Details/@user.Id">
+                                        <i class="fa-solid fa-eye"></i> View
                                     </a>
-                                }
-                                else
-                                {
-                                    <a class="btn-revoke" href="/AdminUser/RevokePermission?id=@user.Id">
-                                        🚫 Revoke
-                                    </a>
-                                }
-                                <a class="btn-view" href="/AdminUser/Details/@user.Id">
-                                    View
-                                </a>
+                                </div>
                             </td>
                         </tr>
                     }

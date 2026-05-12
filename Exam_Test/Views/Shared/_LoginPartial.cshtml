@@ -2,92 +2,47 @@
 @inject SignInManager<IdentityUser> SignInManager
 @inject UserManager<IdentityUser> UserManager
 
-<style>
-    /* MATCH YOUR NAV BUTTON STYLE */
-    .auth-btn {
-        display: inline-block;
-        padding: 9px 14px;
-        margin-left: 8px;
-        border-radius: 10px;
-        font-size: 13px;
-        font-weight: 500;
-        text-decoration: none;
-        border: none;
-        cursor: pointer;
-        transition: 0.2s ease;
-    }
+@if (SignInManager.IsSignedIn(User))
+{
+    <div style="display:flex;align-items:center;gap:10px;">
 
-    /* LOGIN / REGISTER (same as nav-btn but slightly soft) */
-    .auth-link {
-        background: #4f46e5;
-        color: #fff !important;
-    }
+        <!-- USER BADGE -->
+        <div style="display:flex;align-items:center;gap:8px;">
+            <div style="width:32px;height:32px;border-radius:50%;background:var(--accent);display:grid;place-items:center;font-size:13px;font-weight:700;color:#fff;">
+                @UserManager.GetUserName(User)?.Substring(0, 1).ToUpper()
+            </div>
+            <span style="font-size:13px;font-weight:600;color:rgba(255,255,255,0.8);">
+                @UserManager.GetUserName(User)
+            </span>
+        </div>
 
-        .auth-link:hover {
-            background: #3730a3;
-            color: #fff !important;
-        }
+        <div style="width:1px;height:22px;background:rgba(255,255,255,0.1);"></div>
 
-    /* LOGOUT BUTTON */
-    .auth-logout {
-        background: #4f46e5;
-        color: #fff !important;
-    }
+        <!-- LOGOUT -->
+        <form asp-area="Identity"
+              asp-page="/Account/Logout"
+              asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })"
+              method="post"
+              style="margin:0;">
+            <button type="submit" class="topbar-btn" style="color:rgba(255,100,100,0.85) !important;border-color:rgba(255,100,100,0.2);">
+                <i class="fa-solid fa-right-from-bracket"></i> Sign Out
+            </button>
+        </form>
 
-        .auth-logout:hover {
-            background: #3730a3;
-            color: #fff !important;
-        }
+    </div>
+}
+else
+{
+    <div style="display:flex;align-items:center;gap:8px;">
 
-    /* text cleanup */
-    .auth-text {
-        color: #111827;
-        font-weight: 500;
-        margin-right: 10px;
-        font-size: 14px;
-    }
+        <a class="topbar-btn" asp-area="Identity" asp-page="/Account/Register">
+            <i class="fa-solid fa-user-plus"></i> Register
+        </a>
 
-    .auth-wrap {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-    }
-</style>
+        <a class="topbar-btn" asp-area="Identity" asp-page="/Account/Login"
+               style="background:var(--accent);border-color:var(--accent);color:#fff !important;box-shadow:0 3px 10px rgba(99,91,255,0.35);">
+            <i class="fa-solid fa-right-to-bracket"></i> Login
+        </a>
 
-<ul class="navbar-nav">
-
-    @if (SignInManager.IsSignedIn(User))
-    {
-        <li class="nav-item auth-wrap">
-
-            <!-- LOGOUT ONLY (NO HELLO TEXT) -->
-            <form asp-area="Identity"
-                  asp-page="/Account/Logout"
-                  asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })"
-                  method="post"
-                  class="d-inline">
-
-                <button type="submit" class="auth-btn auth-logout">
-                    Logout
-                </button>
-
-            </form>
-
-        </li>
-    }
-    else
-    {
-        <li class="nav-item auth-wrap">
-
-            <a class="auth-btn auth-link" asp-area="Identity" asp-page="/Account/Register">
-                Register
-            </a>
-
-            <a class="auth-btn auth-link" asp-area="Identity" asp-page="/Account/Login">
-                Login
-            </a>
-
-        </li>
-    }
-
-</ul>
+    </div>
+}
