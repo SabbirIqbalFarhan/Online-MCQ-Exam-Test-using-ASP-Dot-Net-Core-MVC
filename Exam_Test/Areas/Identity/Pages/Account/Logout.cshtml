@@ -4,18 +4,226 @@
     ViewData["Title"] = "Log out";
 }
 
-<header>
-    <h1>@ViewData["Title"]</h1>
-    @{
-        if (User.Identity?.IsAuthenticated ?? false)
-        {
-            <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/", new { area = "" })" method="post">
-                <button type="submit" class="nav-link btn btn-link text-dark">Click here to Logout</button>
-            </form>
-        }
-        else
-        {
-            <p>You have successfully logged out of the application.</p>
-        }
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+
+<style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+        font-family: 'DM Sans', sans-serif;
+        background: #f5f3ef;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
     }
-</header>
+
+    body::before {
+        content: '';
+        position: fixed;
+        inset: 0;
+        background-image:
+            linear-gradient(rgba(0,0,0,0.03) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(0,0,0,0.03) 1px, transparent 1px);
+        background-size: 32px 32px;
+        pointer-events: none;
+        z-index: 0;
+    }
+
+    .logout-card {
+        position: relative;
+        z-index: 1;
+        background: #fff;
+        border: 1px solid #dddbd6;
+        border-radius: 12px;
+        padding: 52px 48px;
+        width: 100%;
+        max-width: 440px;
+        text-align: center;
+    }
+
+    .logout-icon {
+        width: 56px;
+        height: 56px;
+        background: #0c0c0e;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 28px;
+    }
+
+    .logout-icon svg {
+        width: 22px;
+        height: 22px;
+        stroke: #fff;
+        fill: none;
+        stroke-width: 2;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+    }
+
+    .logout-icon.success {
+        background: #f5f3ef;
+        border: 1px solid #dddbd6;
+    }
+
+    .logout-icon.success svg { stroke: #0c0c0e; }
+
+    .brand {
+        font-family: 'Playfair Display', serif;
+        font-size: 13px;
+        color: #8a8d97;
+        letter-spacing: 0.08em;
+        margin-bottom: 10px;
+    }
+
+    .brand span { color: #e8845c; }
+
+    .logout-title {
+        font-family: 'Playfair Display', serif;
+        font-size: 26px;
+        color: #0c0c0e;
+        font-weight: 700;
+        margin-bottom: 10px;
+    }
+
+    .logout-desc {
+        font-size: 13.5px;
+        color: #8a8d97;
+        line-height: 1.65;
+        margin-bottom: 36px;
+    }
+
+    .divider {
+        width: 36px;
+        height: 1px;
+        background: #e8845c;
+        margin: 0 auto 28px;
+    }
+
+    .btn-logout {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        width: 100%;
+        height: 48px;
+        background: #0c0c0e;
+        border: none;
+        border-radius: 6px;
+        color: #fff;
+        font-family: 'DM Sans', sans-serif;
+        font-size: 14px;
+        font-weight: 500;
+        letter-spacing: 0.04em;
+        cursor: pointer;
+        text-decoration: none;
+        transition: background 0.2s, transform 0.15s;
+    }
+
+    .btn-logout:hover { background: #1e1e22; color: #fff; }
+    .btn-logout:active { transform: scale(0.99); }
+
+    .btn-logout svg {
+        width: 16px;
+        height: 16px;
+        stroke: #fff;
+        fill: none;
+        stroke-width: 2;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        opacity: 0.5;
+    }
+
+    .btn-home {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        width: 100%;
+        height: 44px;
+        background: transparent;
+        border: 1px solid #dddbd6;
+        border-radius: 6px;
+        color: #4a4d57;
+        font-family: 'DM Sans', sans-serif;
+        font-size: 13px;
+        cursor: pointer;
+        text-decoration: none;
+        margin-top: 10px;
+        transition: border-color 0.2s, color 0.2s;
+    }
+
+    .btn-home:hover { border-color: #0c0c0e; color: #0c0c0e; }
+
+    .footer-note {
+        margin-top: 28px;
+        font-size: 11px;
+        color: #c0bdb7;
+        letter-spacing: 0.04em;
+    }
+</style>
+
+<div class="logout-card">
+
+    @if (User.Identity?.IsAuthenticated ?? false)
+    {
+        <div class="logout-icon">
+            <svg viewBox="0 0 24 24">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                <polyline points="16 17 21 12 16 7"/>
+                <line x1="21" y1="12" x2="9" y2="12"/>
+            </svg>
+        </div>
+
+        <div class="brand">Exam<span>.</span>System</div>
+        <h1 class="logout-title">Sign out?</h1>
+        <p class="logout-desc">You're currently signed in. Click below to securely end your session.</p>
+
+        <div class="divider"></div>
+
+        <form asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/", new { area = "" })" method="post">
+            <button type="submit" class="btn-logout">
+                Sign Out
+                <svg viewBox="0 0 24 24">
+                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                    <polyline points="16 17 21 12 16 7"/>
+                    <line x1="21" y1="12" x2="9" y2="12"/>
+                </svg>
+            </button>
+        </form>
+
+        <a href="/" class="btn-home">← Go back</a>
+    }
+    else
+    {
+        <div class="logout-icon success">
+            <svg viewBox="0 0 24 24">
+                <polyline points="20 6 9 17 4 12"/>
+            </svg>
+        </div>
+
+        <div class="brand">Exam<span>.</span>System</div>
+        <h1 class="logout-title">See you soon</h1>
+        <p class="logout-desc">You've been successfully signed out. Your session has been cleared securely.</p>
+
+        <div class="divider"></div>
+
+        <a asp-area="Identity" asp-page="/Account/Login" class="btn-logout">
+            Sign back in
+            <svg viewBox="0 0 24 24" style="transform:rotate(180deg)">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                <polyline points="16 17 21 12 16 7"/>
+                <line x1="21" y1="12" x2="9" y2="12"/>
+            </svg>
+        </a>
+
+        <a href="/" class="btn-home">← Back to home</a>
+    }
+
+    <div class="footer-note">© @DateTime.Now.Year Exam System</div>
+</div>

@@ -7,10 +7,68 @@
 }
 
 <style>
-    .page {
-        max-width: 1100px;
-        margin: auto;
-        padding: 30px 20px;
+    .admin-wrap {
+        display: flex;
+        min-height: calc(100vh - 60px);
+        background: #f0f2f8;
+    }
+
+    .sidebar {
+        width: 230px;
+        background: #1e2a3a;
+        color: #fff;
+        display: flex;
+        flex-direction: column;
+        padding: 24px 0;
+        flex-shrink: 0;
+    }
+
+    .sidebar-brand {
+        font-size: 16px;
+        font-weight: 700;
+        color: #fff;
+        padding: 0 20px 24px;
+        border-bottom: 1px solid rgba(255,255,255,0.08);
+        margin-bottom: 16px;
+    }
+
+    .sidebar-brand span { color: #6366f1; }
+
+    .sidebar-label {
+        font-size: 10px;
+        font-weight: 600;
+        color: rgba(255,255,255,0.35);
+        text-transform: uppercase;
+        letter-spacing: 1.2px;
+        padding: 0 20px;
+        margin: 10px 0 6px;
+    }
+
+    .sidebar a {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 20px;
+        color: rgba(255,255,255,0.7);
+        text-decoration: none;
+        font-size: 13px;
+        font-weight: 500;
+        border-left: 3px solid transparent;
+        transition: 0.2s;
+    }
+
+    .sidebar a:hover, .sidebar a.active {
+        background: rgba(99,102,241,0.12);
+        color: #fff;
+        border-left-color: #6366f1;
+    }
+
+    .sidebar a .icon { font-size: 15px; width: 20px; text-align: center; }
+
+    .main {
+        flex: 1;
+        padding: 28px;
+        overflow-y: auto;
     }
 
     .topbar {
@@ -20,11 +78,12 @@
         margin-bottom: 16px;
     }
 
-        .topbar h2 {
-            font-size: 20px;
-            font-weight: 700;
-            margin: 0;
-        }
+    .topbar h2 {
+        font-size: 20px;
+        font-weight: 700;
+        margin: 0;
+        color: #111827;
+    }
 
     .meta {
         display: flex;
@@ -52,10 +111,10 @@
         font-weight: 600;
     }
 
-        .count-badge.full {
-            background: #fef2f2;
-            color: #991b1b;
-        }
+    .count-badge.full {
+        background: #fef2f2;
+        color: #991b1b;
+    }
 
     .progress-wrap {
         background: #e5e7eb;
@@ -71,9 +130,7 @@
         background: #4f46e5;
     }
 
-        .progress-fill.full {
-            background: #ef4444;
-        }
+    .progress-fill.full { background: #ef4444; }
 
     .add-btn {
         display: inline-block;
@@ -88,14 +145,12 @@
         white-space: nowrap;
     }
 
-        .add-btn:hover {
-            background: #3730a3;
-        }
+    .add-btn:hover { background: #3730a3; color: #fff; }
 
-        .add-btn.disabled {
-            background: #9ca3af;
-            pointer-events: none;
-        }
+    .add-btn.disabled {
+        background: #9ca3af;
+        pointer-events: none;
+    }
 
     .limit-msg {
         background: #fef2f2;
@@ -107,14 +162,12 @@
         margin-bottom: 14px;
     }
 
-    /* GRID - 5 per row */
     .grid {
         display: grid;
         grid-template-columns: repeat(5, 1fr);
         gap: 10px;
     }
 
-    /* COMPACT CARD */
     .card {
         background: #fff;
         border: 1px solid #e5e7eb;
@@ -126,15 +179,12 @@
         flex-direction: column;
     }
 
-        .card:hover {
-            box-shadow: 0 6px 18px rgba(0,0,0,0.09);
-            transform: translateY(-2px);
-        }
-
-    .card-top {
-        padding: 10px;
-        flex: 1;
+    .card:hover {
+        box-shadow: 0 6px 18px rgba(0,0,0,0.09);
+        transform: translateY(-2px);
     }
+
+    .card-top { padding: 10px; flex: 1; }
 
     .serial-row {
         display: flex;
@@ -208,14 +258,13 @@
         text-overflow: ellipsis;
     }
 
-        .opt.correct {
-            background: #dcfce7;
-            border-color: #bbf7d0;
-            color: #166534;
-            font-weight: 600;
-        }
+    .opt.correct {
+        background: #dcfce7;
+        border-color: #bbf7d0;
+        color: #166534;
+        font-weight: 600;
+    }
 
-    /* ACTION ROW */
     .card-actions {
         display: flex;
         border-top: 1px solid #e5e7eb;
@@ -232,23 +281,11 @@
         color: #fff;
     }
 
-    .btn-edit {
-        background: #0891b2;
-    }
+    .btn-edit { background: #0891b2; }
+    .btn-edit:hover { background: #0e7490; color: #fff; }
 
-        .btn-edit:hover {
-            background: #0e7490;
-            color: #fff;
-        }
-
-    .btn-delete {
-        background: #f97316;
-    }
-
-        .btn-delete:hover {
-            background: #ea580c;
-            color: #fff;
-        }
+    .btn-delete { background: #f97316; }
+    .btn-delete:hover { background: #ea580c; color: #fff; }
 
     .empty {
         text-align: center;
@@ -258,88 +295,116 @@
     }
 </style>
 
-<div class="page">
+<div class="admin-wrap">
 
-    <div class="topbar">
-        <div>
-            <h2>Questions</h2>
-            <div class="meta">
-                <span class="module-badge">Module @ViewBag.ModuleId</span>
-                <span class="count-badge @(count >= 30 ? "full" : "")">
-                    @count / 30
-                </span>
-                <div class="progress-wrap">
-                    <div class="progress-fill @(count >= 30 ? "full" : "")"
-                         style="width: @(count * 100 / 30)%"></div>
-                </div>
-            </div>
-        </div>
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+        <div class="sidebar-brand">TVDE <span>Admin</span></div>
 
-        <a class="add-btn @(!canAdd ? "disabled" : "")"
-               href="/Admin/AddQuestion?moduleId=@ViewBag.ModuleId">
-            + Add Question
+        <div class="sidebar-label">Main</div>
+        <a href="/Admin/Dashboard">
+            <span class="icon">📊</span> Dashboard
+        </a>
+
+        <div class="sidebar-label">Users</div>
+        <a href="/AdminUser">
+            <span class="icon">👥</span> All Users
+        </a>
+
+        <div class="sidebar-label">Questions</div>
+        <a href="/Admin/Questions?moduleId=1" class="@(ViewBag.ModuleId == 1 ? "active" : "")">
+            <span class="icon">📝</span> Module 1
+        </a>
+        <a href="/Admin/Questions?moduleId=2" class="@(ViewBag.ModuleId == 2 ? "active" : "")">
+            <span class="icon">📝</span> Module 2
+        </a>
+        <a href="/Admin/Questions?moduleId=3" class="@(ViewBag.ModuleId == 3 ? "active" : "")">
+            <span class="icon">📝</span> Module 3
+        </a>
+
+        <div class="sidebar-label">Reports</div>
+        <a href="/AdminResult">
+            <span class="icon">📈</span> Exam Results
         </a>
     </div>
 
-    @if (count >= 30)
-    {
-        <div class="limit-msg">
-            ⚠️ Maximum 30 questions reached. Delete one to add a new question.
-        </div>
-    }
+    <!-- MAIN -->
+    <div class="main">
 
-    @if (Model != null && Model.Count > 0)
-    {
-        <div class="grid">
-            @{
-                int serial = 1;
-            }
-            @foreach (var q in Model)
-            {
-                <div class="card">
-
-                    <div class="card-top">
-
-                        <div class="serial-row">
-                            <div class="serial">@serial</div>
-                            <span class="correct-pill">Ans: @q.CorrectAnswer</span>
-                        </div>
-
-                        @if (!string.IsNullOrEmpty(q.ImagePath))
-                        {
-                            <div class="q-image">
-                                <img src="~/images/@q.ImagePath" />
-                            </div>
-                        }
-
-                        @if (!string.IsNullOrEmpty(q.QuestionText))
-                        {
-                            <div class="q-text">@q.QuestionText</div>
-                        }
-
-                        <div class="options-list">
-                            <div class="opt @(q.CorrectAnswer == "A" ? "correct" : "")">A. @q.OptionA</div>
-                            <div class="opt @(q.CorrectAnswer == "B" ? "correct" : "")">B. @q.OptionB</div>
-                            <div class="opt @(q.CorrectAnswer == "C" ? "correct" : "")">C. @q.OptionC</div>
-                            <div class="opt @(q.CorrectAnswer == "D" ? "correct" : "")">D. @q.OptionD</div>
-                        </div>
-
+        <div class="topbar">
+            <div>
+                <h2>Questions</h2>
+                <div class="meta">
+                    <span class="module-badge">Module @ViewBag.ModuleId</span>
+                    <span class="count-badge @(count >= 30 ? "full" : "")">
+                        @count / 30
+                    </span>
+                    <div class="progress-wrap">
+                        <div class="progress-fill @(count >= 30 ? "full" : "")"
+                             style="width: @(count * 100 / 30)%"></div>
                     </div>
-
-                    <div class="card-actions">
-                        <a class="btn btn-edit" href="/Admin/EditQuestion/@q.Id">Edit</a>
-                        <a class="btn btn-delete" href="/Admin/DeleteQuestion/@q.Id">Delete</a>
-                    </div>
-
                 </div>
+            </div>
 
-                serial++;
-            }
+            <a class="add-btn @(!canAdd ? "disabled" : "")"
+               href="/Admin/AddQuestion?moduleId=@ViewBag.ModuleId">
+                + Add Question
+            </a>
         </div>
-    }
-    else
-    {
-        <div class="empty">📭 No questions added yet for this module.</div>
-    }
 
+        @if (count >= 30)
+        {
+            <div class="limit-msg">
+                ⚠️ Maximum 30 questions reached. Delete one to add a new question.
+            </div>
+        }
+
+        @if (Model != null && Model.Count > 0)
+        {
+            <div class="grid">
+                @{int serial = 1;}
+                @foreach (var q in Model)
+                {
+                    <div class="card">
+                        <div class="card-top">
+                            <div class="serial-row">
+                                <div class="serial">@serial</div>
+                                <span class="correct-pill">Ans: @q.CorrectAnswer</span>
+                            </div>
+
+                            @if (!string.IsNullOrEmpty(q.ImagePath))
+                            {
+                                <div class="q-image">
+                                    <img src="~/images/@q.ImagePath" />
+                                </div>
+                            }
+
+                            @if (!string.IsNullOrEmpty(q.QuestionText))
+                            {
+                                <div class="q-text">@q.QuestionText</div>
+                            }
+
+                            <div class="options-list">
+                                <div class="opt @(q.CorrectAnswer == "A" ? "correct" : "")">A. @q.OptionA</div>
+                                <div class="opt @(q.CorrectAnswer == "B" ? "correct" : "")">B. @q.OptionB</div>
+                                <div class="opt @(q.CorrectAnswer == "C" ? "correct" : "")">C. @q.OptionC</div>
+                                <div class="opt @(q.CorrectAnswer == "D" ? "correct" : "")">D. @q.OptionD</div>
+                            </div>
+                        </div>
+
+                        <div class="card-actions">
+                            <a class="btn btn-edit" href="/Admin/EditQuestion/@q.Id">Edit</a>
+                            <a class="btn btn-delete" href="/Admin/DeleteQuestion/@q.Id">Delete</a>
+                        </div>
+                    </div>
+                    serial++;
+                }
+            </div>
+        }
+        else
+        {
+            <div class="empty">📭 No questions added yet for this module.</div>
+        }
+
+    </div>
 </div>

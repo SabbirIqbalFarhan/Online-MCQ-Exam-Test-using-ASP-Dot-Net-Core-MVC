@@ -20,10 +20,21 @@ namespace Exam_Test.Controllers
         }
 
         // =========================
-        // START EXAM
+        // START EXAM - CHECK PERMISSION
         // =========================
-        public IActionResult Start(int moduleId)
+        public async Task<IActionResult> Start(int moduleId)
         {
+            var user = await _userManager.GetUserAsync(User);
+
+            var permission = _context.ExamPermissions
+                .FirstOrDefault(p => p.UserId == user.Id && p.IsPermitted == true);
+
+            if (permission == null)
+            {
+                TempData["Error"] = "You do not have permission to take the exam. Please request access from your dashboard.";
+                return RedirectToAction("Dashboard", "User");
+            }
+
             var questions = _context.Questions
                 .Where(q => q.ModuleId == moduleId)
                 .Take(30)
@@ -41,6 +52,15 @@ namespace Exam_Test.Controllers
         public async Task<IActionResult> Submit(int moduleId, Dictionary<int, string> answers)
         {
             var user = await _userManager.GetUserAsync(User);
+
+            // Double check permission on submit too
+            var permission = _context.ExamPermissions
+                .FirstOrDefault(p => p.UserId == user.Id && p.IsPermitted == true);
+
+            if (permission == null)
+            {
+                return RedirectToAction("Dashboard", "User");
+            }
 
             var questions = await _context.Questions
                 .Where(q => q.ModuleId == moduleId)
@@ -64,17 +84,15 @@ namespace Exam_Test.Controllers
                 {
                     UserId = user.Id,
                     QuestionId = q.Id,
-                    Question = q, // 🔥 ADD THIS
+                    Question = q,
                     SelectedAnswer = selected,
                     IsCorrect = isCorrect,
                     ModuleId = moduleId
                 });
             }
 
-            // Save answers
             _context.UserAnswers.AddRange(userAnswers);
 
-            // Save result
             var result = new Result
             {
                 UserId = user.Id,
@@ -85,7 +103,6 @@ namespace Exam_Test.Controllers
             };
 
             _context.Results.Add(result);
-
             await _context.SaveChangesAsync();
 
             ViewBag.Correct = correct;
@@ -95,6 +112,9 @@ namespace Exam_Test.Controllers
             return View("Result");
         }
 
+        // =========================
+        // REVIEW ANSWERS
+        // =========================
         public async Task<IActionResult> Review(int moduleId, bool onlyWrong = false)
         {
             var user = await _userManager.GetUserAsync(User);

@@ -2,45 +2,100 @@
 
 @{
     ViewData["Title"] = "Users";
+    var permissions = ViewBag.Permissions as List<Exam_Test.Models.ExamPermission>;
+    var requests = ViewBag.Requests as List<Exam_Test.Models.ExamRequest>;
 }
 
 <style>
-    body {
-        margin: 0;
-        font-family: "Segoe UI", Roboto, Arial, sans-serif;
-        background: #f4f6ff;
+    .admin-wrap {
+        display: flex;
+        min-height: calc(100vh - 60px);
+        background: #f0f2f8;
+    }
+
+    .sidebar {
+        width: 230px;
+        background: #1e2a3a;
+        color: #fff;
+        display: flex;
+        flex-direction: column;
+        padding: 24px 0;
+        flex-shrink: 0;
+    }
+
+    .sidebar-brand {
+        font-size: 16px;
+        font-weight: 700;
+        color: #fff;
+        padding: 0 20px 24px;
+        border-bottom: 1px solid rgba(255,255,255,0.08);
+        margin-bottom: 16px;
+    }
+
+        .sidebar-brand span {
+            color: #6366f1;
+        }
+
+    .sidebar-label {
+        font-size: 10px;
+        font-weight: 600;
+        color: rgba(255,255,255,0.35);
+        text-transform: uppercase;
+        letter-spacing: 1.2px;
+        padding: 0 20px;
+        margin: 10px 0 6px;
+    }
+
+    .sidebar a {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 20px;
+        color: rgba(255,255,255,0.7);
+        text-decoration: none;
+        font-size: 13px;
+        font-weight: 500;
+        border-left: 3px solid transparent;
+        transition: 0.2s;
+    }
+
+        .sidebar a:hover, .sidebar a.active {
+            background: rgba(99,102,241,0.12);
+            color: #fff;
+            border-left-color: #6366f1;
+        }
+
+        .sidebar a .icon {
+            font-size: 15px;
+            width: 20px;
+            text-align: center;
+        }
+
+    .main {
+        flex: 1;
+        padding: 28px;
+        overflow-y: auto;
+    }
+
+    .page-title {
+        font-size: 22px;
+        font-weight: 700;
         color: #111827;
+        margin-bottom: 4px;
     }
 
-    .page {
-        max-width: 1000px;
-        margin: auto;
-        padding: 40px 20px;
+    .page-sub {
+        font-size: 13px;
+        color: #6b7280;
+        margin-bottom: 24px;
     }
 
-    .header {
-        margin-bottom: 20px;
-    }
-
-        .header h2 {
-            font-size: 22px;
-            font-weight: 700;
-            margin: 0;
-        }
-
-        .header p {
-            font-size: 13px;
-            color: #6b7280;
-            margin-top: 5px;
-        }
-
-    /* TABLE CARD */
-    .card {
+    .table-card {
         background: #fff;
         border: 1px solid #e5e7eb;
-        border-radius: 16px;
+        border-radius: 14px;
         overflow: hidden;
-        box-shadow: 0 8px 24px rgba(0,0,0,0.04);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.04);
     }
 
     table {
@@ -49,18 +104,18 @@
     }
 
     thead {
-        background: #4f46e5;
+        background: #1e2a3a;
         color: #fff;
     }
 
     th, td {
-        padding: 14px 16px;
-        text-align: left;
+        padding: 13px 16px;
         font-size: 13px;
+        text-align: left;
     }
 
     tbody tr {
-        border-bottom: 1px solid #e5e7eb;
+        border-bottom: 1px solid #f3f4f6;
         transition: 0.2s;
     }
 
@@ -68,61 +123,208 @@
             background: #f8f9ff;
         }
 
-    /* BUTTON */
-    .btn {
+    .badge-green {
+        background: #dcfce7;
+        color: #166534;
+        padding: 4px 10px;
+        border-radius: 999px;
+        font-size: 11px;
+        font-weight: 600;
+    }
+
+    .badge-red {
+        background: #fee2e2;
+        color: #991b1b;
+        padding: 4px 10px;
+        border-radius: 999px;
+        font-size: 11px;
+        font-weight: 600;
+    }
+
+    .badge-yellow {
+        background: #fef9c3;
+        color: #854d0e;
+        padding: 4px 10px;
+        border-radius: 999px;
+        font-size: 11px;
+        font-weight: 600;
+    }
+
+    .badge-gray {
+        background: #f3f4f6;
+        color: #6b7280;
+        padding: 4px 10px;
+        border-radius: 999px;
+        font-size: 11px;
+        font-weight: 600;
+    }
+
+    .btn-grant {
         display: inline-block;
-        padding: 7px 12px;
+        padding: 6px 12px;
         border-radius: 8px;
         font-size: 12px;
-        font-weight: 500;
+        font-weight: 600;
         text-decoration: none;
-        background: #4f46e5;
+        background: #10b981;
+        color: #fff;
+        margin-right: 6px;
+        transition: 0.2s;
+    }
+
+        .btn-grant:hover {
+            background: #059669;
+            color: #fff;
+        }
+
+    .btn-revoke {
+        display: inline-block;
+        padding: 6px 12px;
+        border-radius: 8px;
+        font-size: 12px;
+        font-weight: 600;
+        text-decoration: none;
+        background: #ef4444;
+        color: #fff;
+        margin-right: 6px;
+        transition: 0.2s;
+    }
+
+        .btn-revoke:hover {
+            background: #dc2626;
+            color: #fff;
+        }
+
+    .btn-view {
+        display: inline-block;
+        padding: 6px 12px;
+        border-radius: 8px;
+        font-size: 12px;
+        font-weight: 600;
+        text-decoration: none;
+        background: #6366f1;
         color: #fff;
         transition: 0.2s;
     }
 
-        .btn:hover {
-            background: #3730a3;
+        .btn-view:hover {
+            background: #4f46e5;
+            color: #fff;
         }
-
 </style>
 
-<div class="page">
+<div class="admin-wrap">
 
-    <div class="header">
-        <h2>👥 Users List</h2>
-        <p>Manage all registered users</p>
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+        <div class="sidebar-brand">TVDE <span>Admin</span></div>
+
+        <div class="sidebar-label">Main</div>
+        <a href="/Admin/Dashboard">
+            <span class="icon">📊</span> Dashboard
+        </a>
+
+        <div class="sidebar-label">Users</div>
+        <a href="/AdminUser" class="active">
+            <span class="icon">👥</span> All Users
+        </a>
+
+        <div class="sidebar-label">Questions</div>
+        <a href="/Admin/Questions?moduleId=1">
+            <span class="icon">📝</span> Module 1
+        </a>
+        <a href="/Admin/Questions?moduleId=2">
+            <span class="icon">📝</span> Module 2
+        </a>
+        <a href="/Admin/Questions?moduleId=3">
+            <span class="icon">📝</span> Module 3
+        </a>
+
+        <div class="sidebar-label">Reports</div>
+        <a href="/AdminResult">
+            <span class="icon">📈</span> Exam Results
+        </a>
     </div>
 
-    <div class="card">
+    <!-- MAIN -->
+    <div class="main">
 
-        <table>
+        <div class="page-title">👥 All Users</div>
+        <div class="page-sub">Manage registered users and exam permissions</div>
 
-            <thead>
-                <tr>
-                    <th>Email</th>
-                    <th>Username</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-
-            <tbody>
-                @foreach (var user in Model)
-                {
+        <div class="table-card">
+            <table>
+                <thead>
                     <tr>
-                        <td>@user.Email</td>
-                        <td>@user.UserName</td>
-                        <td>
-                            <a class="btn" href="/AdminUser/Details/@user.Id">
-                                View
-                            </a>
-                        </td>
+                        <th>Email</th>
+                        <th>Username</th>
+                        <th>Request Status</th>
+                        <th>Exam Permission</th>
+                        <th>Actions</th>
                     </tr>
-                }
-            </tbody>
+                </thead>
+                <tbody>
+                    @foreach (var user in Model)
+                    {
+                        var perm = permissions?.FirstOrDefault(p => p.UserId == user.Id);
+                        var req = requests?.FirstOrDefault(r => r.UserId == user.Id);
 
-        </table>
+                        <tr>
+                            <td>@user.Email</td>
+                            <td>@user.UserName</td>
+
+                            <td>
+                                @if (req == null)
+                                {
+                                    <span class="badge-gray">No Request</span>
+                                }
+                                else if (req.Status == "Pending")
+                                {
+                                    <span class="badge-yellow">⏳ Pending</span>
+                                }
+                                else if (req.Status == "Approved")
+                                {
+                                    <span class="badge-green">✅ Approved</span>
+                                }
+                                else
+                                {
+                                    <span class="badge-red">❌ Rejected</span>
+                                }
+                            </td>
+
+                            <td>
+                                @if (perm != null && perm.IsPermitted)
+                                {
+                                    <span class="badge-green">✅ Permitted</span>
+                                }
+                                else
+                                {
+                                    <span class="badge-red">🚫 Not Permitted</span>
+                                }
+                            </td>
+
+                            <td>
+                                @if (perm == null || !perm.IsPermitted)
+                                {
+                                    <a class="btn-grant" href="/AdminUser/GrantPermission?id=@user.Id">
+                                        ✅ Grant
+                                    </a>
+                                }
+                                else
+                                {
+                                    <a class="btn-revoke" href="/AdminUser/RevokePermission?id=@user.Id">
+                                        🚫 Revoke
+                                    </a>
+                                }
+                                <a class="btn-view" href="/AdminUser/Details/@user.Id">
+                                    View
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
 
     </div>
-
 </div>

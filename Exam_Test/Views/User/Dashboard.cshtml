@@ -1,5 +1,8 @@
 ﻿@{
     ViewData["Title"] = "User Dashboard";
+    var permission = ViewBag.Permission as Exam_Test.Models.ExamPermission;
+    var examRequest = ViewBag.ExamRequest as Exam_Test.Models.ExamRequest;
+    bool isPermitted = permission != null && permission.IsPermitted;
 }
 
 <style>
@@ -17,11 +20,11 @@
     }
 
     .header {
-        margin-bottom: 20px;
+        margin-bottom: 24px;
     }
 
         .header h2 {
-            font-size: 22px;
+            font-size: 24px;
             font-weight: 700;
             margin: 0;
         }
@@ -32,55 +35,167 @@
             margin-top: 5px;
         }
 
-    /* GRID */
+    /* PERMISSION BANNER */
+    .banner {
+        border-radius: 14px;
+        padding: 18px 22px;
+        margin-bottom: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+
+        .banner.permitted {
+            background: #dcfce7;
+            border: 1px solid #bbf7d0;
+        }
+
+        .banner.not-permitted {
+            background: #fef9c3;
+            border: 1px solid #fde68a;
+        }
+
+        .banner.pending {
+            background: #eff6ff;
+            border: 1px solid #bfdbfe;
+        }
+
+    .banner-text h3 {
+        margin: 0 0 4px;
+        font-size: 15px;
+        font-weight: 700;
+    }
+
+    .banner-text p {
+        margin: 0;
+        font-size: 13px;
+        color: #374151;
+    }
+
+    .btn-request {
+        display: inline-block;
+        padding: 10px 18px;
+        border-radius: 10px;
+        font-size: 13px;
+        font-weight: 600;
+        text-decoration: none;
+        background: #4f46e5;
+        color: #fff;
+        transition: 0.2s;
+        white-space: nowrap;
+    }
+
+        .btn-request:hover {
+            background: #3730a3;
+            color: #fff;
+        }
+
+    /* ERROR ALERT */
+    .alert-error {
+        background: #fee2e2;
+        border: 1px solid #fecaca;
+        color: #991b1b;
+        border-radius: 12px;
+        padding: 14px 18px;
+        margin-bottom: 20px;
+        font-size: 13px;
+        font-weight: 500;
+    }
+
+    /* STATS ROW */
+    .stats {
+        display: flex;
+        gap: 16px;
+        margin-bottom: 24px;
+        flex-wrap: wrap;
+    }
+
+    .stat-card {
+        flex: 1 1 180px;
+        background: #fff;
+        border: 1px solid #e5e7eb;
+        border-radius: 14px;
+        padding: 18px 20px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+
+        .stat-card .s-label {
+            font-size: 11px;
+            font-weight: 600;
+            color: #6b7280;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            margin-bottom: 8px;
+        }
+
+        .stat-card .s-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: #4f46e5;
+        }
+
+    /* MODULE CARDS */
+    .section-title {
+        font-size: 15px;
+        font-weight: 700;
+        color: #111827;
+        margin-bottom: 14px;
+    }
+
     .grid {
         display: flex;
         gap: 16px;
         flex-wrap: wrap;
     }
 
-    /* CARD */
     .card {
         flex: 1 1 250px;
         background: #fff;
         border: 1px solid #e5e7eb;
         border-radius: 16px;
-        padding: 20px;
-        box-shadow: 0 8px 20px rgba(0,0,0,0.04);
+        padding: 22px;
+        box-shadow: 0 4px 14px rgba(0,0,0,0.04);
         transition: 0.2s;
+        display: flex;
+        flex-direction: column;
     }
 
         .card:hover {
             transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
         }
 
-    .label {
-        font-size: 11px;
-        font-weight: 600;
-        color: #4f46e5;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-    }
+        .card .label {
+            font-size: 11px;
+            font-weight: 600;
+            color: #4f46e5;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
 
-    .card h3 {
-        margin: 10px 0 6px;
-        font-size: 18px;
-    }
+        .card h3 {
+            margin: 0 0 6px;
+            font-size: 17px;
+        }
 
-    .card p {
-        font-size: 13px;
-        color: #6b7280;
-        margin-bottom: 14px;
-    }
+        .card p {
+            font-size: 13px;
+            color: #6b7280;
+            margin-bottom: 16px;
+            flex: 1;
+        }
 
-    /* BUTTON */
     .btn {
         display: inline-block;
         padding: 10px 14px;
         border-radius: 10px;
         font-size: 13px;
-        font-weight: 500;
+        font-weight: 600;
         text-decoration: none;
+        text-align: center;
         background: #4f46e5;
         color: #fff;
         transition: 0.2s;
@@ -88,16 +203,99 @@
 
         .btn:hover {
             background: #3730a3;
+            color: #fff;
         }
 
+    .btn-disabled {
+        background: #d1d5db;
+        color: #9ca3af;
+        cursor: not-allowed;
+        pointer-events: none;
+    }
 </style>
 
 <div class="page">
 
     <div class="header">
-        <h2>🎓 User Dashboard</h2>
-        <p>Select a module to start your exam</p>
+        <h2>🎓 Welcome, @ViewBag.UserName</h2>
+        <p>Your personal exam dashboard</p>
     </div>
+
+    <!-- ERROR MESSAGE -->
+    @if (ViewBag.Error != null)
+    {
+        <div class="alert-error">
+            ⚠️ @ViewBag.Error
+        </div>
+    }
+
+    <!-- PERMISSION BANNER -->
+    @if (isPermitted)
+    {
+        <div class="banner permitted">
+            <div class="banner-text">
+                <h3>✅ Exam Access Granted</h3>
+                <p>You are permitted to take exams. Choose a module below to start.</p>
+            </div>
+        </div>
+    }
+    else if (examRequest != null && examRequest.Status == "Pending")
+    {
+        <div class="banner pending">
+            <div class="banner-text">
+                <h3>⏳ Request Pending</h3>
+                <p>Your exam access request has been submitted. Please wait for admin approval.</p>
+            </div>
+        </div>
+    }
+    else if (examRequest != null && examRequest.Status == "Rejected")
+    {
+        <div class="banner not-permitted">
+            <div class="banner-text">
+                <h3>❌ Request Rejected</h3>
+                <p>Your request was rejected. Contact your admin for more information.</p>
+            </div>
+            <a class="btn-request" href="/User/RequestExamAccess">
+                🔄 Request Again
+            </a>
+        </div>
+    }
+    else
+    {
+        <div class="banner not-permitted">
+            <div class="banner-text">
+                <h3>🔒 Exam Access Required</h3>
+                <p>You need admin permission to take exams. Click the button to send a request.</p>
+            </div>
+            <a class="btn-request" href="/User/RequestExamAccess">
+                📩 Request Exam Access
+            </a>
+        </div>
+    }
+
+    <!-- STATS -->
+    <div class="stats">
+        <div class="stat-card">
+            <div class="s-label">Total Attempts</div>
+            <div class="s-value">@ViewBag.TotalAttempts</div>
+        </div>
+        <div class="stat-card">
+            <div class="s-label">Exam Status</div>
+            <div class="s-value" style="font-size:16px; padding-top:6px;">
+                @if (isPermitted)
+                {
+                    <span style="color:#10b981;">✅ Active</span>
+                }
+                else
+                {
+                    <span style="color:#f59e0b;">🔒 Locked</span>
+                }
+            </div>
+        </div>
+    </div>
+
+    <!-- MODULE CARDS -->
+    <div class="section-title">📚 Exam Modules</div>
 
     <div class="grid">
 
@@ -105,21 +303,42 @@
             <div class="label">Module</div>
             <h3>Module 1</h3>
             <p>Basic level questions for practice and learning.</p>
-            <a class="btn" href="/User/Module/1">Start Exam</a>
+            @if (isPermitted)
+            {
+                <a class="btn" href="/Exam/Start?moduleId=1">Start Exam</a>
+            }
+            else
+            {
+                <span class="btn btn-disabled">🔒 Locked</span>
+            }
         </div>
 
         <div class="card">
             <div class="label">Module</div>
             <h3>Module 2</h3>
             <p>Intermediate level questions for skill improvement.</p>
-            <a class="btn" href="/User/Module/2">Start Exam</a>
+            @if (isPermitted)
+            {
+                <a class="btn" href="/Exam/Start?moduleId=2">Start Exam</a>
+            }
+            else
+            {
+                <span class="btn btn-disabled">🔒 Locked</span>
+            }
         </div>
 
         <div class="card">
             <div class="label">Module</div>
             <h3>Module 3</h3>
             <p>Advanced level questions for final evaluation.</p>
-            <a class="btn" href="/User/Module/3">Start Exam</a>
+            @if (isPermitted)
+            {
+                <a class="btn" href="/Exam/Start?moduleId=3">Start Exam</a>
+            }
+            else
+            {
+                <span class="btn btn-disabled">🔒 Locked</span>
+            }
         </div>
 
     </div>

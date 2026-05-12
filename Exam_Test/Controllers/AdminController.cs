@@ -19,6 +19,15 @@ namespace Exam_Test.Controllers
 
         public IActionResult Dashboard()
         {
+            ViewBag.TotalQuestions = _context.Questions.Count();
+            ViewBag.TotalResults = _context.Results.Count();
+            ViewBag.TotalUsers = _context.Users.Count();
+            ViewBag.PendingRequests = _context.ExamRequests.Count(r => r.Status == "Pending");
+            ViewBag.RecentResults = _context.Results
+                .OrderByDescending(r => r.ExamDate)
+                .Take(5)
+                .ToList();
+
             return View();
         }
 
@@ -34,7 +43,6 @@ namespace Exam_Test.Controllers
             return View(questions);
         }
 
-        // ADD QUESTION GET
         [HttpGet]
         public IActionResult AddQuestion(int moduleId)
         {
@@ -42,7 +50,6 @@ namespace Exam_Test.Controllers
             return View();
         }
 
-        // ADD QUESTION POST
         [HttpPost]
         public async Task<IActionResult> AddQuestion(int ModuleId, string? QuestionText, string? OptionA, string? OptionB, string? OptionC, string? OptionD, string? CorrectAnswer, IFormFile? imageFile)
         {
@@ -82,7 +89,6 @@ namespace Exam_Test.Controllers
             return RedirectToAction("Questions", new { moduleId = ModuleId });
         }
 
-        // EDIT QUESTION GET
         [HttpGet]
         public IActionResult EditQuestion(int id)
         {
@@ -91,7 +97,6 @@ namespace Exam_Test.Controllers
             return View(question);
         }
 
-        // EDIT QUESTION POST
         [HttpPost]
         public async Task<IActionResult> EditQuestion(Question model, IFormFile? imageFile)
         {
@@ -133,7 +138,6 @@ namespace Exam_Test.Controllers
             return RedirectToAction("Questions", new { moduleId = model.ModuleId });
         }
 
-        // DELETE QUESTION
         public IActionResult DeleteQuestion(int id)
         {
             var question = _context.Questions.Find(id);

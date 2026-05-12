@@ -3,183 +3,362 @@
 }
 
 <style>
-    body {
-        margin: 0;
-        font-family: "Segoe UI", Roboto, Arial, sans-serif;
-        background: #f6f8fc;
-        color: #111827;
-    }
-
-    .page {
-        max-width: 1100px;
-        margin: auto;
-        padding: 40px 20px;
-    }
-
-    .topbar h2 {
-        margin: 0;
-        font-size: 26px;
-        font-weight: 700;
-    }
-
-    .topbar p {
-        margin-top: 5px;
-        font-size: 14px;
-        color: #6b7280;
-    }
-
-    .stats {
+    .admin-wrap {
         display: flex;
-        flex-wrap: wrap;
-        gap: 16px;
-        margin: 30px 0;
+        min-height: calc(100vh - 60px);
+        background: #f0f2f8;
     }
 
-    .stat {
-        flex: 1 1 200px;
+    /* SIDEBAR */
+    .sidebar {
+        width: 230px;
+        background: #1e2a3a;
+        color: #fff;
+        display: flex;
+        flex-direction: column;
+        padding: 24px 0;
+        flex-shrink: 0;
+    }
+
+    .sidebar-brand {
+        font-size: 16px;
+        font-weight: 700;
+        color: #fff;
+        padding: 0 20px 24px;
+        border-bottom: 1px solid rgba(255,255,255,0.08);
+        margin-bottom: 16px;
+        letter-spacing: 0.5px;
+    }
+
+    .sidebar-brand span {
+        color: #6366f1;
+    }
+
+    .sidebar-label {
+        font-size: 10px;
+        font-weight: 600;
+        color: rgba(255,255,255,0.35);
+        text-transform: uppercase;
+        letter-spacing: 1.2px;
+        padding: 0 20px;
+        margin: 10px 0 6px;
+    }
+
+    .sidebar a {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 20px;
+        color: rgba(255,255,255,0.7);
+        text-decoration: none;
+        font-size: 13px;
+        font-weight: 500;
+        border-left: 3px solid transparent;
+        transition: 0.2s;
+    }
+
+    .sidebar a:hover, .sidebar a.active {
+        background: rgba(99,102,241,0.12);
+        color: #fff;
+        border-left-color: #6366f1;
+    }
+
+    .sidebar a .icon {
+        font-size: 15px;
+        width: 20px;
+        text-align: center;
+    }
+
+    /* MAIN CONTENT */
+    .main {
+        flex: 1;
+        padding: 28px;
+        overflow-y: auto;
+    }
+
+    .page-title {
+        font-size: 22px;
+        font-weight: 700;
+        color: #111827;
+        margin-bottom: 4px;
+    }
+
+    .page-sub {
+        font-size: 13px;
+        color: #6b7280;
+        margin-bottom: 24px;
+    }
+
+    /* STAT CARDS */
+    .stats {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 16px;
+        margin-bottom: 28px;
+    }
+
+    .stat-card {
+        background: #fff;
+        border-radius: 14px;
+        padding: 20px;
+        border: 1px solid #e5e7eb;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+
+    .stat-card .label {
+        font-size: 11px;
+        font-weight: 600;
+        color: #6b7280;
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+        margin-bottom: 8px;
+    }
+
+    .stat-card .number {
+        font-size: 32px;
+        font-weight: 700;
+        color: #111827;
+        line-height: 1;
+    }
+
+    .stat-card .icon {
+        font-size: 22px;
+        margin-bottom: 10px;
+    }
+
+    .stat-card.pending .number { color: #f59e0b; }
+    .stat-card.users .number  { color: #6366f1; }
+    .stat-card.q .number      { color: #10b981; }
+    .stat-card.results .number{ color: #3b82f6; }
+
+    /* QUICK ACTIONS */
+    .section-title {
+        font-size: 14px;
+        font-weight: 700;
+        color: #111827;
+        margin-bottom: 14px;
+    }
+
+    .actions-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 14px;
+        margin-bottom: 28px;
+    }
+
+    .action-card {
         background: #fff;
         border: 1px solid #e5e7eb;
         border-radius: 14px;
-        padding: 16px;
-    }
-
-        .stat h3 {
-            margin: 0;
-            font-size: 17px;
-        }
-
-        .stat span {
-            font-size: 13px;
-            color: #6b7280;
-        }
-
-    .grid {
+        padding: 20px;
+        text-decoration: none;
+        color: #111827;
+        transition: 0.2s;
         display: flex;
-        flex-wrap: wrap;
-        gap: 18px;
+        flex-direction: column;
+        gap: 6px;
     }
 
-    .card {
-        flex: 1 1 320px;
+    .action-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+        color: #111827;
+    }
+
+    .action-card .a-icon {
+        font-size: 24px;
+        margin-bottom: 4px;
+    }
+
+    .action-card .a-title {
+        font-size: 14px;
+        font-weight: 700;
+    }
+
+    .action-card .a-desc {
+        font-size: 12px;
+        color: #6b7280;
+    }
+
+    /* RECENT RESULTS TABLE */
+    .table-card {
         background: #fff;
         border: 1px solid #e5e7eb;
-        border-radius: 16px;
-        padding: 22px;
-        transition: 0.2s ease;
-        display: flex; /* ✅ ADDED */
-        flex-direction: column; /* ✅ ADDED */
+        border-radius: 14px;
+        overflow: hidden;
     }
 
-        .card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.06);
-        }
+    .table-card table {
+        width: 100%;
+        border-collapse: collapse;
+    }
 
-    .label {
+    .table-card thead {
+        background: #1e2a3a;
+        color: #fff;
+    }
+
+    .table-card th, .table-card td {
+        padding: 12px 16px;
+        font-size: 13px;
+        text-align: left;
+    }
+
+    .table-card tbody tr {
+        border-bottom: 1px solid #f3f4f6;
+        transition: 0.2s;
+    }
+
+    .table-card tbody tr:hover {
+        background: #f8f9ff;
+    }
+
+    .badge-green {
+        background: #dcfce7;
+        color: #166534;
+        padding: 3px 10px;
+        border-radius: 999px;
         font-size: 11px;
         font-weight: 600;
-        color: #6366f1;
-        text-transform: uppercase;
-        letter-spacing: 0.6px;
     }
 
-    .card h3 {
-        margin: 10px 0 6px;
-        font-size: 18px;
+    .badge-red {
+        background: #fee2e2;
+        color: #991b1b;
+        padding: 3px 10px;
+        border-radius: 999px;
+        font-size: 11px;
+        font-weight: 600;
     }
 
-    .card p {
-        font-size: 13px;
-        color: #6b7280;
-        margin-bottom: 0; /* ✅ CHANGED: removed bottom margin */
-        line-height: 1.5;
-        flex: 1; /* ✅ ADDED: fills remaining space, pushes button down */
+    .badge-yellow {
+        background: #fef9c3;
+        color: #854d0e;
+        padding: 3px 10px;
+        border-radius: 999px;
+        font-size: 11px;
+        font-weight: 600;
     }
-
-    .btn {
-        display: inline-block;
-        padding: 9px 14px;
-        border-radius: 10px;
-        font-size: 13px;
-        font-weight: 500;
-        text-decoration: none;
-        background: #4f46e5;
-        color: #fff !important;
-        transition: 0.2s ease;
-        border: none;
-    }
-
-        .btn:hover {
-            background: #3730a3;
-            color: #fff !important;
-        }
-
-    .module-btns {
-        margin-top: 16px; /* ✅ CHANGED: matches single-button top spacing */
-        display: flex;
-        gap: 8px;
-        flex-wrap: wrap;
-        align-items: center;
-    }
-
 </style>
 
-<div class="page">
+<div class="admin-wrap">
 
-    <div class="topbar">
-        <h2>Admin Panel</h2>
-        <p>Manage users, questions, and exam results</p>
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+        <div class="sidebar-brand">TVDE <span>Admin</span></div>
+
+        <div class="sidebar-label">Main</div>
+        <a href="/Admin/Dashboard" class="active">
+            <span class="icon">📊</span> Dashboard
+        </a>
+
+        <div class="sidebar-label">Users</div>
+        <a href="/AdminUser">
+            <span class="icon">👥</span> All Users
+        </a>
+
+        <div class="sidebar-label">Questions</div>
+        <a href="/Admin/Questions?moduleId=1">
+            <span class="icon">📝</span> Module 1
+        </a>
+        <a href="/Admin/Questions?moduleId=2">
+            <span class="icon">📝</span> Module 2
+        </a>
+        <a href="/Admin/Questions?moduleId=3">
+            <span class="icon">📝</span> Module 3
+        </a>
+
+        <div class="sidebar-label">Reports</div>
+        <a href="/AdminResult">
+            <span class="icon">📈</span> Exam Results
+        </a>
     </div>
 
-    <div class="stats">
+    <!-- MAIN -->
+    <div class="main">
 
-        <div class="stat">
-            <h3>Users</h3>
-            <span>Manage registered users</span>
-        </div>
+        <div class="page-title">Dashboard</div>
+        <div class="page-sub">Welcome back, Admin. Here's what's happening.</div>
 
-        <div class="stat">
-            <h3>Questions</h3>
-            <span>Module-based exam content</span>
-        </div>
-
-        <div class="stat">
-            <h3>Reports</h3>
-            <span>Performance tracking</span>
-        </div>
-
-    </div>
-
-    <div class="grid">
-
-        <!-- USERS -->
-        <div class="card">
-            <div class="label">Management</div>
-            <h3>User Control</h3>
-            <p>View and manage all registered users in the system.</p>
-            <a class="btn" href="/AdminUser">Open Users</a>
-        </div>
-
-        <!-- MODULES -->
-        <div class="card">
-            <div class="label">Content</div>
-            <h3>Question Modules</h3>
-            <p>Organize exam questions into structured modules.</p>
-            <div class="module-btns">
-                <a class="btn" href="/Admin/Questions?moduleId=1">Module 1</a>
-                <a class="btn" href="/Admin/Questions?moduleId=2">Module 2</a>
-                <a class="btn" href="/Admin/Questions?moduleId=3">Module 3</a>
+        <!-- STATS -->
+        <div class="stats">
+            <div class="stat-card users">
+                <div class="icon">👥</div>
+                <div class="label">Total Users</div>
+                <div class="number">@ViewBag.TotalUsers</div>
+            </div>
+            <div class="stat-card q">
+                <div class="icon">📝</div>
+                <div class="label">Total Questions</div>
+                <div class="number">@ViewBag.TotalQuestions</div>
+            </div>
+            <div class="stat-card results">
+                <div class="icon">📊</div>
+                <div class="label">Total Results</div>
+                <div class="number">@ViewBag.TotalResults</div>
+            </div>
+            <div class="stat-card pending">
+                <div class="icon">⏳</div>
+                <div class="label">Pending Requests</div>
+                <div class="number">@ViewBag.PendingRequests</div>
             </div>
         </div>
 
-        <!-- RESULTS -->
-        <div class="card">
-            <div class="label">Analytics</div>
-            <h3>Exam Reports</h3>
-            <p>View student performance and exam results.</p>
-            <a class="btn" href="/AdminResult">View Reports</a>
+        <!-- QUICK ACTIONS -->
+        <div class="section-title">Quick Actions</div>
+        <div class="actions-grid">
+            <a class="action-card" href="/AdminUser">
+                <div class="a-icon">👥</div>
+                <div class="a-title">Manage Users</div>
+                <div class="a-desc">Grant or revoke exam permissions</div>
+            </a>
+            <a class="action-card" href="/Admin/Questions?moduleId=1">
+                <div class="a-icon">📝</div>
+                <div class="a-title">Manage Questions</div>
+                <div class="a-desc">Add, edit or delete exam questions</div>
+            </a>
+            <a class="action-card" href="/AdminResult">
+                <div class="a-icon">📈</div>
+                <div class="a-title">View Reports</div>
+                <div class="a-desc">Check student exam performance</div>
+            </a>
+        </div>
+
+        <!-- RECENT RESULTS -->
+        <div class="section-title">Recent Exam Results</div>
+        <div class="table-card">
+            <table>
+                <thead>
+                    <tr>
+                        <th>User ID</th>
+                        <th>Module</th>
+                        <th>Correct</th>
+                        <th>Wrong</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var r in ViewBag.RecentResults)
+                    {
+                        <tr>
+                            <td>@r.UserId</td>
+                            <td>Module @r.ModuleId</td>
+                            <td><span class="badge-green">@r.Correct</span></td>
+                            <td><span class="badge-red">@r.Wrong</span></td>
+                            <td>@r.ExamDate.ToString("yyyy-MM-dd HH:mm")</td>
+                        </tr>
+                    }
+                    @if (((IEnumerable<dynamic>)ViewBag.RecentResults).Count() == 0)
+                    {
+                        <tr>
+                            <td colspan="5" style="text-align:center; color:#9ca3af; padding:30px;">
+                                No exam results yet.
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
         </div>
 
     </div>
-
 </div>
