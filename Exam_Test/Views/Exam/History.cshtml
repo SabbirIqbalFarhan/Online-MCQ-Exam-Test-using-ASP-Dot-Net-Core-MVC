@@ -13,28 +13,36 @@
     }
 
     .page {
-        max-width: 900px;
+        max-width: 960px;
         margin: auto;
         padding: 40px 20px;
     }
 
     .header {
         margin-bottom: 18px;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
     }
 
-        .header h2 {
-            font-size: 22px;
-            font-weight: 700;
-            margin: 0;
-        }
+    .header h2 { font-size: 22px; font-weight: 700; margin: 0; }
+    .header p { font-size: 13px; color: #6b7280; margin-top: 5px; }
 
-        .header p {
-            font-size: 13px;
-            color: #6b7280;
-            margin-top: 5px;
-        }
+    .btn-back {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 9px 16px;
+        border-radius: 10px;
+        font-size: 13px;
+        font-weight: 600;
+        text-decoration: none;
+        background: #4f46e5;
+        color: #fff;
+        transition: 0.2s;
+    }
+    .btn-back:hover { background: #3730a3; color: #fff; }
 
-    /* CARD */
     .card {
         background: #fff;
         border: 1px solid #e5e7eb;
@@ -43,102 +51,88 @@
         box-shadow: 0 8px 24px rgba(0,0,0,0.04);
     }
 
-    table {
-        width: 100%;
-        border-collapse: collapse;
-    }
+    table { width: 100%; border-collapse: collapse; }
+    thead { background: #4f46e5; color: white; }
+    th, td { padding: 14px 16px; font-size: 13px; text-align: left; }
 
-    thead {
-        background: #4f46e5;
-        color: white;
-    }
+    tbody tr { border-bottom: 1px solid #e5e7eb; transition: 0.2s; }
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: #f8f9ff; }
 
-    th, td {
-        padding: 14px 16px;
-        font-size: 13px;
-        text-align: left;
-    }
+    .badge-success { background: #dcfce7; color: #166534; padding: 4px 10px; border-radius: 999px; font-size: 12px; font-weight: 500; }
+    .badge-danger  { background: #fee2e2; color: #991b1b;  padding: 4px 10px; border-radius: 999px; font-size: 12px; font-weight: 500; }
+    .date { font-size: 12px; color: #6b7280; }
 
-    tbody tr {
-        border-bottom: 1px solid #e5e7eb;
+    .btn-review {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        padding: 5px 12px;
+        border-radius: 8px;
+        font-size: 12px;
+        font-weight: 600;
+        text-decoration: none;
+        background: #eef2ff;
+        color: #4f46e5;
+        border: 1px solid #c7d2fe;
         transition: 0.2s;
     }
+    .btn-review:hover { background: #e0e7ff; color: #3730a3; }
 
-        tbody tr:hover {
-            background: #f8f9ff;
-        }
-
-    /* BADGES */
-    .badge-success {
-        background: #dcfce7;
-        color: #166534;
-        padding: 4px 10px;
-        border-radius: 999px;
-        font-size: 12px;
-        font-weight: 500;
-    }
-
-    .badge-danger {
-        background: #fee2e2;
-        color: #991b1b;
-        padding: 4px 10px;
-        border-radius: 999px;
-        font-size: 12px;
-        font-weight: 500;
-    }
-
-    .date {
-        font-size: 12px;
-        color: #6b7280;
-    }
-
+    .empty-state { text-align: center; padding: 48px 20px; color: #6b7280; }
+    .empty-state .icon { font-size: 40px; margin-bottom: 12px; }
+    .empty-state p { font-size: 14px; }
 </style>
 
 <div class="page">
 
     <div class="header">
-        <h2>📊 My Exam History</h2>
-        <p>Track your performance and progress</p>
+        <div>
+            <h2>📊 My Exam History</h2>
+            <p>Track your performance and progress</p>
+        </div>
+        <a class="btn-back" href="/User/Dashboard">← Back to Dashboard</a>
     </div>
 
     <div class="card">
 
-        <table>
-
-            <thead>
-                <tr>
-                    <th>Module</th>
-                    <th>Correct</th>
-                    <th>Wrong</th>
-                    <th>Date</th>
-                </tr>
-            </thead>
-
-            <tbody>
-
-                @foreach (var r in Model)
-                {
+        @if (!Model.Any())
+        {
+            <div class="empty-state">
+                <div class="icon">📭</div>
+                <p>No exam history yet. Complete a module to see your results here.</p>
+            </div>
+        }
+        else
+        {
+            <table>
+                <thead>
                     <tr>
-                        <td><b>Module @r.ModuleId</b></td>
-
-                        <td>
-                            <span class="badge-success">@r.Correct</span>
-                        </td>
-
-                        <td>
-                            <span class="badge-danger">@r.Wrong</span>
-                        </td>
-
-                        <td class="date">
-                            @r.ExamDate
-                        </td>
+                        <th>Module</th>
+                        <th>Correct</th>
+                        <th>Wrong</th>
+                        <th>Total</th>
+                        <th>Date</th>
+                        <th>Review</th>
                     </tr>
-                }
-
-            </tbody>
-
-        </table>
+                </thead>
+                <tbody>
+                    @foreach (var r in Model)
+                    {
+                        <tr>
+                            <td><b>Module @r.ModuleId</b></td>
+                            <td><span class="badge-success">✅ @r.Correct</span></td>
+                            <td><span class="badge-danger">❌ @r.Wrong</span></td>
+                            <td class="date">@(r.Correct + r.Wrong) Qs</td>
+                            <td class="date">@r.ExamDate.ToString("dd MMM yyyy, hh:mm tt")</td>
+                            <td>
+                                <a class="btn-review" href="/Exam/Review?moduleId=@r.ModuleId">🔍 Review</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
 
     </div>
-
 </div>
