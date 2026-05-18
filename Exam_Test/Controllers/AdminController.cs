@@ -20,9 +20,14 @@ namespace Exam_Test.Controllers
         public IActionResult Dashboard()
         {
             ViewBag.TotalQuestions = _context.Questions.Count();
-            ViewBag.TotalResults = _context.Results.Count();
             ViewBag.TotalUsers = _context.Users.Count();
             ViewBag.PendingRequests = _context.ExamRequests.Count(r => r.Status == "Pending");
+
+            // Module Results: count per module
+            ViewBag.Module1Results = _context.Results.Count(r => r.ModuleId == 1);
+            ViewBag.Module2Results = _context.Results.Count(r => r.ModuleId == 2);
+            ViewBag.Module3Results = _context.Results.Count(r => r.ModuleId == 3);
+
             ViewBag.RecentResults = _context.Results
                 .OrderByDescending(r => r.ExamDate)
                 .Take(5)
@@ -51,7 +56,7 @@ namespace Exam_Test.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddQuestion(int ModuleId, string? QuestionText, string? OptionA, string? OptionB, string? OptionC, string? OptionD, string? CorrectAnswer, IFormFile? imageFile)
+        public async Task<IActionResult> AddQuestion(int ModuleId, string? QuestionText, string? OptionA, string? OptionB, string? OptionC, string? CorrectAnswer, IFormFile? imageFile)
         {
             var existingCount = _context.Questions.Count(q => q.ModuleId == ModuleId);
 
@@ -65,7 +70,6 @@ namespace Exam_Test.Controllers
                 OptionA = OptionA,
                 OptionB = OptionB,
                 OptionC = OptionC,
-                OptionD = OptionD,
                 CorrectAnswer = CorrectAnswer
             };
 
@@ -108,7 +112,6 @@ namespace Exam_Test.Controllers
             question.OptionA = model.OptionA;
             question.OptionB = model.OptionB;
             question.OptionC = model.OptionC;
-            question.OptionD = model.OptionD;
             question.CorrectAnswer = model.CorrectAnswer;
             question.ModuleId = model.ModuleId;
 
@@ -158,5 +161,6 @@ namespace Exam_Test.Controllers
 
             return RedirectToAction("Questions", new { moduleId = moduleId });
         }
+
     }
 }

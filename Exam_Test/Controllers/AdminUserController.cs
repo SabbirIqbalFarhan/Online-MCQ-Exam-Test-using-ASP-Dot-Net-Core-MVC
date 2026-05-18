@@ -18,16 +18,53 @@ namespace Exam_Test.Controllers
             _context = context;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index(int page = 1, string searchStudentId = "", string searchName = "")
         {
-            var users = _userManager.Users.ToList();
+            int pageSize = 10;
+            var allUsers = _userManager.Users.ToList();
+            var profiles = _context.UserProfiles.ToList();
+
+            // Get all admin user IDs
+            var adminUserIds = new List<string>();
+            foreach (var u in allUsers)
+            {
+                if (await _userManager.IsInRoleAsync(u, "Admin"))
+                    adminUserIds.Add(u.Id);
+            }
+
+            // Apply search filters (match against profiles)
+            if (!string.IsNullOrWhiteSpace(searchStudentId))
+            {
+                var matchedIds = profiles
+                    .Where(p => p.StudentId != null && p.StudentId.Contains(searchStudentId, StringComparison.OrdinalIgnoreCase))
+                    .Select(p => p.UserId)
+                    .ToHashSet();
+                allUsers = allUsers.Where(u => matchedIds.Contains(u.Id)).ToList();
+            }
+
+            if (!string.IsNullOrWhiteSpace(searchName))
+            {
+                var matchedIds = profiles
+                    .Where(p => p.FullName != null && p.FullName.Contains(searchName, StringComparison.OrdinalIgnoreCase))
+                    .Select(p => p.UserId)
+                    .ToHashSet();
+                allUsers = allUsers.Where(u => matchedIds.Contains(u.Id)).ToList();
+            }
+
+            int totalUsers = allUsers.Count;
+            var users = allUsers.Skip((page - 1) * pageSize).Take(pageSize).ToList();
+
             var permissions = _context.ExamPermissions.ToList();
             var requests = _context.ExamRequests.ToList();
-            var profiles = _context.UserProfiles.ToList();
 
             ViewBag.Permissions = permissions;
             ViewBag.Requests = requests;
             ViewBag.Profiles = profiles;
+            ViewBag.CurrentPage = page;
+            ViewBag.TotalPages = (int)Math.Ceiling((double)totalUsers / pageSize);
+            ViewBag.SearchStudentId = searchStudentId;
+            ViewBag.SearchName = searchName;
+            ViewBag.AdminUserIds = adminUserIds;
 
             return View(users);
         }
@@ -175,6 +212,39 @@ namespace Exam_Test.Controllers
             if (request != null) request.Status = "Rejected";
 
             _context.SaveChanges();
+            return RedirectToAction("Index");
+        }
+
+        // NEW: Delete User
+        public async Task<IActionResult> DeleteUser(string id)
+        {
+            var user = await _userManager.FindByIdAsync(id);
+            if (user == null) return NotFound();
+
+            // Block deletion of any Admin-role user
+            if (await _userManager.IsInRoleAsync(user, "Admin"))
+            {
+                TempData["Error"] = "Admin accounts cannot be deleted.";
+                return RedirectToAction("Index");
+            }
+
+            // Remove related data
+            var perms = _context.ExamPermissions.Where(p => p.UserId == id).ToList();
+            _context.ExamPermissions.RemoveRange(perms);
+
+            var reqs = _context.ExamRequests.Where(r => r.UserId == id).ToList();
+            _context.ExamRequests.RemoveRange(reqs);
+
+            var profiles = _context.UserProfiles.Where(p => p.UserId == id).ToList();
+            _context.UserProfiles.RemoveRange(profiles);
+
+            var results = _context.Results.Where(r => r.UserId == id).ToList();
+            _context.Results.RemoveRange(results);
+
+            _context.SaveChanges();
+
+            await _userManager.DeleteAsync(user);
+
             return RedirectToAction("Index");
         }
     }

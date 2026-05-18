@@ -350,6 +350,11 @@
             <a class="btn-action btn-dark" href="/AdminUser/ResetPassword/@Model.Id">
                 <i class="fa-solid fa-key"></i> Reset Password
             </a>
+            <a class="btn-action btn-red"
+               href="/AdminUser/DeleteUser/@Model.Id"
+               onclick="return confirm('Are you sure? This will permanently delete the user and all their data.')">
+                <i class="fa-solid fa-trash"></i> Delete User
+            </a>
         </div>
 
     </div>

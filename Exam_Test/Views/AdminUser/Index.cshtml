@@ -4,277 +4,188 @@
     ViewData["Title"] = "Users";
     var permissions = ViewBag.Permissions as List<Exam_Test.Models.ExamPermission>;
     var requests = ViewBag.Requests as List<Exam_Test.Models.ExamRequest>;
+    var profiles = ViewBag.Profiles as List<Exam_Test.Models.UserProfile>;
+    var adminUserIds = ViewBag.AdminUserIds as List<string> ?? new List<string>();
+    int currentPage = ViewBag.CurrentPage ?? 1;
+    int totalPages = ViewBag.TotalPages ?? 1;
+    string searchStudentId = ViewBag.SearchStudentId ?? "";
+    string searchName = ViewBag.SearchName ?? "";
 }
 
 <style>
-    .admin-wrap {
-        display: flex;
-        min-height: calc(100vh - 60px);
-        background: #f1f4fb;
-    }
-
-    .dash-sidebar {
-        width: 230px;
-        background: #1a2236;
-        flex-shrink: 0;
-        padding: 24px 0;
-        display: flex;
-        flex-direction: column;
-    }
-
-    .nav-section-label {
-        font-size: 9.5px;
-        font-weight: 700;
-        color: rgba(240,244,255,0.35);
-        text-transform: uppercase;
-        letter-spacing: 1.4px;
-        padding: 14px 20px 6px;
-    }
-
-    .sidebar-link {
-        display: flex;
-        align-items: center;
-        gap: 11px;
-        padding: 9px 20px;
-        color: rgba(240,244,255,0.62);
-        text-decoration: none;
-        font-size: 13px;
-        font-weight: 500;
-        border-left: 3px solid transparent;
-        transition: all 0.18s;
-    }
-
-    .sidebar-link:hover {
-        color: #fff;
-        background: rgba(99,91,255,0.1);
-        border-left-color: rgba(99,91,255,0.5);
-    }
-
-    .sidebar-link.active {
-        color: #fff;
-        background: rgba(99,91,255,0.15);
-        border-left-color: #635bff;
-    }
-
-    .sidebar-link .s-icon {
-        width: 30px;
-        height: 30px;
-        border-radius: 8px;
-        display: grid;
-        place-items: center;
-        font-size: 14px;
-        flex-shrink: 0;
-        background: rgba(255,255,255,0.06);
-        transition: 0.18s;
-    }
-
-    .sidebar-link:hover .s-icon,
-    .sidebar-link.active .s-icon {
-        background: rgba(99,91,255,0.25);
-    }
-
-    .dash-main {
-        flex: 1;
-        padding: 28px;
-        overflow-y: auto;
-    }
-
-    .page-header {
-        margin-bottom: 24px;
-    }
-
-    .page-header h2 {
-        font-size: 22px;
-        font-weight: 800;
-        color: #1a2236;
-        margin: 0 0 4px;
-    }
-
-    .page-header p {
-        font-size: 13px;
-        color: #64748b;
-        margin: 0;
-    }
-
-    .table-card {
-        background: #fff;
-        border: 1px solid #e5e9f2;
-        border-radius: 16px;
-        overflow: hidden;
-        box-shadow: 0 2px 8px rgba(26,34,54,0.04);
-    }
-
-    .table-card table {
-        width: 100%;
-        border-collapse: collapse;
-    }
-
-    .table-card thead {
-        background: #1a2236;
-    }
-
-    .table-card th {
-        padding: 13px 16px;
-        font-size: 11px;
-        font-weight: 700;
-        color: rgba(240,244,255,0.6);
-        text-transform: uppercase;
-        letter-spacing: 0.8px;
-        text-align: left;
-    }
-
-    .table-card td {
-        padding: 14px 16px;
-        font-size: 13px;
-        color: #374151;
-        text-align: left;
-    }
-
-    .table-card tbody tr {
-        border-bottom: 1px solid #f1f5f9;
-        transition: 0.18s;
-    }
-
-    .table-card tbody tr:last-child {
-        border-bottom: none;
-    }
-
-    .table-card tbody tr:hover {
-        background: #f8f9ff;
-    }
-
-    .user-cell {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    }
-
-    .user-avatar {
-        width: 32px;
-        height: 32px;
-        border-radius: 50%;
-        background: rgba(99,91,255,0.12);
-        display: grid;
-        place-items: center;
-        font-size: 12px;
-        font-weight: 800;
-        color: #635bff;
-        flex-shrink: 0;
-    }
-
-    .user-email {
-        font-size: 13px;
-        font-weight: 600;
-        color: #1a2236;
-    }
-
-    .badge-green   { background: #dcfce7; color: #166534; padding: 4px 12px; border-radius: 999px; font-size: 11.5px; font-weight: 700; }
-    .badge-red     { background: #fee2e2; color: #991b1b; padding: 4px 12px; border-radius: 999px; font-size: 11.5px; font-weight: 700; }
-    .badge-yellow  { background: #fef9c3; color: #854d0e; padding: 4px 12px; border-radius: 999px; font-size: 11.5px; font-weight: 700; }
-    .badge-gray    { background: #f1f5f9; color: #64748b; padding: 4px 12px; border-radius: 999px; font-size: 11.5px; font-weight: 700; }
-
-    .actions-cell {
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        flex-wrap: wrap;
-    }
-
-    .btn-action {
-        display: inline-flex;
-        align-items: center;
-        gap: 5px;
-        padding: 6px 12px;
-        border-radius: 8px;
-        font-size: 12px;
-        font-weight: 700;
-        text-decoration: none;
-        color: #fff;
-        transition: 0.18s;
-        font-family: 'Plus Jakarta Sans', sans-serif;
-        white-space: nowrap;
-    }
-
-    .btn-grant  { background: #10b981; }
-    .btn-grant:hover  { background: #059669; color: #fff; }
-
-    .btn-revoke { background: #ef4444; }
-    .btn-revoke:hover { background: #dc2626; color: #fff; }
-
-    .btn-view   { background: #635bff; }
-    .btn-view:hover   { background: #4f46e5; color: #fff; }
+    .admin-wrap { display: flex; min-height: calc(100vh - 60px); background: #f1f4fb; }
+    .dash-sidebar { width: 230px; background: #1a2236; flex-shrink: 0; padding: 24px 0; display: flex; flex-direction: column; }
+    .nav-section-label { font-size: 9.5px; font-weight: 700; color: rgba(240,244,255,0.35); text-transform: uppercase; letter-spacing: 1.4px; padding: 14px 20px 6px; }
+    .sidebar-link { display: flex; align-items: center; gap: 11px; padding: 9px 20px; color: rgba(240,244,255,0.62); text-decoration: none; font-size: 13px; font-weight: 500; border-left: 3px solid transparent; transition: all 0.18s; }
+    .sidebar-link:hover { color: #fff; background: rgba(99,91,255,0.1); border-left-color: rgba(99,91,255,0.5); }
+    .sidebar-link.active { color: #fff; background: rgba(99,91,255,0.15); border-left-color: #635bff; }
+    .sidebar-link .s-icon { width: 30px; height: 30px; border-radius: 8px; display: grid; place-items: center; font-size: 14px; flex-shrink: 0; background: rgba(255,255,255,0.06); transition: 0.18s; }
+    .sidebar-link:hover .s-icon, .sidebar-link.active .s-icon { background: rgba(99,91,255,0.25); }
+    .dash-main { flex: 1; padding: 28px; overflow-y: auto; }
+    .page-header { margin-bottom: 24px; }
+    .page-header h2 { font-size: 22px; font-weight: 800; color: #1a2236; margin: 0 0 4px; }
+    .page-header p { font-size: 13px; color: #64748b; margin: 0; }
+    .search-bar { display: flex; gap: 10px; margin-bottom: 18px; flex-wrap: wrap; }
+    .search-bar input { padding: 9px 14px; border-radius: 9px; border: 1.5px solid #e2e8f0; font-size: 13px; font-weight: 500; color: #1a2236; outline: none; width: 220px; transition: 0.18s; font-family: 'Plus Jakarta Sans', sans-serif; }
+    .search-bar input:focus { border-color: #635bff; box-shadow: 0 0 0 3px rgba(99,91,255,0.1); }
+    .search-bar button { padding: 9px 18px; border-radius: 9px; border: none; background: #635bff; color: #fff; font-size: 13px; font-weight: 700; cursor: pointer; transition: 0.18s; font-family: 'Plus Jakarta Sans', sans-serif; }
+    .search-bar button:hover { background: #4f46e5; }
+    .search-bar a.clear-btn { padding: 9px 14px; border-radius: 9px; border: 1.5px solid #e2e8f0; background: #fff; color: #64748b; font-size: 13px; font-weight: 600; text-decoration: none; transition: 0.18s; }
+    .search-bar a.clear-btn:hover { border-color: #ef4444; color: #ef4444; }
+    .table-card { background: #fff; border: 1px solid #e5e9f2; border-radius: 16px; overflow: hidden; box-shadow: 0 2px 8px rgba(26,34,54,0.04); }
+    .table-card table { width: 100%; border-collapse: collapse; }
+    .table-card thead { background: #1a2236; }
+    .table-card th { padding: 13px 16px; font-size: 11px; font-weight: 700; color: rgba(240,244,255,0.6); text-transform: uppercase; letter-spacing: 0.8px; text-align: left; }
+    .table-card td { padding: 14px 16px; font-size: 13px; color: #374151; text-align: left; }
+    .table-card tbody tr { border-bottom: 1px solid #f1f5f9; transition: 0.18s; }
+    .table-card tbody tr:last-child { border-bottom: none; }
+    .table-card tbody tr:hover { background: #f8f9ff; }
+    .user-cell { display: flex; align-items: center; gap: 10px; }
+    .user-avatar { width: 32px; height: 32px; border-radius: 50%; background: rgba(99,91,255,0.12); display: grid; place-items: center; font-size: 12px; font-weight: 800; color: #635bff; flex-shrink: 0; }
+    .user-avatar.admin-avatar { background: rgba(239,68,68,0.12); color: #ef4444; }
+    .user-email { font-size: 13px; font-weight: 600; color: #1a2236; }
+    .badge-green { background: #dcfce7; color: #166534; padding: 4px 12px; border-radius: 999px; font-size: 11.5px; font-weight: 700; }
+    .badge-red { background: #fee2e2; color: #991b1b; padding: 4px 12px; border-radius: 999px; font-size: 11.5px; font-weight: 700; }
+    .badge-yellow { background: #fef9c3; color: #854d0e; padding: 4px 12px; border-radius: 999px; font-size: 11.5px; font-weight: 700; }
+    .badge-gray { background: #f1f5f9; color: #64748b; padding: 4px 12px; border-radius: 999px; font-size: 11.5px; font-weight: 700; }
+    .badge-admin { background: rgba(239,68,68,0.1); color: #ef4444; padding: 4px 12px; border-radius: 999px; font-size: 11.5px; font-weight: 700; }
+    .actions-cell { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+    .btn-action { display: inline-flex; align-items: center; gap: 5px; padding: 6px 12px; border-radius: 8px; font-size: 12px; font-weight: 700; text-decoration: none; color: #fff; transition: 0.18s; font-family: 'Plus Jakarta Sans', sans-serif; white-space: nowrap; }
+    .btn-grant { background: #10b981; }
+    .btn-grant:hover { background: #059669; color: #fff; }
+    .btn-revoke { background: #f59e0b; }
+    .btn-revoke:hover { background: #d97706; color: #fff; }
+    .btn-view { background: #635bff; }
+    .btn-view:hover { background: #4f46e5; color: #fff; }
+    .btn-delete { background: #ef4444; }
+    .btn-delete:hover { background: #dc2626; color: #fff; }
+    .no-results { text-align: center; padding: 40px; color: #94a3b8; font-size: 14px; }
+    .pagination { display: flex; align-items: center; gap: 6px; margin-top: 20px; justify-content: center; }
+    .page-btn { padding: 8px 14px; border-radius: 8px; border: 1.5px solid #e2e8f0; background: #fff; color: #374151; font-size: 13px; font-weight: 600; text-decoration: none; transition: 0.18s; }
+    .page-btn:hover { background: #f8f9ff; border-color: #635bff; color: #635bff; }
+    .page-btn.active { background: #635bff; color: #fff; border-color: #635bff; }
+    .page-btn.disabled { opacity: 0.4; pointer-events: none; cursor: default; }
+    .error-toast { background: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; border-radius: 10px; padding: 12px 18px; margin-bottom: 16px; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 8px; }
 </style>
 
 <div class="admin-wrap">
-
     <div class="dash-sidebar">
         <div class="nav-section-label">Main</div>
-        <a class="sidebar-link" href="/Admin/Dashboard">
-            <span class="s-icon">📊</span><span>Dashboard</span>
-        </a>
+        <a class="sidebar-link" href="/Admin/Dashboard"><span class="s-icon">📊</span><span>Dashboard</span></a>
         <div class="nav-section-label">Users</div>
-        <a class="sidebar-link active" href="/AdminUser">
-            <span class="s-icon">👥</span><span>All Users</span>
-        </a>
+        <a class="sidebar-link active" href="/AdminUser"><span class="s-icon">👥</span><span>All Users</span></a>
         <div class="nav-section-label">Questions</div>
-        <a class="sidebar-link" href="/Admin/Questions?moduleId=1">
-            <span class="s-icon">📝</span><span>Module 1</span>
-        </a>
-        <a class="sidebar-link" href="/Admin/Questions?moduleId=2">
-            <span class="s-icon">📝</span><span>Module 2</span>
-        </a>
-        <a class="sidebar-link" href="/Admin/Questions?moduleId=3">
-            <span class="s-icon">📝</span><span>Module 3</span>
-        </a>
+        <a class="sidebar-link" href="/Admin/Questions?moduleId=1"><span class="s-icon">📝</span><span>Module 1</span></a>
+        <a class="sidebar-link" href="/Admin/Questions?moduleId=2"><span class="s-icon">📝</span><span>Module 2</span></a>
+        <a class="sidebar-link" href="/Admin/Questions?moduleId=3"><span class="s-icon">📝</span><span>Module 3</span></a>
         <div class="nav-section-label">Sessions</div>
-        <a class="sidebar-link" href="/AdminSession">
-            <span class="s-icon">🕐</span><span>Exam Sessions</span>
-        </a>
+        <a class="sidebar-link" href="/AdminSession"><span class="s-icon">🕐</span><span>Exam Sessions</span></a>
         <div class="nav-section-label">Reports</div>
-        <a class="sidebar-link" href="/AdminResult">
-            <span class="s-icon">📈</span><span>Exam Results</span>
-        </a>
+        <a class="sidebar-link" href="/AdminResult"><span class="s-icon">📈</span><span>Exam Results</span></a>
     </div>
 
     <div class="dash-main">
-
         <div class="page-header">
-            <h2>
-                <i class="fa-solid fa-users" style="color:#635bff;margin-right:8px;"></i>
-                All Users
-            </h2>
+            <h2><i class="fa-solid fa-users" style="color:#635bff;margin-right:8px;"></i>All Users</h2>
             <p>Manage registered users and exam permissions</p>
         </div>
+
+        @if (TempData["Error"] != null)
+        {
+            <div class="error-toast">
+                <i class="fa-solid fa-circle-exclamation"></i> @TempData["Error"]
+            </div>
+        }
+
+        <form method="get" action="/AdminUser">
+            <div class="search-bar">
+                <input type="text" name="searchStudentId" value="@searchStudentId" placeholder="🔍 Search by Student ID..." />
+                <input type="text" name="searchName" value="@searchName" placeholder="🔍 Search by Full Name..." />
+                <button type="submit"><i class="fa-solid fa-magnifying-glass"></i> Search</button>
+                @if (!string.IsNullOrEmpty(searchStudentId) || !string.IsNullOrEmpty(searchName))
+                {
+                    <a href="/AdminUser" class="clear-btn"><i class="fa-solid fa-xmark"></i> Clear</a>
+                }
+            </div>
+        </form>
 
         <div class="table-card">
             <table>
                 <thead>
                     <tr>
+                        <th>Student ID</th>
+                        <th>Student Name</th>
                         <th>User</th>
-                        <th>Username</th>
                         <th>Request Status</th>
                         <th>Exam Permission</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
+                    @if (!Model.Any())
+                    {
+                        <tr>
+                            <td colspan="6" class="no-results">
+                                <i class="fa-solid fa-users-slash" style="font-size:24px;margin-bottom:8px;display:block;"></i>
+                                No users found matching your search.
+                            </td>
+                        </tr>
+                    }
                     @foreach (var user in Model)
                     {
                         var perm = permissions?.FirstOrDefault(p => p.UserId == user.Id);
-                        var req  = requests?.FirstOrDefault(r => r.UserId == user.Id);
+                        var req = requests?.FirstOrDefault(r => r.UserId == user.Id);
+                        var profile = profiles?.FirstOrDefault(p => p.UserId == user.Id);
+                        bool isAdmin = adminUserIds.Contains(user.Id);
 
                         <tr>
                             <td>
+                                @if (profile != null && !string.IsNullOrEmpty(profile.StudentId))
+                                {
+                                    <span style="background:rgba(99,91,255,0.1);color:#635bff;padding:3px 10px;border-radius:999px;font-size:12px;font-weight:700;">@profile.StudentId</span>
+                                }
+                                else if (isAdmin)
+                                {
+                                    <span class="badge-admin">👑 Admin</span>
+                                }
+                                else
+                                {
+                                    <span style="color:#94a3b8;font-size:12px;">— Not assigned</span>
+                                }
+                            </td>
+                            <td>
+                                @if (profile != null && !string.IsNullOrEmpty(profile.FullName))
+                                {
+                                    <span style="font-weight:600;color:#1a2236;">@profile.FullName</span>
+                                }
+                                else
+                                {
+                                    <span style="color:#94a3b8;font-size:12px;">— Not assigned</span>
+                                }
+                            </td>
+                            <td>
                                 <div class="user-cell">
-                                    <div class="user-avatar">
-                                        @user.Email?.Substring(0, 1).ToUpper()
-                                    </div>
+                                    @if (isAdmin)
+                                    {
+                                        <div class="user-avatar admin-avatar">
+                                            @user.Email?.Substring(0, 1).ToUpper()
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="user-avatar">
+                                            @user.Email?.Substring(0, 1).ToUpper()
+                                        </div>
+                                    }
                                     <span class="user-email">@user.Email</span>
                                 </div>
                             </td>
-                            <td style="color:#64748b;">@user.UserName</td>
                             <td>
-                                @if (req == null)
+                                @if (isAdmin)
+                                {
+                                    <span class="badge-admin">— Admin</span>
+                                }
+                                else if (req == null)
                                 {
                                     <span class="badge-gray">No Request</span>
                                 }
@@ -292,7 +203,11 @@
                                 }
                             </td>
                             <td>
-                                @if (perm != null && perm.IsPermitted)
+                                @if (isAdmin)
+                                {
+                                    <span class="badge-admin">— Admin</span>
+                                }
+                                else if (perm != null && perm.IsPermitted)
                                 {
                                     <span class="badge-green">✅ Permitted</span>
                                 }
@@ -303,21 +218,32 @@
                             </td>
                             <td>
                                 <div class="actions-cell">
-                                    @if (perm == null || !perm.IsPermitted)
+                                    @if (!isAdmin)
                                     {
-                                        <a class="btn-action btn-grant" href="/AdminUser/GrantPermission?id=@user.Id">
-                                            <i class="fa-solid fa-circle-check"></i> Grant
-                                        </a>
-                                    }
-                                    else
-                                    {
-                                        <a class="btn-action btn-revoke" href="/AdminUser/RevokePermission?id=@user.Id">
-                                            <i class="fa-solid fa-ban"></i> Revoke
-                                        </a>
+                                        @if (perm == null || !perm.IsPermitted)
+                                        {
+                                            <a class="btn-action btn-grant" href="/AdminUser/GrantPermission?id=@user.Id">
+                                                <i class="fa-solid fa-circle-check"></i> Grant
+                                            </a>
+                                        }
+                                        else
+                                        {
+                                            <a class="btn-action btn-revoke" href="/AdminUser/RevokePermission?id=@user.Id">
+                                                <i class="fa-solid fa-ban"></i> Revoke
+                                            </a>
+                                        }
                                     }
                                     <a class="btn-action btn-view" href="/AdminUser/Details/@user.Id">
                                         <i class="fa-solid fa-eye"></i> View
                                     </a>
+                                    @if (!isAdmin)
+                                    {
+                                        <a class="btn-action btn-delete"
+                                           href="/AdminUser/DeleteUser/@user.Id"
+                                           onclick="return confirm('Delete this user and all their data?')">
+                                            <i class="fa-solid fa-trash"></i> Delete
+                                        </a>
+                                    }
                                 </div>
                             </td>
                         </tr>
@@ -325,6 +251,45 @@
                 </tbody>
             </table>
         </div>
+
+        @if (totalPages > 1)
+        {
+            <div class="pagination">
+                @if (currentPage == 1)
+                {
+                    <span class="page-btn disabled"><i class="fa-solid fa-chevron-left"></i></span>
+                }
+                else
+                {
+                    <a href="?page=@(currentPage - 1)&searchStudentId=@searchStudentId&searchName=@searchName" class="page-btn">
+                        <i class="fa-solid fa-chevron-left"></i>
+                    </a>
+                }
+
+                @for (int i = 1; i <= totalPages; i++)
+                {
+                    if (i == currentPage)
+                    {
+                        <span class="page-btn active">@i</span>
+                    }
+                    else
+                    {
+                        <a href="?page=@i&searchStudentId=@searchStudentId&searchName=@searchName" class="page-btn">@i</a>
+                    }
+                }
+
+                @if (currentPage == totalPages)
+                {
+                    <span class="page-btn disabled"><i class="fa-solid fa-chevron-right"></i></span>
+                }
+                else
+                {
+                    <a href="?page=@(currentPage + 1)&searchStudentId=@searchStudentId&searchName=@searchName" class="page-btn">
+                        <i class="fa-solid fa-chevron-right"></i>
+                    </a>
+                }
+            </div>
+        }
 
     </div>
 </div>

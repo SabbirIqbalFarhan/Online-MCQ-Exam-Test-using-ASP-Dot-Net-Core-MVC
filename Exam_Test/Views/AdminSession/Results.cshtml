@@ -1,11 +1,14 @@
 ﻿@model List<Exam_Test.Models.Result>
 
 @{
-    ViewData["Title"] = "Exam Results";
+    ViewData["Title"] = "Session Results";
+    var session = ViewBag.Session as Exam_Test.Models.ExamSession;
+    var profiles = ViewBag.Profiles as List<Exam_Test.Models.UserProfile>;
     int selectedModule = ViewBag.ModuleId ?? 0;
     string selectedUserId = ViewBag.UserId ?? "";
     int currentPage = ViewBag.CurrentPage ?? 1;
     int totalPages = ViewBag.TotalPages ?? 1;
+    int sessionId = ViewBag.SessionId ?? 0;
     int totalCount = ViewBag.TotalCount ?? 0;
 }
 
@@ -16,7 +19,7 @@
     .sidebar-link { display: flex; align-items: center; gap: 11px; padding: 9px 20px; color: rgba(240,244,255,0.62); text-decoration: none; font-size: 13px; font-weight: 500; border-left: 3px solid transparent; transition: all 0.18s; }
     .sidebar-link:hover { color: #fff; background: rgba(99,91,255,0.1); border-left-color: rgba(99,91,255,0.5); }
     .sidebar-link.active { color: #fff; background: rgba(99,91,255,0.15); border-left-color: #635bff; }
-    .sidebar-link .s-icon { width: 30px; height: 30px; border-radius: 8px; display: grid; place-items: center; font-size: 14px; flex-shrink: 0; background: rgba(255,255,255,0.06); }
+    .sidebar-link .s-icon { width: 30px; height: 30px; border-radius: 8px; display: grid; place-items: center; font-size: 14px; flex-shrink: 0; background: rgba(255,255,255,0.06); transition: 0.18s; }
     .sidebar-link:hover .s-icon, .sidebar-link.active .s-icon { background: rgba(99,91,255,0.25); }
     .dash-main { flex: 1; padding: 28px; overflow-y: auto; }
     .page-header { margin-bottom: 24px; }
@@ -28,7 +31,6 @@
     .filter-card select:focus, .filter-card input[type=text]:focus { border-color: #635bff; background: #fff; box-shadow: 0 0 0 3px rgba(99,91,255,0.1); }
     .btn-filter { display: inline-flex; align-items: center; gap: 7px; padding: 9px 18px; border-radius: 10px; background: #635bff; color: #fff; font-size: 13px; font-weight: 700; font-family: 'Plus Jakarta Sans', sans-serif; border: none; cursor: pointer; transition: 0.2s; box-shadow: 0 4px 12px rgba(99,91,255,0.3); }
     .btn-filter:hover { background: #4f46e5; }
-    .summary-pill { background: rgba(99,91,255,0.08); border: 1px solid rgba(99,91,255,0.15); color: #635bff; padding: 5px 14px; border-radius: 999px; font-size: 12px; font-weight: 700; margin-left: auto; }
     .table-card { background: #fff; border: 1px solid #e5e9f2; border-radius: 16px; overflow: hidden; box-shadow: 0 2px 8px rgba(26,34,54,0.04); }
     .table-card table { width: 100%; border-collapse: collapse; }
     .table-card thead { background: #1a2236; }
@@ -37,23 +39,19 @@
     .table-card tbody tr { border-bottom: 1px solid #f1f5f9; transition: 0.18s; }
     .table-card tbody tr:last-child { border-bottom: none; }
     .table-card tbody tr:hover { background: #f8f9ff; }
-    .user-cell { display: flex; align-items: center; gap: 9px; }
-    .user-avatar { width: 30px; height: 30px; border-radius: 50%; background: rgba(99,91,255,0.12); display: grid; place-items: center; font-size: 11px; font-weight: 800; color: #635bff; flex-shrink: 0; }
-    .user-id-text { font-size: 12.5px; font-weight: 600; color: #1a2236; max-width: 140px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-    .module-pill { background: rgba(99,91,255,0.1); color: #635bff; padding: 4px 12px; border-radius: 999px; font-size: 11.5px; font-weight: 700; }
     .badge-green { background: #dcfce7; color: #166534; padding: 4px 12px; border-radius: 999px; font-size: 11.5px; font-weight: 700; }
     .badge-red { background: #fee2e2; color: #991b1b; padding: 4px 12px; border-radius: 999px; font-size: 11.5px; font-weight: 700; }
-    .date-cell { font-size: 12.5px; color: #64748b; }
-    .btn-del { display: inline-flex; align-items: center; gap: 5px; padding: 5px 10px; border-radius: 7px; background: #ef4444; color: #fff; font-size: 12px; font-weight: 700; text-decoration: none; transition: 0.18s; }
-    .btn-del:hover { background: #dc2626; color: #fff; }
-    .empty-state { text-align: center; padding: 50px 20px; color: #94a3b8; }
-    .empty-state .e-icon { font-size: 36px; margin-bottom: 10px; }
-    .empty-state p { font-size: 13px; margin: 0; }
+    .module-pill { background: rgba(99,91,255,0.1); color: #635bff; padding: 4px 12px; border-radius: 999px; font-size: 11.5px; font-weight: 700; }
     .pagination { display: flex; align-items: center; gap: 6px; margin-top: 20px; justify-content: center; }
     .page-btn { padding: 8px 14px; border-radius: 8px; border: 1.5px solid #e2e8f0; background: #fff; color: #374151; font-size: 13px; font-weight: 600; text-decoration: none; transition: 0.18s; }
     .page-btn:hover { background: #f8f9ff; border-color: #635bff; color: #635bff; }
     .page-btn.active { background: #635bff; color: #fff; border-color: #635bff; }
     .page-btn.disabled { opacity: 0.4; pointer-events: none; }
+    .btn-back { display: inline-flex; align-items: center; gap: 7px; padding: 9px 18px; border-radius: 10px; background: #1a2236; color: #fff; font-size: 13px; font-weight: 700; text-decoration: none; margin-bottom: 20px; transition: 0.2s; }
+    .btn-back:hover { background: #243050; color: #fff; }
+    .summary-pill { background: rgba(99,91,255,0.08); border: 1px solid rgba(99,91,255,0.15); color: #635bff; padding: 5px 14px; border-radius: 999px; font-size: 12px; font-weight: 700; }
+    .btn-del { display: inline-flex; align-items: center; gap: 5px; padding: 5px 10px; border-radius: 7px; background: #ef4444; color: #fff; font-size: 12px; font-weight: 700; text-decoration: none; transition: 0.18s; }
+    .btn-del:hover { background: #dc2626; color: #fff; }
 </style>
 
 <div class="admin-wrap">
@@ -67,18 +65,23 @@
         <a class="sidebar-link" href="/Admin/Questions?moduleId=2"><span class="s-icon">📝</span><span>Module 2</span></a>
         <a class="sidebar-link" href="/Admin/Questions?moduleId=3"><span class="s-icon">📝</span><span>Module 3</span></a>
         <div class="nav-section-label">Sessions</div>
-        <a class="sidebar-link" href="/AdminSession"><span class="s-icon">🕐</span><span>Exam Sessions</span></a>
+        <a class="sidebar-link active" href="/AdminSession"><span class="s-icon">🕐</span><span>Exam Sessions</span></a>
         <div class="nav-section-label">Reports</div>
-        <a class="sidebar-link active" href="/AdminResult"><span class="s-icon">📈</span><span>Exam Results</span></a>
+        <a class="sidebar-link" href="/AdminResult"><span class="s-icon">📈</span><span>Exam Results</span></a>
     </div>
 
     <div class="dash-main">
+        <a class="btn-back" href="/AdminSession">
+            <i class="fa-solid fa-arrow-left"></i> Back to Sessions
+        </a>
+
         <div class="page-header">
-            <h2><i class="fa-solid fa-chart-line" style="color:#635bff;margin-right:8px;"></i>Exam Results</h2>
-            <p>View, filter, and manage all student exam results</p>
+            <h2><i class="fa-solid fa-chart-bar" style="color:#635bff;margin-right:8px;"></i>Session Results</h2>
+            <p>@session?.Title — @session?.StartTime.ToString("dd MMM yyyy") to @session?.EndTime.ToString("dd MMM yyyy")</p>
         </div>
 
         <form method="get" class="filter-card">
+            <input type="hidden" name="id" value="@sessionId" />
             <span class="filter-label"><i class="fa-solid fa-filter" style="margin-right:4px;"></i> Filter by</span>
             <select name="moduleId">
                 <option value="">All Modules</option>
@@ -95,7 +98,8 @@
             <table>
                 <thead>
                     <tr>
-                        <th>User</th>
+                        <th>#</th>
+                        <th>User ID</th>
                         <th>Module</th>
                         <th>Correct</th>
                         <th>Wrong</th>
@@ -106,42 +110,43 @@
                 <tbody>
                     @if (Model != null && Model.Count > 0)
                     {
+                        int serial = (currentPage - 1) * 10 + 1;
                         @foreach (var r in Model)
                         {
                             <tr>
-                                <td>
-                                    <div class="user-cell">
-                                        <div class="user-avatar">@r.UserId?.Substring(0, 1).ToUpper()</div>
-                                        <span class="user-id-text" title="@r.UserId">@r.UserId</span>
-                                    </div>
+                                <td style="color:#94a3b8;">@serial</td>
+                                <td style="font-weight:600;color:#1a2236;font-size:12.5px;">
+                                    @{
+                                        var profile = profiles?.FirstOrDefault(p => p.UserId == r.UserId);
+                                    }
+                                    @if (profile != null)
+                                    {
+                                        <span>@profile.FullName</span><br/>
+                                        <span style="color:#94a3b8;font-size:11px;">@profile.StudentId</span>
+                                    }
+                                    else
+                                    {
+                                        <span style="font-size:11px;">@r.UserId</span>
+                                    }
                                 </td>
                                 <td><span class="module-pill">Module @r.ModuleId</span></td>
                                 <td><span class="badge-green">✓ @r.Correct</span></td>
                                 <td><span class="badge-red">✗ @r.Wrong</span></td>
+                                <td style="color:#64748b;font-size:12.5px;">@r.ExamDate.ToString("yyyy-MM-dd HH:mm")</td>
                                 <td>
-                                    <span class="date-cell">
-                                        <i class="fa-regular fa-clock" style="margin-right:5px;"></i>
-                                        @r.ExamDate.ToString("yyyy-MM-dd HH:mm")
-                                    </span>
-                                </td>
-                                <td>
-                                    <a class="btn-del"
-                                       href="/AdminResult/Delete/@r.Id"
-                                       onclick="return confirm('Delete this result?')">
+                                    <a class="btn-del" href="/AdminResult/Delete/@r.Id" onclick="return confirm('Delete this result?')">
                                         <i class="fa-solid fa-trash"></i> Delete
                                     </a>
                                 </td>
                             </tr>
+                            serial++;
                         }
                     }
                     else
                     {
                         <tr>
-                            <td colspan="6">
-                                <div class="empty-state">
-                                    <div class="e-icon">📭</div>
-                                    <p>No results found for the selected filter.</p>
-                                </div>
+                            <td colspan="7" style="text-align:center;color:#94a3b8;padding:40px;font-size:13px;">
+                                📭 No results found.
                             </td>
                         </tr>
                     }
@@ -152,16 +157,16 @@
         @if (totalPages > 1)
         {
             <div class="pagination">
-                <a href="?moduleId=@selectedModule&userId=@selectedUserId&page=@(currentPage - 1)"
+                <a href="?id=@sessionId&moduleId=@selectedModule&userId=@selectedUserId&page=@(currentPage - 1)"
                    class="page-btn @(currentPage == 1 ? "disabled" : "")">
                     <i class="fa-solid fa-chevron-left"></i>
                 </a>
                 @for (int i = 1; i <= totalPages; i++)
                 {
-                    <a href="?moduleId=@selectedModule&userId=@selectedUserId&page=@i"
+                    <a href="?id=@sessionId&moduleId=@selectedModule&userId=@selectedUserId&page=@i"
                        class="page-btn @(i == currentPage ? "active" : "")">@i</a>
                 }
-                <a href="?moduleId=@selectedModule&userId=@selectedUserId&page=@(currentPage + 1)"
+                <a href="?id=@sessionId&moduleId=@selectedModule&userId=@selectedUserId&page=@(currentPage + 1)"
                    class="page-btn @(currentPage == totalPages ? "disabled" : "")">
                     <i class="fa-solid fa-chevron-right"></i>
                 </a>

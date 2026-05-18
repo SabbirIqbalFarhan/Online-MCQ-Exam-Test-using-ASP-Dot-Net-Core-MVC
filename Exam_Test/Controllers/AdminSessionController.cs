@@ -15,11 +15,19 @@ namespace Exam_Test.Controllers
             _context = context;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(int page = 1)
         {
-            var sessions = _context.ExamSessions
+            int pageSize = 10;
+            var allSessions = _context.ExamSessions
                 .OrderByDescending(s => s.CreatedAt)
                 .ToList();
+
+            int total = allSessions.Count;
+            var sessions = allSessions.Skip((page - 1) * pageSize).Take(pageSize).ToList();
+
+            ViewBag.CurrentPage = page;
+            ViewBag.TotalPages = (int)Math.Ceiling((double)total / pageSize);
+
             return View(sessions);
         }
 
@@ -74,24 +82,40 @@ namespace Exam_Test.Controllers
             return RedirectToAction("Index");
         }
 
-        public IActionResult Results(int id, int moduleId = 1)
+        public IActionResult Results(int id, int? moduleId, string? userId, int page = 1)
         {
             var session = _context.ExamSessions.Find(id);
             if (session == null) return NotFound();
 
-            var results = _context.Results
-                .Where(r => r.SessionId == id && r.ModuleId == moduleId)
+            int pageSize = 10;
+            var results = _context.Results.Where(r => r.SessionId == id).AsQueryable();
+
+            if (moduleId.HasValue)
+                results = results.Where(r => r.ModuleId == moduleId.Value);
+
+            if (!string.IsNullOrEmpty(userId))
+                results = results.Where(r => r.UserId != null && r.UserId.Contains(userId));
+
+            int total = results.Count();
+
+            var data = results
                 .OrderByDescending(r => r.ExamDate)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
                 .ToList();
 
             var profiles = _context.UserProfiles.ToList();
 
             ViewBag.Session = session;
             ViewBag.ModuleId = moduleId;
+            ViewBag.UserId = userId;
             ViewBag.SessionId = id;
             ViewBag.Profiles = profiles;
+            ViewBag.CurrentPage = page;
+            ViewBag.TotalPages = (int)Math.Ceiling((double)total / pageSize);
+            ViewBag.TotalCount = total;
 
-            return View(results);
+            return View(data);
         }
     }
 }
