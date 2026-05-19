@@ -117,5 +117,48 @@ namespace Exam_Test.Controllers
 
             return View(data);
         }
+        public IActionResult ViewResult(string userId, int sessionId)
+        {
+            var session = _context.ExamSessions.Find(sessionId);
+            if (session == null) return NotFound();
+
+            var results = _context.Results
+                .Where(r => r.UserId == userId && r.SessionId == sessionId)
+                .OrderBy(r => r.ModuleId)
+                .ToList();
+
+            var profile = _context.UserProfiles.FirstOrDefault(p => p.UserId == userId);
+
+            int totalCorrect = results.Sum(r => r.Correct);
+            int totalWrong = results.Sum(r => r.Wrong);
+            int totalQuestions = totalCorrect + totalWrong;
+
+            // Load user answers with their questions for the review section
+            var userAnswers = _context.UserAnswers
+                .Where(a => a.UserId == userId)
+                .ToList();
+
+            var questionIds = userAnswers.Select(a => a.QuestionId).Distinct().ToList();
+            var questions = _context.Questions
+                .Where(q => questionIds.Contains(q.Id))
+                .ToList();
+
+            // Attach question objects to answers
+            foreach (var ans in userAnswers)
+            {
+                ans.Question = questions.FirstOrDefault(q => q.Id == ans.QuestionId);
+            }
+
+            ViewBag.Session = session;
+            ViewBag.Profile = profile;
+            ViewBag.UserId = userId;
+            ViewBag.SessionId = sessionId;
+            ViewBag.TotalCorrect = totalCorrect;
+            ViewBag.TotalWrong = totalWrong;
+            ViewBag.TotalQuestions = totalQuestions;
+            ViewBag.UserAnswers = userAnswers;
+
+            return View(results);
+        }
     }
 }
