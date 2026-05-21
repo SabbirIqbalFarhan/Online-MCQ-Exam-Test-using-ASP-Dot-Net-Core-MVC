@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Exam_Test.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260519134150_SessionUpdate")]
-    partial class SessionUpdate
+    [Migration("20260521114327_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

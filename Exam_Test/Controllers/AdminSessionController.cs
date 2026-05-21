@@ -166,5 +166,12 @@ namespace Exam_Test.Controllers
 
             return View();
         }
+        public IActionResult DeleteResult(int id, int sessionId)
+        {
+            var result = _context.Results.Find(id);
+            if (result != null) _context.Results.Remove(result);
+            _context.SaveChanges();
+            return RedirectToAction("Results", new { id = sessionId });
+        }
     }
 }

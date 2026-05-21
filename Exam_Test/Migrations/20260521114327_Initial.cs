@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Exam_Test.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class Initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -260,7 +260,6 @@ namespace Exam_Test.Migrations
                     OptionA = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     OptionB = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     OptionC = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    OptionD = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CorrectAnswer = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ModuleId = table.Column<int>(type: "int", nullable: false)
                 },
