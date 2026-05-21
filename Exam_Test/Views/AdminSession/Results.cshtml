@@ -13,15 +13,19 @@
 }
 
 <style>
-    .admin-wrap { display: flex; min-height: calc(100vh - 60px); background: #f1f4fb; }
-    .dash-sidebar { width: 230px; background: #1a2236; flex-shrink: 0; padding: 24px 0; display: flex; flex-direction: column; }
+    .admin-wrap, .dash-wrap { flex-wrap: wrap; }
+.dash-sidebar { width: 100%; max-width: 230px; min-width: 180px; }
+.dash-main { min-width: 0; flex: 1 1 300px; padding: 16px; }
+.stats-grid { grid-template-columns: repeat(2, 1fr); }
+.actions-grid { grid-template-columns: 1fr; }
+.modules-grid { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+.summary-grid { grid-template-columns: repeat(2, 1fr); }
     .nav-section-label { font-size: 9.5px; font-weight: 700; color: rgba(240,244,255,0.35); text-transform: uppercase; letter-spacing: 1.4px; padding: 14px 20px 6px; }
     .sidebar-link { display: flex; align-items: center; gap: 11px; padding: 9px 20px; color: rgba(240,244,255,0.62); text-decoration: none; font-size: 13px; font-weight: 500; border-left: 3px solid transparent; transition: all 0.18s; }
     .sidebar-link:hover { color: #fff; background: rgba(99,91,255,0.1); border-left-color: rgba(99,91,255,0.5); }
     .sidebar-link.active { color: #fff; background: rgba(99,91,255,0.15); border-left-color: #635bff; }
     .sidebar-link .s-icon { width: 30px; height: 30px; border-radius: 8px; display: grid; place-items: center; font-size: 14px; flex-shrink: 0; background: rgba(255,255,255,0.06); transition: 0.18s; }
     .sidebar-link:hover .s-icon, .sidebar-link.active .s-icon { background: rgba(99,91,255,0.25); }
-    .dash-main { flex: 1; padding: 28px; overflow-y: auto; }
     .page-header { margin-bottom: 24px; }
     .page-header h2 { font-size: 22px; font-weight: 800; color: #1a2236; margin: 0 0 4px; }
     .page-header p { font-size: 13px; color: #64748b; margin: 0; }

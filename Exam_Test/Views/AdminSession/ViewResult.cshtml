@@ -23,15 +23,19 @@
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { font-family: 'Segoe UI', sans-serif; background: #f1f4fb; }
-        .admin-wrap { display: flex; min-height: 100vh; }
-        .dash-sidebar { width: 230px; background: #1a2236; flex-shrink: 0; padding: 24px 0; display: flex; flex-direction: column; }
+        .admin-wrap, .dash-wrap { flex-wrap: wrap; }
+.dash-sidebar { width: 100%; max-width: 230px; min-width: 180px; }
+.dash-main { min-width: 0; flex: 1 1 300px; padding: 16px; }
+.stats-grid { grid-template-columns: repeat(2, 1fr); }
+.actions-grid { grid-template-columns: 1fr; }
+.modules-grid { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+.summary-grid { grid-template-columns: repeat(2, 1fr); }
         .nav-section-label { font-size: 9.5px; font-weight: 700; color: rgba(240,244,255,0.35); text-transform: uppercase; letter-spacing: 1.4px; padding: 14px 20px 6px; }
         .sidebar-link { display: flex; align-items: center; gap: 11px; padding: 9px 20px; color: rgba(240,244,255,0.62); text-decoration: none; font-size: 13px; font-weight: 500; border-left: 3px solid transparent; transition: all 0.18s; }
         .sidebar-link:hover { color: #fff; background: rgba(99,91,255,0.1); border-left-color: rgba(99,91,255,0.5); }
         .sidebar-link.active { color: #fff; background: rgba(99,91,255,0.15); border-left-color: #635bff; }
         .sidebar-link .s-icon { width: 30px; height: 30px; border-radius: 8px; display: grid; place-items: center; font-size: 14px; flex-shrink: 0; background: rgba(255,255,255,0.06); }
         .sidebar-link:hover .s-icon, .sidebar-link.active .s-icon { background: rgba(99,91,255,0.25); }
-        .dash-main { flex: 1; padding: 28px; overflow-y: auto; }
         .btn-back { display: inline-flex; align-items: center; gap: 7px; padding: 9px 18px; border-radius: 10px; background: #1a2236; color: #fff; font-size: 13px; font-weight: 700; text-decoration: none; margin-bottom: 24px; transition: 0.2s; }
         .btn-back:hover { background: #243050; color: #fff; }
         .student-card { background: #fff; border: 1px solid #e5e9f2; border-radius: 16px; padding: 24px 28px; margin-bottom: 24px; display: flex; align-items: center; gap: 20px; box-shadow: 0 2px 8px rgba(26,34,54,0.04); }
