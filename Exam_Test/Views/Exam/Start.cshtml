@@ -260,6 +260,7 @@
 </style>
 
 <form method="post" action="/Exam/Submit" id="examForm">
+    @Html.AntiForgeryToken()
     <input type="hidden" name="moduleId" value="@moduleId" />
     <input type="hidden" name="sessionId" value="@sessionId" />
 

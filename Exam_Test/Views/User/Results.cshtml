@@ -76,7 +76,7 @@
                             var sess = sessions.FirstOrDefault(s => s.Id == r.SessionId);
                             <tr>
                                 <td>@(sess?.Title ?? "—")</td>
-                                <td><span class="module-pill">M@r.ModuleId</span></td>
+                                <td><span class="module-pill">Module @r.ModuleId</span></td>
                                 <td>
                                     @if (pct >= 60)
                                     {
