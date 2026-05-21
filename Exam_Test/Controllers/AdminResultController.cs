@@ -54,6 +54,8 @@ namespace Exam_Test.Controllers
         }
 
         // NEW: Delete a result
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult Delete(int id)
         {
             var result = _context.Results.Find(id);
