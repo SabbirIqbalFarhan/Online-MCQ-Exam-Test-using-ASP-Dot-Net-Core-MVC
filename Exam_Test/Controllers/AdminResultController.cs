@@ -61,9 +61,13 @@ namespace Exam_Test.Controllers
             var result = _context.Results.Find(id);
             if (result != null)
             {
+                var answers = _context.UserAnswers
+                    .Where(a => a.UserId == result.UserId && a.ModuleId == result.ModuleId)
+                    .ToList();
+                _context.UserAnswers.RemoveRange(answers);
                 _context.Results.Remove(result);
-                _context.SaveChanges();
             }
+            _context.SaveChanges();
             return RedirectToAction("Index");
         }
     }

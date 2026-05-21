@@ -157,9 +157,15 @@
                                        style="display:inline-flex;align-items:center;gap:5px;padding:5px 10px;border-radius:7px;background:#635bff;color:#fff;font-size:12px;font-weight:700;text-decoration:none;">
                                         <i class="fa-solid fa-eye"></i> View
                                     </a>
-                                    <a class="btn-del" href="/AdminSession/DeleteResult?id=@r.Id&sessionId=@sessionId" onclick="return confirm('Delete this result?')">
-    <i class="fa-solid fa-trash"></i> Delete
-</a>
+                                    <form method="post" action="/AdminSession/DeleteResult" style="display:inline"
+                                          onsubmit="return confirm('Delete this result?')">
+                                        @Html.AntiForgeryToken()
+                                        <input type="hidden" name="id" value="@r.Id" />
+                                        <input type="hidden" name="sessionId" value="@sessionId" />
+                                        <button type="submit" class="btn-del">
+                                            <i class="fa-solid fa-trash"></i> Delete
+                                        </button>
+                                    </form>
                             </tr>
                             serial++;
                         }

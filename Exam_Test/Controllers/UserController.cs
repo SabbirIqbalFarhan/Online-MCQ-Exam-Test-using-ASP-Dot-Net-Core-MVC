@@ -27,15 +27,17 @@ namespace Exam_Test.Controllers
             var permission = _context.ExamPermissions.FirstOrDefault(p => p.UserId == user.Id);
             var examRequest = _context.ExamRequests.FirstOrDefault(r => r.UserId == user.Id);
             var activeSession = _context.ExamSessions
-    .Where(s => s.IsActive)
-    .OrderByDescending(s => s.StartTime)
-    .FirstOrDefault()
-    ?? _context.ExamSessions
-    .Where(s => s.StartTime <= DateTime.Now && s.EndTime >= DateTime.Now)
-    .OrderByDescending(s => s.StartTime)
-    .FirstOrDefault();
+                .Where(s => s.IsActive)
+                .OrderByDescending(s => s.StartTime)
+                .FirstOrDefault()
+                ?? _context.ExamSessions
+                .Where(s => s.StartTime <= DateTime.Now && s.EndTime >= DateTime.Now)
+                .OrderByDescending(s => s.StartTime)
+                .FirstOrDefault();
+
             var allSessions = _context.ExamSessions.OrderByDescending(s => s.CreatedAt).ToList();
             ViewBag.AllSessions = allSessions;
+
             var profile = _context.UserProfiles.FirstOrDefault(p => p.UserId == user.Id);
 
             ViewBag.UserName = user.UserName;
@@ -44,16 +46,16 @@ namespace Exam_Test.Controllers
             ViewBag.ExamRequest = examRequest;
             ViewBag.ActiveSession = activeSession;
             ViewBag.Profile = profile;
+
             var completedModules = activeSession != null
-    ? _context.Results
-        .Where(r => r.UserId == user.Id && r.SessionId == activeSession.Id)
-        .Select(r => r.ModuleId)
-        .Distinct()
-        .ToList()
-    : new List<int>();
+                ? _context.Results
+                    .Where(r => r.UserId == user.Id && r.SessionId == activeSession.Id)
+                    .Select(r => r.ModuleId)
+                    .Distinct()
+                    .ToList()
+                : new List<int>();
 
             ViewBag.CompletedModules = completedModules;
-
 
             return View();
         }
@@ -106,11 +108,9 @@ namespace Exam_Test.Controllers
             var user = await _userManager.GetUserAsync(User);
             if (user == null) return RedirectToAction("Login", "Account");
 
-            var now = DateTime.Now;
-            var session = _context.ExamSessions
-                .Where(s => s.IsActive && s.StartTime <= now && s.EndTime >= now)
-                .OrderByDescending(s => s.StartTime)
-                .FirstOrDefault();
+            // FIX: look up session directly by ID so users can view past results
+            // (previously required the session to be currently active, causing 404 for ended sessions)
+            var session = _context.ExamSessions.Find(sessionId);
             if (session == null) return NotFound();
 
             var result = _context.Results

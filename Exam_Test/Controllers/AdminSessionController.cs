@@ -201,7 +201,14 @@ namespace Exam_Test.Controllers
         public IActionResult DeleteResult(int id, int sessionId)
         {
             var result = _context.Results.Find(id);
-            if (result != null) _context.Results.Remove(result);
+            if (result != null)
+            {
+                var answers = _context.UserAnswers
+                    .Where(a => a.UserId == result.UserId && a.ModuleId == result.ModuleId)
+                    .ToList();
+                _context.UserAnswers.RemoveRange(answers);
+                _context.Results.Remove(result);
+            }
             _context.SaveChanges();
             return RedirectToAction("Results", new { id = sessionId });
         }
