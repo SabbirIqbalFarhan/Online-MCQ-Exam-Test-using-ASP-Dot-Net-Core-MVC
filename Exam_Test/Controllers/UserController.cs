@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Exam_Test.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "User")]
     public class UserController : Controller
     {
         private readonly ApplicationDbContext _context;
