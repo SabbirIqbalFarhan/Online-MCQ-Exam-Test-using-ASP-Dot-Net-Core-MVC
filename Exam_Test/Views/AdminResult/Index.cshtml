@@ -142,11 +142,14 @@
                                     </span>
                                 </td>
                                 <td>
-                                    <a class="btn-del"
-                                       href="/AdminResult/Delete/@r.Id"
-                                       onclick="return confirm('Delete this result?')">
-                                        <i class="fa-solid fa-trash"></i> Delete
-                                    </a>
+                                   <form method="post" action="/AdminResult/Delete" style="display:inline;"
+                                          onsubmit="return confirm('Delete this result?')">
+                                        @Html.AntiForgeryToken()
+                                        <input type="hidden" name="id" value="@r.Id" />
+                                        <button type="submit" class="btn-action btn-delete">
+                                            <i class="fa-solid fa-trash"></i> Delete
+                                        </button>
+                                   </form>
                                 </td>
                             </tr>
                         }
