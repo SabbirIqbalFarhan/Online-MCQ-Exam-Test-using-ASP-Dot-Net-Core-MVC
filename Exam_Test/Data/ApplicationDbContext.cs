@@ -10,6 +10,7 @@ namespace Exam_Test.Data
             : base(options)
         {
         }
+
         public DbSet<Module> Modules { get; set; }
         public DbSet<Question> Questions { get; set; }
         public DbSet<UserAnswer> UserAnswers { get; set; }
@@ -18,5 +19,16 @@ namespace Exam_Test.Data
         public DbSet<ExamRequest> ExamRequests { get; set; }
         public DbSet<ExamSession> ExamSessions { get; set; }
         public DbSet<UserProfile> UserProfiles { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
+
+            builder.Entity<UserAnswer>()
+                .HasOne(a => a.Question)
+                .WithMany()
+                .HasForeignKey(a => a.QuestionId)
+                .OnDelete(DeleteBehavior.Restrict);
+        }
     }
 }
