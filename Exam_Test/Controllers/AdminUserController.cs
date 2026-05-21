@@ -25,12 +25,8 @@ namespace Exam_Test.Controllers
             var profiles = _context.UserProfiles.ToList();
 
             // Get all admin user IDs
-            var adminUserIds = new List<string>();
-            foreach (var u in allUsers)
-            {
-                if (await _userManager.IsInRoleAsync(u, "Admin"))
-                    adminUserIds.Add(u.Id);
-            }
+            var adminUsers = await _userManager.GetUsersInRoleAsync("Admin");
+            var adminUserIds = adminUsers.Select(u => u.Id).ToList();
 
             // Apply search filters (match against profiles)
             if (!string.IsNullOrWhiteSpace(searchStudentId))
