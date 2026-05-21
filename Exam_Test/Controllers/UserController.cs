@@ -44,11 +44,13 @@ namespace Exam_Test.Controllers
             ViewBag.ExamRequest = examRequest;
             ViewBag.ActiveSession = activeSession;
             ViewBag.Profile = profile;
-            var completedModules = _context.Results
-    .Where(r => r.UserId == user.Id)
-    .Select(r => r.ModuleId)
-    .Distinct()
-    .ToList();
+            var completedModules = activeSession != null
+    ? _context.Results
+        .Where(r => r.UserId == user.Id && r.SessionId == activeSession.Id)
+        .Select(r => r.ModuleId)
+        .Distinct()
+        .ToList()
+    : new List<int>();
 
             ViewBag.CompletedModules = completedModules;
 
@@ -97,6 +99,55 @@ namespace Exam_Test.Controllers
             ViewBag.Sessions = sessions;
 
             return View(results);
+        }
+
+        public async Task<IActionResult> ViewResult(int sessionId, int moduleId)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null) return RedirectToAction("Login", "Account");
+
+            var session = _context.ExamSessions.Find(sessionId);
+            if (session == null) return NotFound();
+
+            var result = _context.Results
+                .FirstOrDefault(r => r.UserId == user.Id && r.SessionId == sessionId && r.ModuleId == moduleId);
+
+            var profile = _context.UserProfiles.FirstOrDefault(p => p.UserId == user.Id);
+
+            int totalCorrect = result?.Correct ?? 0;
+            int totalWrong = result?.Wrong ?? 0;
+            int totalQuestions = totalCorrect + totalWrong;
+
+            var moduleQuestionIds = _context.Questions
+                .Where(q => q.ModuleId == moduleId)
+                .Select(q => q.Id)
+                .ToList();
+
+            var userAnswers = _context.UserAnswers
+                .Where(a => a.UserId == user.Id && a.ModuleId == moduleId && moduleQuestionIds.Contains(a.QuestionId))
+                .OrderByDescending(a => a.Id)
+                .Take(totalQuestions)
+                .ToList();
+
+            var questionIds = userAnswers.Select(a => a.QuestionId).Distinct().ToList();
+            var questions = _context.Questions
+                .Where(q => questionIds.Contains(q.Id))
+                .ToList();
+
+            foreach (var ans in userAnswers)
+                ans.Question = questions.FirstOrDefault(q => q.Id == ans.QuestionId);
+
+            ViewBag.Session = session;
+            ViewBag.Profile = profile;
+            ViewBag.SessionId = sessionId;
+            ViewBag.ModuleId = moduleId;
+            ViewBag.TotalCorrect = totalCorrect;
+            ViewBag.TotalWrong = totalWrong;
+            ViewBag.TotalQuestions = totalQuestions;
+            ViewBag.UserAnswers = userAnswers;
+            ViewBag.Result = result;
+
+            return View();
         }
 
         public IActionResult ChangePassword() => View();

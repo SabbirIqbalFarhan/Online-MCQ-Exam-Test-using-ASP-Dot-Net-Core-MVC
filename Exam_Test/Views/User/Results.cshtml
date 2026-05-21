@@ -7,7 +7,7 @@
 
 <style>
     .admin-wrap { display: flex; flex-wrap: wrap; min-height: calc(100vh - 60px); background: #f1f4fb; margin: -28px; }
-    .dash-sidebar { width: 230px; background: #1a2236; flex-shrink: 0; padding: 60px 0 24px; display: flex; flex-direction: column; min-height: 100vh; }
+    .dash-sidebar { width: 230px; background: #1a2236; flex-shrink: 0; padding: 16px 0; display: flex; flex-direction: column; min-height: 100vh; }
     .nav-section-label { font-size: 9.5px; font-weight: 700; color: rgba(240,244,255,0.35); text-transform: uppercase; letter-spacing: 1.4px; padding: 14px 20px 6px; }
     .sidebar-link { display: flex; align-items: center; gap: 11px; padding: 9px 20px; color: rgba(240,244,255,0.62); text-decoration: none; font-size: 13px; font-weight: 500; border-left: 3px solid transparent; transition: all 0.18s; }
     .sidebar-link:hover { color: #fff; background: rgba(99,91,255,0.1); border-left-color: rgba(99,91,255,0.5); }
@@ -91,7 +91,7 @@
                                 <td style="color:#ef4444;font-weight:700;">@r.Wrong</td>
                                 <td>@r.ExamDate.ToString("dd MMM yyyy, hh:mm tt")</td>
                                 <td>
-                                    <a class="btn-view" href="/Exam/Review?moduleId=@r.ModuleId">🔍 Review</a>
+                                    <a class="btn-view" href="/User/ViewResult?sessionId=@r.SessionId&moduleId=@r.ModuleId">🔍 View Result</a>
                                 </td>
                             </tr>
                         }

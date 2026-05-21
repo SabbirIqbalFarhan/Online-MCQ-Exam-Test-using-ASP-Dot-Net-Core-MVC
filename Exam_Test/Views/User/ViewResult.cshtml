@@ -1,0 +1,227 @@
+﻿@{
+    ViewData["Title"] = "User Result Detail";
+    var session = ViewBag.Session as Exam_Test.Models.ExamSession;
+    var profile = ViewBag.Profile as Exam_Test.Models.UserProfile;
+    var result = ViewBag.Result as Exam_Test.Models.Result;
+    int sessionId = ViewBag.SessionId ?? 0;
+    int moduleId = ViewBag.ModuleId ?? 0;
+    int totalCorrect = ViewBag.TotalCorrect ?? 0;
+    int totalWrong = ViewBag.TotalWrong ?? 0;
+    int totalQuestions = ViewBag.TotalQuestions ?? 0;
+    double percentage = totalQuestions > 0 ? Math.Round((double)totalCorrect / totalQuestions * 100, 1) : 0;
+    var userAnswers = ViewBag.UserAnswers as List<Exam_Test.Models.UserAnswer> ?? new List<Exam_Test.Models.UserAnswer>();
+}
+
+<style>
+    .admin-wrap {
+        display: flex;
+        min-height: calc(100vh - 60px);
+        background: #f1f4fb;
+        margin: -16px;
+    }
+    .dash-sidebar {
+        width: 230px;
+        background: #1a2236;
+        flex-shrink: 0;
+        padding: 16px 0;
+        display: flex;
+        flex-direction: column;
+        min-height: calc(100vh - 60px);
+    }
+    .dash-main {
+        flex: 1;
+        padding: 28px;
+        overflow-y: auto;
+    }
+    .nav-section-label { font-size: 9.5px; font-weight: 700; color: rgba(240,244,255,0.35); text-transform: uppercase; letter-spacing: 1.4px; padding: 14px 20px 6px; }
+    .sidebar-link { display: flex; align-items: center; gap: 11px; padding: 9px 20px; color: rgba(240,244,255,0.62); text-decoration: none; font-size: 13px; font-weight: 500; border-left: 3px solid transparent; transition: all 0.18s; }
+    .sidebar-link:hover { color: #fff; background: rgba(99,91,255,0.1); border-left-color: rgba(99,91,255,0.5); }
+    .sidebar-link.active { color: #fff; background: rgba(99,91,255,0.15); border-left-color: #635bff; }
+    .sidebar-link .s-icon { width: 30px; height: 30px; border-radius: 8px; display: grid; place-items: center; font-size: 14px; flex-shrink: 0; background: rgba(255,255,255,0.06); }
+    .sidebar-link:hover .s-icon, .sidebar-link.active .s-icon { background: rgba(99,91,255,0.25); }
+    .btn-back { display: inline-flex; align-items: center; gap: 7px; padding: 9px 18px; border-radius: 10px; background: #1a2236; color: #fff; font-size: 13px; font-weight: 700; text-decoration: none; margin-bottom: 24px; transition: 0.2s; }
+    .btn-back:hover { background: #243050; color: #fff; }
+    .student-card { background: #fff; border: 1px solid #e5e9f2; border-radius: 16px; padding: 24px 28px; margin-bottom: 24px; display: flex; align-items: center; gap: 20px; box-shadow: 0 2px 8px rgba(26,34,54,0.04); }
+    .student-avatar { width: 60px; height: 60px; border-radius: 50%; background: rgba(99,91,255,0.12); display: grid; place-items: center; font-size: 24px; font-weight: 800; color: #635bff; flex-shrink: 0; }
+    .student-info h3 { font-size: 18px; font-weight: 800; color: #1a2236; margin: 0 0 4px; }
+    .student-info p { font-size: 13px; color: #64748b; margin: 0; }
+    .student-id-badge { margin-left: auto; background: rgba(99,91,255,0.08); border: 1px solid rgba(99,91,255,0.2); color: #635bff; padding: 6px 16px; border-radius: 999px; font-size: 13px; font-weight: 700; }
+    .module-badge { display: inline-flex; align-items: center; gap: 6px; background: rgba(99,91,255,0.1); color: #635bff; padding: 3px 12px; border-radius: 999px; font-size: 12px; font-weight: 700; margin-left: 10px; vertical-align: middle; }
+    .summary-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
+    .summary-card { background: #fff; border: 1px solid #e5e9f2; border-radius: 14px; padding: 20px; text-align: center; box-shadow: 0 2px 8px rgba(26,34,54,0.04); }
+    .summary-card .s-num { font-size: 32px; font-weight: 900; margin-bottom: 4px; }
+    .summary-card .s-label { font-size: 12px; font-weight: 600; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px; }
+    .num-total { color: #1a2236; }
+    .num-correct { color: #10b981; }
+    .num-wrong { color: #ef4444; }
+    .num-pct { color: #635bff; }
+    .progress-wrap { background: #fff; border: 1px solid #e5e9f2; border-radius: 14px; padding: 20px 24px; margin-bottom: 24px; box-shadow: 0 2px 8px rgba(26,34,54,0.04); }
+    .progress-wrap h4 { font-size: 13px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin: 0 0 12px; }
+    .progress-bar-bg { background: #f1f5f9; border-radius: 999px; height: 14px; overflow: hidden; }
+    .progress-bar-fill { height: 100%; border-radius: 999px; background: linear-gradient(90deg, #635bff, #10b981); transition: width 0.6s ease; }
+    .review-header { display: flex; align-items: center; gap: 8px; font-size: 15px; font-weight: 800; color: #1a2236; margin-bottom: 16px; }
+    .q-card { border-radius: 14px; padding: 20px 22px; margin-bottom: 12px; border: 1.5px solid transparent; }
+    .q-card.correct { background: #f0fdf4; border-color: #86efac; }
+    .q-card.wrong { background: #fff5f5; border-color: #fca5a5; }
+    .q-header { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 14px; }
+    .q-num { width: 28px; height: 28px; border-radius: 8px; display: grid; place-items: center; font-size: 12px; font-weight: 800; flex-shrink: 0; }
+    .correct .q-num { background: #dcfce7; color: #166534; }
+    .wrong .q-num { background: #fee2e2; color: #991b1b; }
+    .q-text { font-size: 14px; font-weight: 600; color: #1a2236; line-height: 1.5; flex: 1; }
+    .q-status-badge { flex-shrink: 0; font-size: 11px; font-weight: 700; padding: 4px 12px; border-radius: 999px; }
+    .correct .q-status-badge { background: #dcfce7; color: #166534; }
+    .wrong .q-status-badge { background: #fee2e2; color: #991b1b; }
+    .options-list { display: flex; flex-direction: column; gap: 8px; }
+    .opt { display: flex; align-items: center; gap: 10px; padding: 9px 14px; border-radius: 9px; font-size: 13px; border: 1.5px solid #e5e9f2; background: #fff; }
+    .opt-letter { width: 24px; height: 24px; border-radius: 6px; display: grid; place-items: center; font-size: 11px; font-weight: 800; flex-shrink: 0; background: #f1f5f9; color: #64748b; }
+    .opt.is-correct { border-color: #86efac; background: #dcfce7; }
+    .opt.is-correct .opt-letter { background: #22c55e; color: #fff; }
+    .opt.is-selected-wrong { border-color: #fca5a5; background: #fee2e2; }
+    .opt.is-selected-wrong .opt-letter { background: #ef4444; color: #fff; }
+    .opt-tag { margin-left: auto; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 999px; }
+    .opt.is-correct .opt-tag { background: #22c55e; color: #fff; }
+    .opt.is-selected-wrong .opt-tag { background: #ef4444; color: #fff; }
+    .q-img { max-width: 260px; border-radius: 10px; margin-bottom: 12px; border: 1px solid #e5e9f2; display: block; }
+    .empty-state { text-align: center; padding: 50px; color: #94a3b8; font-size: 14px; background: #fff; border-radius: 16px; border: 1px solid #e5e9f2; }
+</style>
+
+<div class="admin-wrap">
+
+   <div class="dash-sidebar">
+    <div class="nav-section-label">Menu</div>
+    <a class="sidebar-link" href="/User/Dashboard"><span class="s-icon">📊</span><span>Dashboard</span></a>
+    <a class="sidebar-link" href="/User/RequestExamAccess"><span class="s-icon">📩</span><span>Request Access</span></a>
+    <a class="sidebar-link active" href="/User/Results"><span class="s-icon">📈</span><span>My Results</span></a>
+</div>
+
+    <div class="dash-main">
+
+        <a class="btn-back" href="/User/Results">
+            <i class="fa-solid fa-arrow-left"></i> Back to Session Results
+        </a>
+
+        <div class="student-card">
+            <div class="student-avatar">
+                @(profile?.FullName?.Substring(0, 1).ToUpper() ?? "?")
+            </div>
+            <div class="student-info">
+                <h3>
+                    @(profile?.FullName ?? "Unknown User")
+                    <span class="module-badge">Module @moduleId</span>
+                </h3>
+                <p>
+                    <i class="fa-solid fa-id-card" style="margin-right:5px;color:#635bff;"></i>
+                    Student ID: <strong>@(profile?.StudentId ?? "—")</strong>
+                    &#160;&#160;
+                    <i class="fa-solid fa-calendar" style="margin-right:5px;color:#94a3b8;"></i>
+                    Session: <strong>@session?.Title</strong>
+                    @if (result != null)
+                    {
+                        <text>&#160;&#160;<i class="fa-regular fa-clock" style="margin-right:4px;color:#94a3b8;"></i>@result.ExamDate.ToString("yyyy-MM-dd HH:mm")</text>
+                    }
+                </p>
+            </div>
+            @if (profile?.StudentId != null)
+            {
+                <span class="student-id-badge">
+                    <i class="fa-solid fa-graduation-cap" style="margin-right:5px;"></i>@profile.StudentId
+                </span>
+            }
+        </div>
+
+        <div class="summary-grid">
+            <div class="summary-card">
+                <div class="s-num num-total">@totalQuestions</div>
+                <div class="s-label">Total Answered</div>
+            </div>
+            <div class="summary-card">
+                <div class="s-num num-correct">@totalCorrect</div>
+                <div class="s-label">Total Correct</div>
+            </div>
+            <div class="summary-card">
+                <div class="s-num num-wrong">@totalWrong</div>
+                <div class="s-label">Total Wrong</div>
+            </div>
+            <div class="summary-card">
+                <div class="s-num num-pct">@percentage%</div>
+                <div class="s-label">Score</div>
+            </div>
+        </div>
+
+        <div class="progress-wrap">
+            <h4>
+                <i class="fa-solid fa-chart-bar" style="margin-right:6px;color:#635bff;"></i>
+                Module @moduleId Performance
+            </h4>
+            <div style="display:flex;align-items:center;gap:12px;">
+                <div class="progress-bar-bg" style="flex:1;">
+                    <div class="progress-bar-fill" style="width:@(percentage)%;"></div>
+                </div>
+                <span style="font-size:14px;font-weight:800;color:#635bff;min-width:50px;">@percentage%</span>
+            </div>
+        </div>
+
+        @if (userAnswers.Any())
+        {
+            <div class="review-header">
+                <i class="fa-solid fa-list-check" style="color:#635bff;"></i>
+                Question Review — Module @moduleId
+            </div>
+
+            int qNum = 1;
+            foreach (var ans in userAnswers)
+            {
+                if (ans.Question == null) { continue; }
+                var q = ans.Question;
+                string cardClass = ans.IsCorrect ? "correct" : "wrong";
+                string statusLabel = ans.IsCorrect ? "Correct" : "Wrong";
+                string statusIcon = ans.IsCorrect ? "&#10003;" : "&#10007;";
+
+                <div class="q-card @cardClass">
+                    <div class="q-header">
+                        <div class="q-num">@qNum</div>
+                        <div class="q-text">@q.QuestionText</div>
+                        <span class="q-status-badge">@Html.Raw(statusIcon) @statusLabel</span>
+                    </div>
+
+                    @if (!string.IsNullOrEmpty(q.ImagePath))
+                    {
+                        <img src="~/images/@System.IO.Path.GetFileName(q.ImagePath)" class="q-img" alt="Question image" />
+                    }
+
+                    <div class="options-list">
+                        @{
+                            var opts = new[]
+                            {
+                                new { Letter = "A", Text = q.OptionA },
+                                new { Letter = "B", Text = q.OptionB },
+                                new { Letter = "C", Text = q.OptionC }
+                            };
+                        }
+                        @foreach (var opt in opts)
+                        {
+                            bool isCorrectOpt = q.CorrectAnswer == opt.Letter;
+                            bool isSelectedWrong = !ans.IsCorrect && ans.SelectedAnswer == opt.Letter;
+                            string optClass = isCorrectOpt ? "is-correct" : (isSelectedWrong ? "is-selected-wrong" : "");
+                            string optTag = isCorrectOpt ? "Correct" : (isSelectedWrong ? "Your Answer" : "");
+                            <div class="opt @optClass">
+                                <div class="opt-letter">@opt.Letter</div>
+                                <span style="flex:1;color:#374151;">@opt.Text</span>
+                                @if (!string.IsNullOrEmpty(optTag))
+                                {
+                                    <span class="opt-tag">@optTag</span>
+                                }
+                            </div>
+                        }
+                    </div>
+                </div>
+                qNum++;
+            }
+        }
+        else
+        {
+            <div class="empty-state">No answers recorded for this module.</div>
+        }
+
+    </div>
+</div>
