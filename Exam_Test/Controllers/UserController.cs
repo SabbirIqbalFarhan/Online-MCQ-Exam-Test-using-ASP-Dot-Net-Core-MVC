@@ -27,6 +27,8 @@ namespace Exam_Test.Controllers
             var permission = _context.ExamPermissions.FirstOrDefault(p => p.UserId == user.Id);
             var examRequest = _context.ExamRequests.FirstOrDefault(r => r.UserId == user.Id);
             var activeSession = _context.ExamSessions.FirstOrDefault(s => s.IsActive);
+            var allSessions = _context.ExamSessions.OrderByDescending(s => s.CreatedAt).ToList();
+            ViewBag.AllSessions = allSessions;
             var profile = _context.UserProfiles.FirstOrDefault(p => p.UserId == user.Id);
 
             ViewBag.UserName = user.UserName;
@@ -36,14 +38,7 @@ namespace Exam_Test.Controllers
             ViewBag.ActiveSession = activeSession;
             ViewBag.Profile = profile;
 
-            if (TempData["Error"] != null) ViewBag.Error = TempData["Error"];
-            if (TempData["ModuleResult"] != null) ViewBag.ModuleResult = TempData["ModuleResult"];
-            if (TempData["ExamDone"] != null)
-            {
-                ViewBag.ExamDone = true;
-                ViewBag.FinalCorrect = TempData["FinalCorrect"];
-                ViewBag.FinalWrong = TempData["FinalWrong"];
-            }
+            
 
             return View();
         }
@@ -84,6 +79,9 @@ namespace Exam_Test.Controllers
                 .Where(r => r.UserId == user.Id)
                 .OrderByDescending(r => r.Id)
                 .ToList();
+
+            var sessions = _context.ExamSessions.ToList();
+            ViewBag.Sessions = sessions;
 
             return View(results);
         }

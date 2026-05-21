@@ -6,86 +6,63 @@
     int total    = correct + wrong;
     int pct      = total > 0 ? (correct * 100 / total) : 0;
     double dashOffset = 283 - (283.0 * pct / 100);
+    var userAnswers = ViewBag.UserAnswers as List<Exam_Test.Models.UserAnswer> ?? new List<Exam_Test.Models.UserAnswer>();
 }
 
 <style>
-    body {
-        margin: 0;
-        font-family: "Segoe UI", Roboto, Arial, sans-serif;
-        background: #f4f6ff;
-        color: #111827;
-    }
-
-    .page {
-        max-width: 700px;
-        margin: auto;
-        padding: 60px 20px;
-        text-align: center;
-    }
-
-    .card {
-        background: #fff;
-        border: 1px solid #e5e7eb;
-        border-radius: 18px;
-        padding: 36px 30px;
-        box-shadow: 0 10px 25px rgba(0,0,0,0.05);
-    }
-
-    .title    { font-size: 22px; font-weight: 700; margin-bottom: 6px; }
+    body { margin: 0; font-family: "Segoe UI", Roboto, Arial, sans-serif; background: #f4f6ff; color: #111827; }
+    .page { max-width: 800px; margin: auto; padding: 40px 16px; }
+    .card { background: #fff; border: 1px solid #e5e7eb; border-radius: 18px; padding: 32px 28px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); margin-bottom: 24px; }
+    .title { font-size: 22px; font-weight: 700; margin-bottom: 6px; }
     .subtitle { font-size: 13px; color: #6b7280; margin-bottom: 24px; }
-
     .score-ring-wrap { display: flex; justify-content: center; margin-bottom: 24px; }
     .score-ring { position: relative; width: 120px; height: 120px; }
     .score-ring svg { transform: rotate(-90deg); }
     .ring-bg   { fill: none; stroke: #e5e7eb; stroke-width: 10; }
-    .ring-fill { fill: none; stroke: #10b981; stroke-width: 10; stroke-linecap: round; stroke-dasharray: 283; transition: stroke-dashoffset 1s ease; }
+    .ring-fill { fill: none; stroke: #10b981; stroke-width: 10; stroke-linecap: round; stroke-dasharray: 283; }
     .ring-text { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
     .ring-pct  { font-size: 22px; font-weight: 800; color: #111827; line-height: 1; }
     .ring-label{ font-size: 10px; color: #6b7280; font-weight: 600; margin-top: 2px; }
-
     .stats { display: flex; justify-content: center; gap: 16px; margin: 0 0 28px 0; flex-wrap: wrap; }
-    .box { flex: 1; min-width: 130px; padding: 16px; border-radius: 14px; border: 1px solid #e5e7eb; background: #f9fafb; }
-    .box h3 { margin: 0; font-size: 13px; color: #6b7280; font-weight: 500; }
+    .box { flex: 1; min-width: 100px; padding: 16px; border-radius: 14px; border: 1px solid #e5e7eb; background: #f9fafb; text-align: center; }
+    .box h3 { margin: 0; font-size: 12px; color: #6b7280; font-weight: 500; }
     .box span { display: block; margin-top: 6px; font-size: 24px; font-weight: 800; }
-
     .correct-val { color: #16a34a; }
     .wrong-val   { color: #dc2626; }
     .total-val   { color: #4f46e5; }
-
     .divider { border: none; border-top: 1px solid #f3f4f6; margin: 0 0 20px 0; }
-
-    .actions { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
-    .btn {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        padding: 10px 18px;
-        border-radius: 10px;
-        font-size: 13px;
-        font-weight: 600;
-        text-decoration: none;
-        transition: 0.2s;
-    }
+    .actions { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-bottom: 32px; }
+    .btn { display: inline-flex; align-items: center; gap: 6px; padding: 10px 18px; border-radius: 10px; font-size: 13px; font-weight: 600; text-decoration: none; transition: 0.2s; }
     .btn-primary { background: #4f46e5; color: #fff; }
     .btn-primary:hover { background: #3730a3; color: #fff; }
-    .btn-outline { background: #fff; border: 1px solid #4f46e5; color: #4f46e5; }
-    .btn-outline:hover { background: #eef2ff; }
-    .btn-success { background: #10b981; color: #fff; }
-    .btn-success:hover { background: #059669; color: #fff; }
+    .btn-outline { background: #fff; border: 1px solid #e5e7eb; color: #374151; }
+    .btn-outline:hover { background: #f3f4f6; }
+    .section-title { font-size: 16px; font-weight: 700; color: #1a2236; margin-bottom: 16px; }
+    .q-row { background: #fff; border: 1px solid #e5e7eb; border-radius: 14px; padding: 18px 20px; margin-bottom: 12px; }
+    .q-row.correct-row { border-left: 4px solid #10b981; }
+    .q-row.wrong-row { border-left: 4px solid #ef4444; }
+    .q-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.7px; margin-bottom: 6px; }
+    .q-label.c { color: #10b981; }
+    .q-label.w { color: #ef4444; }
+    .q-text { font-size: 14px; font-weight: 600; color: #1a2236; margin-bottom: 10px; }
+    .q-image { max-width: 100%; max-height: 200px; border-radius: 8px; border: 1px solid #e5e7eb; margin-bottom: 10px; display: block; }
+    .ans-row { display: flex; align-items: center; gap: 8px; font-size: 13px; margin-bottom: 4px; }
+    .ans-badge { padding: 2px 10px; border-radius: 999px; font-size: 11.5px; font-weight: 700; }
+    .ans-selected-correct { background: #dcfce7; color: #166534; }
+    .ans-selected-wrong   { background: #fee2e2; color: #991b1b; }
+    .ans-correct-hint     { background: #dcfce7; color: #166534; }
 </style>
 
 <div class="page">
-    <div class="card">
-
+    <div class="card" style="text-align:center;">
         <div class="title">🎯 Module @moduleId — Exam Result</div>
-        <div class="subtitle">Here's how you performed on this module</div>
+        <div class="subtitle">Here's how you performed</div>
 
         <div class="score-ring-wrap">
             <div class="score-ring">
                 <svg width="120" height="120" viewBox="0 0 100 100">
-                    <circle class="ring-bg"   cx="50" cy="50" r="45" />
-                    <circle class="ring-fill" cx="50" cy="50" r="45"
-                            style="stroke-dashoffset:@dashOffset.ToString("F1")" />
+                    <circle class="ring-bg" cx="50" cy="50" r="45" />
+                    <circle class="ring-fill" cx="50" cy="50" r="45" style="stroke-dashoffset:@dashOffset.ToString("F1")" />
                 </svg>
                 <div class="ring-text">
                     <span class="ring-pct">@pct%</span>
@@ -96,18 +73,54 @@
 
         <div class="stats">
             <div class="box"><h3>✅ Correct</h3><span class="correct-val">@correct</span></div>
-            <div class="box"><h3>❌ Wrong</h3>  <span class="wrong-val">@wrong</span></div>
-            <div class="box"><h3>📋 Total</h3>  <span class="total-val">@total</span></div>
+            <div class="box"><h3>❌ Wrong</h3><span class="wrong-val">@wrong</span></div>
+            <div class="box"><h3>📋 Total</h3><span class="total-val">@total</span></div>
         </div>
 
         <hr class="divider" />
 
         <div class="actions">
-            <a class="btn btn-primary" href="/Exam/Review?moduleId=@moduleId">🔍 Review All</a>
-            <a class="btn btn-outline" href="/Exam/Review?moduleId=@moduleId&onlyWrong=true">❌ Wrong Only</a>
-            <a class="btn btn-success" href="/Exam/History">📊 History</a>
-            <a class="btn btn-outline" href="/User/Dashboard">← Dashboard</a>
+            <a class="btn btn-outline" href="/User/Dashboard">← Back to Dashboard</a>
         </div>
-
     </div>
+
+    <div class="section-title">📋 Question Breakdown</div>
+
+    @foreach (var ans in userAnswers)
+    {
+        bool isCorrect = ans.IsCorrect;
+        var q = ans.Question;
+        if (q == null) continue;
+
+        <div class="q-row @(isCorrect ? "correct-row" : "wrong-row")">
+            <div class="q-label @(isCorrect ? "c" : "w")">
+                @(isCorrect ? "✅ Correct" : "❌ Wrong")
+            </div>
+
+            @if (!string.IsNullOrEmpty(q.ImagePath))
+            {
+                <img class="q-image" src="~/images/@q.ImagePath" />
+            }
+
+            @if (!string.IsNullOrEmpty(q.QuestionText))
+            {
+                <div class="q-text">@q.QuestionText</div>
+            }
+
+            <div class="ans-row">
+                <span class="ans-badge @(isCorrect ? "ans-selected-correct" : "ans-selected-wrong")">
+                    Your answer: @(ans.SelectedAnswer ?? "No answer")
+                </span>
+            </div>
+
+            @if (!isCorrect)
+            {
+                <div class="ans-row">
+                    <span class="ans-badge ans-correct-hint">
+                        ✅ Correct answer: @q.CorrectAnswer
+                    </span>
+                </div>
+            }
+        </div>
+    }
 </div>

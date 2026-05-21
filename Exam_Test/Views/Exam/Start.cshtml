@@ -424,11 +424,22 @@
     }
 
     // Timer - counts up
-    let seconds = 0;
-    setInterval(function () {
-        seconds++;
-        let m = Math.floor(seconds / 60).toString().padStart(2, '0');
-        let s = (seconds % 60).toString().padStart(2, '0');
-        document.getElementById('timer').innerText = m + ':' + s;
-    }, 1000);
+    let timeLeft = 1800; // 30 minutes
+const timerEl = document.getElementById('timer');
+
+function updateTimer() {
+    let m = Math.floor(timeLeft / 60).toString().padStart(2, '0');
+    let s = (timeLeft % 60).toString().padStart(2, '0');
+    timerEl.innerText = m + ':' + s;
+    if (timeLeft <= 60) timerEl.style.background = '#b91c1c';
+    if (timeLeft <= 0) {
+        timerEl.innerText = '00:00';
+        document.getElementById('examForm').submit();
+        return;
+    }
+    timeLeft--;
+}
+
+updateTimer();
+setInterval(updateTimer, 1000);
 </script>

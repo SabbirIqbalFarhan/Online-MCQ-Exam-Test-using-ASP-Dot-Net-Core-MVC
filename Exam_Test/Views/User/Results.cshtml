@@ -1,0 +1,103 @@
+﻿@model List<Exam_Test.Models.Result>
+
+@{
+    ViewData["Title"] = "My Results";
+    var sessions = ViewBag.Sessions as List<Exam_Test.Models.ExamSession> ?? new List<Exam_Test.Models.ExamSession>();
+}
+
+<style>
+    .admin-wrap { display: flex; flex-wrap: wrap; min-height: calc(100vh - 60px); background: #f1f4fb; margin: -28px; }
+    .dash-sidebar { width: 230px; background: #1a2236; flex-shrink: 0; padding: 60px 0 24px; display: flex; flex-direction: column; min-height: 100vh; }
+    .nav-section-label { font-size: 9.5px; font-weight: 700; color: rgba(240,244,255,0.35); text-transform: uppercase; letter-spacing: 1.4px; padding: 14px 20px 6px; }
+    .sidebar-link { display: flex; align-items: center; gap: 11px; padding: 9px 20px; color: rgba(240,244,255,0.62); text-decoration: none; font-size: 13px; font-weight: 500; border-left: 3px solid transparent; transition: all 0.18s; }
+    .sidebar-link:hover { color: #fff; background: rgba(99,91,255,0.1); border-left-color: rgba(99,91,255,0.5); }
+    .sidebar-link.active { color: #fff; background: rgba(99,91,255,0.15); border-left-color: #635bff; }
+    .sidebar-link .s-icon { width: 30px; height: 30px; border-radius: 8px; display: grid; place-items: center; font-size: 14px; flex-shrink: 0; background: rgba(255,255,255,0.06); }
+    .sidebar-link:hover .s-icon, .sidebar-link.active .s-icon { background: rgba(99,91,255,0.25); }
+    .dash-main { flex: 1 1 300px; padding: 28px; overflow-y: auto; }
+    .page-header { margin-bottom: 24px; }
+    .page-header h2 { font-size: 22px; font-weight: 800; color: #1a2236; margin: 0 0 4px; }
+    .page-header p { font-size: 13px; color: #64748b; margin: 0; }
+    .table-card { background: #fff; border: 1px solid #e5e9f2; border-radius: 16px; overflow: hidden; box-shadow: 0 2px 8px rgba(26,34,54,0.04); }
+    .table-card table { width: 100%; border-collapse: collapse; }
+    .table-card thead { background: #1a2236; }
+    .table-card th { padding: 13px 16px; font-size: 11px; font-weight: 700; color: rgba(240,244,255,0.6); text-transform: uppercase; letter-spacing: 0.8px; text-align: left; }
+    .table-card td { padding: 12px 16px; font-size: 13px; color: #374151; }
+    .table-card tbody tr { border-bottom: 1px solid #f1f5f9; transition: 0.18s; }
+    .table-card tbody tr:last-child { border-bottom: none; }
+    .table-card tbody tr:hover { background: #f8f9ff; }
+    .badge-green { background: #dcfce7; color: #166534; padding: 4px 10px; border-radius: 999px; font-size: 11.5px; font-weight: 700; }
+    .badge-red { background: #fee2e2; color: #991b1b; padding: 4px 10px; border-radius: 999px; font-size: 11.5px; font-weight: 700; }
+    .module-pill { background: rgba(99,91,255,0.1); color: #635bff; padding: 3px 10px; border-radius: 999px; font-size: 11.5px; font-weight: 700; }
+    .btn-view { display: inline-flex; align-items: center; gap: 5px; padding: 5px 12px; border-radius: 7px; background: #635bff; color: #fff; font-size: 12px; font-weight: 700; text-decoration: none; }
+    .btn-view:hover { background: #4f46e5; color: #fff; }
+</style>
+
+<div class="admin-wrap">
+    <div class="dash-sidebar">
+        <div class="nav-section-label">Menu</div>
+        <a class="sidebar-link" href="/User/Dashboard"><span class="s-icon">📊</span><span>Dashboard</span></a>
+        <a class="sidebar-link" href="/User/RequestExamAccess"><span class="s-icon">📩</span><span>Request Access</span></a>
+        <a class="sidebar-link active" href="/User/Results"><span class="s-icon">📈</span><span>My Results</span></a>
+    </div>
+
+    <div class="dash-main">
+        <div class="page-header">
+            <h2>My Results</h2>
+            <p>Your exam history across all sessions</p>
+        </div>
+
+        @if (!Model.Any())
+        {
+            <div style="background:#fff;border-radius:14px;padding:32px;text-align:center;color:#64748b;border:1px solid #e5e9f2;">
+                No results yet. Complete an exam to see your results here.
+            </div>
+        }
+        else
+        {
+            <div class="table-card">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Session</th>
+                            <th>Module</th>
+                            <th>Score</th>
+                            <th>Correct</th>
+                            <th>Wrong</th>
+                            <th>Date</th>
+                            <th>Review</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var r in Model)
+                        {
+                            int total = r.Correct + r.Wrong;
+                            int pct = total > 0 ? (r.Correct * 100 / total) : 0;
+                            var sess = sessions.FirstOrDefault(s => s.Id == r.SessionId);
+                            <tr>
+                                <td>@(sess?.Title ?? "—")</td>
+                                <td><span class="module-pill">M@r.ModuleId</span></td>
+                                <td>
+                                    @if (pct >= 60)
+                                    {
+                                        <span class="badge-green">@pct%</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge-red">@pct%</span>
+                                    }
+                                </td>
+                                <td style="color:#10b981;font-weight:700;">@r.Correct</td>
+                                <td style="color:#ef4444;font-weight:700;">@r.Wrong</td>
+                                <td>@r.ExamDate.ToString("dd MMM yyyy, hh:mm tt")</td>
+                                <td>
+                                    <a class="btn-view" href="/Exam/Review?moduleId=@r.ModuleId">🔍 Review</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+</div>

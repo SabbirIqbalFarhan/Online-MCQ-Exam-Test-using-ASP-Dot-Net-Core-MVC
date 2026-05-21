@@ -52,6 +52,16 @@ namespace Exam_Test.Controllers
                 return RedirectToAction("Dashboard", "User");
             }
 
+            // Prevent re-taking the same module in the same session
+            bool alreadyAttempted = _context.Results
+                .Any(r => r.UserId == user.Id && r.ModuleId == moduleId && r.SessionId == session.Id);
+
+            if (alreadyAttempted)
+            {
+                TempData["Error"] = $"You have already completed Module {moduleId} in this session.";
+                return RedirectToAction("Dashboard", "User");
+            }
+
             var questions = _context.Questions
                 .Where(q => q.ModuleId == moduleId)
                 .ToList();
@@ -72,6 +82,13 @@ namespace Exam_Test.Controllers
                 .FirstOrDefault(p => p.UserId == user.Id && p.IsPermitted == true);
 
             if (permission == null)
+                return RedirectToAction("Dashboard", "User");
+
+            // Prevent double-submit
+            bool alreadySubmitted = _context.Results
+                .Any(r => r.UserId == user.Id && r.ModuleId == moduleId && r.SessionId == sessionId);
+
+            if (alreadySubmitted)
                 return RedirectToAction("Dashboard", "User");
 
             var questions = await _context.Questions
@@ -111,18 +128,46 @@ namespace Exam_Test.Controllers
 
             await _context.SaveChangesAsync();
 
-            int nextModule = moduleId + 1;
+            // Always redirect to result page after submitting
+            return RedirectToAction("Result", new { moduleId = moduleId, sessionId = sessionId });
+        }
 
-            if (nextModule <= 3)
-            {
-                TempData["ModuleResult"] = $"✅ Module {moduleId} completed! Correct: {correct}, Wrong: {wrong}. Now starting Module {nextModule}...";
-                return RedirectToAction("Start", new { moduleId = nextModule });
-            }
+        public async Task<IActionResult> Result(int moduleId, int sessionId)
+        {
+            var user = await _userManager.GetUserAsync(User);
 
-            TempData["ExamDone"] = $"true";
-            TempData["FinalCorrect"] = correct.ToString();
-            TempData["FinalWrong"] = wrong.ToString();
-            return RedirectToAction("Dashboard", "User");
+            var result = _context.Results
+                .FirstOrDefault(r => r.UserId == user.Id && r.ModuleId == moduleId && r.SessionId == sessionId);
+
+            if (result == null)
+                return RedirectToAction("Dashboard", "User");
+
+            var moduleQuestionIds = _context.Questions
+                .Where(q => q.ModuleId == moduleId)
+                .Select(q => q.Id)
+                .ToList();
+
+            int totalQ = result.Correct + result.Wrong;
+
+            var userAnswers = _context.UserAnswers
+                .Where(a => a.UserId == user.Id && a.ModuleId == moduleId && moduleQuestionIds.Contains(a.QuestionId))
+                .OrderByDescending(a => a.Id)
+                .Take(totalQ)
+                .ToList();
+
+            var questionIds = userAnswers.Select(a => a.QuestionId).Distinct().ToList();
+            var questions = _context.Questions.Where(q => questionIds.Contains(q.Id)).ToList();
+
+            foreach (var ans in userAnswers)
+                ans.Question = questions.FirstOrDefault(q => q.Id == ans.QuestionId);
+
+            ViewBag.ModuleId = moduleId;
+            ViewBag.SessionId = sessionId;
+            ViewBag.Correct = result.Correct;
+            ViewBag.Wrong = result.Wrong;
+            ViewBag.UserAnswers = userAnswers;
+
+            return View();
         }
 
         public async Task<IActionResult> Review(int moduleId, bool onlyWrong = false)

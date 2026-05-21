@@ -23,10 +23,7 @@ namespace Exam_Test.Controllers
             ViewBag.TotalUsers = _context.Users.Count();
             ViewBag.PendingRequests = _context.ExamRequests.Count(r => r.Status == "Pending");
 
-            // Module Results: count per module
-            ViewBag.Module1Results = _context.Results.Count(r => r.ModuleId == 1);
-            ViewBag.Module2Results = _context.Results.Count(r => r.ModuleId == 2);
-            ViewBag.Module3Results = _context.Results.Count(r => r.ModuleId == 3);
+            ViewBag.TotalSessions = _context.ExamSessions.Count();
 
             ViewBag.Profiles = _context.UserProfiles.ToList();
 

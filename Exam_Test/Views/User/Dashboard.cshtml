@@ -391,10 +391,7 @@
             <span class="s-icon">📈</span>
             <span>My Results</span>
         </a>
-        <a class="sidebar-link" href="/User/Profile">
-            <span class="s-icon">👤</span>
-            <span>My Profile</span>
-        </a>
+        
     </div>
 
     <!-- MAIN -->
@@ -413,33 +410,7 @@
             }
         </div>
 
-        <!-- ALERTS -->
-        @if (ViewBag.Error != null)
-        {
-            <div class="alert alert-error">
-                <i class="fa-solid fa-circle-exclamation"></i>
-                @ViewBag.Error
-            </div>
-        }
-
-        @if (ViewBag.ModuleResult != null)
-        {
-            <div class="alert alert-success">
-                <i class="fa-solid fa-circle-check"></i>
-                @ViewBag.ModuleResult
-            </div>
-        }
-
-        @if (ViewBag.ExamDone != null)
-        {
-            <div class="alert alert-success">
-                <i class="fa-solid fa-trophy"></i>
-                <div>
-                    <strong>Exam Completed!</strong> You have successfully completed all modules.
-                    Final Module — Correct: @ViewBag.FinalCorrect, Wrong: @ViewBag.FinalWrong
-                </div>
-            </div>
-        }
+        
 
         <!-- PERMISSION BANNER -->
         @if (isPermitted)
@@ -523,6 +494,44 @@
                 </div>
             </div>
         }
+        <div class="section-title" style="margin-top:24px;">
+    <i class="fa-solid fa-calendar-days" style="color:#635bff;margin-right:7px;"></i>
+    All Sessions
+</div>
+
+@{
+    var allSessions = ViewBag.AllSessions as List<Exam_Test.Models.ExamSession> ?? new List<Exam_Test.Models.ExamSession>();
+}
+
+@foreach (var sess in allSessions)
+{
+    bool isLive = DateTime.Now >= sess.StartTime && DateTime.Now <= sess.EndTime && sess.IsActive;
+    bool isSoon = DateTime.Now < sess.StartTime;
+    bool isEnded = DateTime.Now > sess.EndTime || !sess.IsActive;
+
+    <div class="session-box" style="margin-bottom:10px;">
+        <div>
+            <div class="s-title">@sess.Title</div>
+            <div class="s-time">
+                Start: @sess.StartTime.ToString("dd MMM yyyy, hh:mm tt")
+                &nbsp;·&nbsp;
+                End: @sess.EndTime.ToString("dd MMM yyyy, hh:mm tt")
+            </div>
+        </div>
+        @if (isLive)
+        {
+            <span class="badge-live">🟢 Live Now</span>
+        }
+        else if (isSoon)
+        {
+            <span class="badge-soon">⏰ Starting Soon</span>
+        }
+        else
+        {
+            <span class="badge-ended">🔴 Ended</span>
+        }
+    </div>
+}
 
         <!-- STATS -->
         <div class="stats-row">
