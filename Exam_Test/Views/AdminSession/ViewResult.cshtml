@@ -1,11 +1,11 @@
-﻿@model List<Exam_Test.Models.Result>
-
-@{
+﻿@{
     ViewData["Title"] = "User Result Detail";
+    Layout = null;
     var session = ViewBag.Session as Exam_Test.Models.ExamSession;
     var profile = ViewBag.Profile as Exam_Test.Models.UserProfile;
-    string userId = ViewBag.UserId ?? "";
+    var result = ViewBag.Result as Exam_Test.Models.Result;
     int sessionId = ViewBag.SessionId ?? 0;
+    int moduleId = ViewBag.ModuleId ?? 0;
     int totalCorrect = ViewBag.TotalCorrect ?? 0;
     int totalWrong = ViewBag.TotalWrong ?? 0;
     int totalQuestions = ViewBag.TotalQuestions ?? 0;
@@ -13,109 +13,72 @@
     var userAnswers = ViewBag.UserAnswers as List<Exam_Test.Models.UserAnswer> ?? new List<Exam_Test.Models.UserAnswer>();
 }
 
-<style>
-    .mod-btn {
-    padding: 8px 18px;
-    border-radius: 999px;
-    border: 1.5px solid #e5e9f2;
-    background: #fff;
-    color: #64748b;
-    font-size: 13px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: 0.18s;
-}
-.mod-btn:hover {
-    border-color: #635bff;
-    color: #635bff;
-}
-.mod-btn.active {
-    background: #635bff;
-    border-color: #635bff;
-    color: #fff;
-}
-    .admin-wrap { display: flex; min-height: calc(100vh - 60px); background: #f1f4fb; }
-    .dash-sidebar { width: 230px; background: #1a2236; flex-shrink: 0; padding: 24px 0; display: flex; flex-direction: column; }
-    .nav-section-label { font-size: 9.5px; font-weight: 700; color: rgba(240,244,255,0.35); text-transform: uppercase; letter-spacing: 1.4px; padding: 14px 20px 6px; }
-    .sidebar-link { display: flex; align-items: center; gap: 11px; padding: 9px 20px; color: rgba(240,244,255,0.62); text-decoration: none; font-size: 13px; font-weight: 500; border-left: 3px solid transparent; transition: all 0.18s; }
-    .sidebar-link:hover { color: #fff; background: rgba(99,91,255,0.1); border-left-color: rgba(99,91,255,0.5); }
-    .sidebar-link.active { color: #fff; background: rgba(99,91,255,0.15); border-left-color: #635bff; }
-    .sidebar-link .s-icon { width: 30px; height: 30px; border-radius: 8px; display: grid; place-items: center; font-size: 14px; flex-shrink: 0; background: rgba(255,255,255,0.06); }
-    .sidebar-link:hover .s-icon, .sidebar-link.active .s-icon { background: rgba(99,91,255,0.25); }
-    .dash-main { flex: 1; padding: 28px; overflow-y: auto; }
-    .btn-back { display: inline-flex; align-items: center; gap: 7px; padding: 9px 18px; border-radius: 10px; background: #1a2236; color: #fff; font-size: 13px; font-weight: 700; text-decoration: none; margin-bottom: 24px; transition: 0.2s; }
-    .btn-back:hover { background: #243050; color: #fff; }
-
-    .student-card { background: #fff; border: 1px solid #e5e9f2; border-radius: 16px; padding: 24px 28px; margin-bottom: 24px; display: flex; align-items: center; gap: 20px; box-shadow: 0 2px 8px rgba(26,34,54,0.04); }
-    .student-avatar { width: 60px; height: 60px; border-radius: 50%; background: rgba(99,91,255,0.12); display: grid; place-items: center; font-size: 24px; font-weight: 800; color: #635bff; flex-shrink: 0; }
-    .student-info h3 { font-size: 18px; font-weight: 800; color: #1a2236; margin: 0 0 4px; }
-    .student-info p { font-size: 13px; color: #64748b; margin: 0; }
-    .student-id-badge { margin-left: auto; background: rgba(99,91,255,0.08); border: 1px solid rgba(99,91,255,0.2); color: #635bff; padding: 6px 16px; border-radius: 999px; font-size: 13px; font-weight: 700; }
-
-    .summary-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
-    .summary-card { background: #fff; border: 1px solid #e5e9f2; border-radius: 14px; padding: 20px; text-align: center; box-shadow: 0 2px 8px rgba(26,34,54,0.04); }
-    .summary-card .s-num { font-size: 32px; font-weight: 900; margin-bottom: 4px; }
-    .summary-card .s-label { font-size: 12px; font-weight: 600; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px; }
-    .num-total { color: #1a2236; }
-    .num-correct { color: #10b981; }
-    .num-wrong { color: #ef4444; }
-    .num-pct { color: #635bff; }
-
-    .progress-wrap { background: #fff; border: 1px solid #e5e9f2; border-radius: 14px; padding: 20px 24px; margin-bottom: 24px; box-shadow: 0 2px 8px rgba(26,34,54,0.04); }
-    .progress-wrap h4 { font-size: 13px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin: 0 0 12px; }
-    .progress-bar-bg { background: #f1f5f9; border-radius: 999px; height: 14px; overflow: hidden; }
-    .progress-bar-fill { height: 100%; border-radius: 999px; background: linear-gradient(90deg, #635bff, #10b981); transition: width 0.6s ease; }
-
-    .table-card { background: #fff; border: 1px solid #e5e9f2; border-radius: 16px; overflow: hidden; box-shadow: 0 2px 8px rgba(26,34,54,0.04); margin-bottom: 24px; }
-    .table-card h4 { font-size: 15px; font-weight: 800; color: #1a2236; padding: 18px 20px 0; margin: 0 0 14px; }
-    .table-card table { width: 100%; border-collapse: collapse; }
-    .table-card thead { background: #1a2236; }
-    .table-card th { padding: 12px 16px; font-size: 11px; font-weight: 700; color: rgba(240,244,255,0.6); text-transform: uppercase; letter-spacing: 0.8px; text-align: left; }
-    .table-card td { padding: 16px; font-size: 13px; color: #374151; border-bottom: 1px solid #f1f5f9; }
-    .table-card tbody tr:last-child td { border-bottom: none; }
-    .table-card tbody tr:hover { background: #f8f9ff; }
-    .module-pill { background: rgba(99,91,255,0.1); color: #635bff; padding: 5px 14px; border-radius: 999px; font-size: 12px; font-weight: 700; }
-    .badge-green { background: #dcfce7; color: #166534; padding: 5px 14px; border-radius: 999px; font-size: 12px; font-weight: 700; }
-    .badge-red { background: #fee2e2; color: #991b1b; padding: 5px 14px; border-radius: 999px; font-size: 12px; font-weight: 700; }
-    .mini-bar-bg { background: #f1f5f9; border-radius: 999px; height: 8px; width: 120px; overflow: hidden; display: inline-block; vertical-align: middle; margin-left: 8px; }
-    .mini-bar-fill { height: 100%; border-radius: 999px; background: linear-gradient(90deg, #635bff, #10b981); }
-    .empty-state { text-align:center; padding:50px; color:#94a3b8; font-size:14px; }
-
-    /* ── Question Review Section ── */
-    .review-section { margin-top: 8px; }
-    .review-section-header { font-size: 15px; font-weight: 800; color: #1a2236; margin: 0 0 16px; display: flex; align-items: center; gap: 8px; }
-
-    .module-group { margin-bottom: 28px; }
-    .module-group-title { font-size: 12px; font-weight: 700; color: #635bff; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; padding: 6px 14px; background: rgba(99,91,255,0.07); border-radius: 8px; display: inline-block; }
-
-    .q-card { border-radius: 14px; padding: 20px 22px; margin-bottom: 12px; border: 1.5px solid transparent; }
-    .q-card.correct { background: #f0fdf4; border-color: #86efac; }
-    .q-card.wrong { background: #fff5f5; border-color: #fca5a5; }
-
-    .q-header { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 14px; }
-    .q-num { width: 28px; height: 28px; border-radius: 8px; display: grid; place-items: center; font-size: 12px; font-weight: 800; flex-shrink: 0; }
-    .correct .q-num { background: #dcfce7; color: #166534; }
-    .wrong .q-num { background: #fee2e2; color: #991b1b; }
-    .q-text { font-size: 14px; font-weight: 600; color: #1a2236; line-height: 1.5; flex: 1; }
-    .q-status-badge { flex-shrink: 0; font-size: 11px; font-weight: 700; padding: 4px 12px; border-radius: 999px; }
-    .correct .q-status-badge { background: #dcfce7; color: #166534; }
-    .wrong .q-status-badge { background: #fee2e2; color: #991b1b; }
-
-    .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-    .opt { display: flex; align-items: center; gap: 10px; padding: 9px 14px; border-radius: 9px; font-size: 13px; border: 1.5px solid #e5e9f2; background: #fff; }
-    .opt-letter { width: 24px; height: 24px; border-radius: 6px; display: grid; place-items: center; font-size: 11px; font-weight: 800; flex-shrink: 0; background: #f1f5f9; color: #64748b; }
-    .opt.is-correct { border-color: #86efac; background: #dcfce7; }
-    .opt.is-correct .opt-letter { background: #22c55e; color: #fff; }
-    .opt.is-selected-wrong { border-color: #fca5a5; background: #fee2e2; }
-    .opt.is-selected-wrong .opt-letter { background: #ef4444; color: #fff; }
-    .opt-text { font-size: 13px; color: #374151; }
-    .opt-tag { margin-left: auto; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 999px; }
-    .opt.is-correct .opt-tag { background: #22c55e; color: #fff; }
-    .opt.is-selected-wrong .opt-tag { background: #ef4444; color: #fff; }
-
-    .q-img { max-width: 260px; border-radius: 10px; margin-bottom: 12px; border: 1px solid #e5e9f2; }
-</style>
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>User Result Detail</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', sans-serif; background: #f1f4fb; }
+        .admin-wrap { display: flex; min-height: 100vh; }
+        .dash-sidebar { width: 230px; background: #1a2236; flex-shrink: 0; padding: 24px 0; display: flex; flex-direction: column; }
+        .nav-section-label { font-size: 9.5px; font-weight: 700; color: rgba(240,244,255,0.35); text-transform: uppercase; letter-spacing: 1.4px; padding: 14px 20px 6px; }
+        .sidebar-link { display: flex; align-items: center; gap: 11px; padding: 9px 20px; color: rgba(240,244,255,0.62); text-decoration: none; font-size: 13px; font-weight: 500; border-left: 3px solid transparent; transition: all 0.18s; }
+        .sidebar-link:hover { color: #fff; background: rgba(99,91,255,0.1); border-left-color: rgba(99,91,255,0.5); }
+        .sidebar-link.active { color: #fff; background: rgba(99,91,255,0.15); border-left-color: #635bff; }
+        .sidebar-link .s-icon { width: 30px; height: 30px; border-radius: 8px; display: grid; place-items: center; font-size: 14px; flex-shrink: 0; background: rgba(255,255,255,0.06); }
+        .sidebar-link:hover .s-icon, .sidebar-link.active .s-icon { background: rgba(99,91,255,0.25); }
+        .dash-main { flex: 1; padding: 28px; overflow-y: auto; }
+        .btn-back { display: inline-flex; align-items: center; gap: 7px; padding: 9px 18px; border-radius: 10px; background: #1a2236; color: #fff; font-size: 13px; font-weight: 700; text-decoration: none; margin-bottom: 24px; transition: 0.2s; }
+        .btn-back:hover { background: #243050; color: #fff; }
+        .student-card { background: #fff; border: 1px solid #e5e9f2; border-radius: 16px; padding: 24px 28px; margin-bottom: 24px; display: flex; align-items: center; gap: 20px; box-shadow: 0 2px 8px rgba(26,34,54,0.04); }
+        .student-avatar { width: 60px; height: 60px; border-radius: 50%; background: rgba(99,91,255,0.12); display: grid; place-items: center; font-size: 24px; font-weight: 800; color: #635bff; flex-shrink: 0; }
+        .student-info h3 { font-size: 18px; font-weight: 800; color: #1a2236; margin: 0 0 4px; }
+        .student-info p { font-size: 13px; color: #64748b; margin: 0; }
+        .student-id-badge { margin-left: auto; background: rgba(99,91,255,0.08); border: 1px solid rgba(99,91,255,0.2); color: #635bff; padding: 6px 16px; border-radius: 999px; font-size: 13px; font-weight: 700; }
+        .module-badge { display: inline-flex; align-items: center; gap: 6px; background: rgba(99,91,255,0.1); color: #635bff; padding: 3px 12px; border-radius: 999px; font-size: 12px; font-weight: 700; margin-left: 10px; vertical-align: middle; }
+        .summary-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
+        .summary-card { background: #fff; border: 1px solid #e5e9f2; border-radius: 14px; padding: 20px; text-align: center; box-shadow: 0 2px 8px rgba(26,34,54,0.04); }
+        .summary-card .s-num { font-size: 32px; font-weight: 900; margin-bottom: 4px; }
+        .summary-card .s-label { font-size: 12px; font-weight: 600; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px; }
+        .num-total { color: #1a2236; }
+        .num-correct { color: #10b981; }
+        .num-wrong { color: #ef4444; }
+        .num-pct { color: #635bff; }
+        .progress-wrap { background: #fff; border: 1px solid #e5e9f2; border-radius: 14px; padding: 20px 24px; margin-bottom: 24px; box-shadow: 0 2px 8px rgba(26,34,54,0.04); }
+        .progress-wrap h4 { font-size: 13px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin: 0 0 12px; }
+        .progress-bar-bg { background: #f1f5f9; border-radius: 999px; height: 14px; overflow: hidden; }
+        .progress-bar-fill { height: 100%; border-radius: 999px; background: linear-gradient(90deg, #635bff, #10b981); transition: width 0.6s ease; }
+        .review-header { display: flex; align-items: center; gap: 8px; font-size: 15px; font-weight: 800; color: #1a2236; margin-bottom: 16px; }
+        .q-card { border-radius: 14px; padding: 20px 22px; margin-bottom: 12px; border: 1.5px solid transparent; }
+        .q-card.correct { background: #f0fdf4; border-color: #86efac; }
+        .q-card.wrong { background: #fff5f5; border-color: #fca5a5; }
+        .q-header { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 14px; }
+        .q-num { width: 28px; height: 28px; border-radius: 8px; display: grid; place-items: center; font-size: 12px; font-weight: 800; flex-shrink: 0; }
+        .correct .q-num { background: #dcfce7; color: #166534; }
+        .wrong .q-num { background: #fee2e2; color: #991b1b; }
+        .q-text { font-size: 14px; font-weight: 600; color: #1a2236; line-height: 1.5; flex: 1; }
+        .q-status-badge { flex-shrink: 0; font-size: 11px; font-weight: 700; padding: 4px 12px; border-radius: 999px; }
+        .correct .q-status-badge { background: #dcfce7; color: #166534; }
+        .wrong .q-status-badge { background: #fee2e2; color: #991b1b; }
+        .options-list { display: flex; flex-direction: column; gap: 8px; }
+        .opt { display: flex; align-items: center; gap: 10px; padding: 9px 14px; border-radius: 9px; font-size: 13px; border: 1.5px solid #e5e9f2; background: #fff; }
+        .opt-letter { width: 24px; height: 24px; border-radius: 6px; display: grid; place-items: center; font-size: 11px; font-weight: 800; flex-shrink: 0; background: #f1f5f9; color: #64748b; }
+        .opt.is-correct { border-color: #86efac; background: #dcfce7; }
+        .opt.is-correct .opt-letter { background: #22c55e; color: #fff; }
+        .opt.is-selected-wrong { border-color: #fca5a5; background: #fee2e2; }
+        .opt.is-selected-wrong .opt-letter { background: #ef4444; color: #fff; }
+        .opt-tag { margin-left: auto; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 999px; }
+        .opt.is-correct .opt-tag { background: #22c55e; color: #fff; }
+        .opt.is-selected-wrong .opt-tag { background: #ef4444; color: #fff; }
+        .q-img { max-width: 260px; border-radius: 10px; margin-bottom: 12px; border: 1px solid #e5e9f2; }
+        .empty-state { text-align: center; padding: 50px; color: #94a3b8; font-size: 14px; background: #fff; border-radius: 16px; border: 1px solid #e5e9f2; }
+    </style>
+</head>
+<body>
 <div class="admin-wrap">
     <div class="dash-sidebar">
         <div class="nav-section-label">Main</div>
@@ -128,8 +91,6 @@
         <a class="sidebar-link" href="/Admin/Questions?moduleId=3"><span class="s-icon">📝</span><span>Module 3</span></a>
         <div class="nav-section-label">Sessions</div>
         <a class="sidebar-link active" href="/AdminSession"><span class="s-icon">🕐</span><span>Exam Sessions</span></a>
-        <div class="nav-section-label">Reports</div>
-        <a class="sidebar-link" href="/AdminResult"><span class="s-icon">📈</span><span>Exam Results</span></a>
     </div>
 
     <div class="dash-main">
@@ -138,28 +99,35 @@
             <i class="fa-solid fa-arrow-left"></i> Back to Session Results
         </a>
 
-        <!-- Student Info Card -->
         <div class="student-card">
             <div class="student-avatar">
                 @(profile?.FullName?.Substring(0, 1).ToUpper() ?? "?")
             </div>
             <div class="student-info">
-                <h3>@(profile?.FullName ?? "Unknown User")</h3>
+                <h3>
+                    @(profile?.FullName ?? "Unknown User")
+                    <span class="module-badge">Module @moduleId</span>
+                </h3>
                 <p>
                     <i class="fa-solid fa-id-card" style="margin-right:5px;color:#635bff;"></i>
                     Student ID: <strong>@(profile?.StudentId ?? "—")</strong>
-                    &nbsp;&nbsp;
+                    &#160;&#160;
                     <i class="fa-solid fa-calendar" style="margin-right:5px;color:#94a3b8;"></i>
                     Session: <strong>@session?.Title</strong>
+                    @if (result != null)
+                    {
+                        <text>&#160;&#160;<i class="fa-regular fa-clock" style="margin-right:4px;color:#94a3b8;"></i>@result.ExamDate.ToString("yyyy-MM-dd HH:mm")</text>
+                    }
                 </p>
             </div>
             @if (profile?.StudentId != null)
             {
-                <span class="student-id-badge"><i class="fa-solid fa-graduation-cap" style="margin-right:5px;"></i>@profile.StudentId</span>
+                <span class="student-id-badge">
+                    <i class="fa-solid fa-graduation-cap" style="margin-right:5px;"></i>@profile.StudentId
+                </span>
             }
         </div>
 
-        <!-- Summary Stats -->
         <div class="summary-grid">
             <div class="summary-card">
                 <div class="s-num num-total">@totalQuestions</div>
@@ -175,13 +143,15 @@
             </div>
             <div class="summary-card">
                 <div class="s-num num-pct">@percentage%</div>
-                <div class="s-label">Overall Score</div>
+                <div class="s-label">Score</div>
             </div>
         </div>
 
-        <!-- Overall Progress Bar -->
         <div class="progress-wrap">
-            <h4><i class="fa-solid fa-chart-bar" style="margin-right:6px;color:#635bff;"></i>Overall Performance</h4>
+            <h4>
+                <i class="fa-solid fa-chart-bar" style="margin-right:6px;color:#635bff;"></i>
+                Module @moduleId Performance
+            </h4>
             <div style="display:flex;align-items:center;gap:12px;">
                 <div class="progress-bar-bg" style="flex:1;">
                     <div class="progress-bar-fill" style="width:@(percentage)%;"></div>
@@ -190,164 +160,69 @@
             </div>
         </div>
 
-        <!-- Per Module Breakdown -->
-        <div class="table-card">
-            <h4><i class="fa-solid fa-layer-group" style="margin-right:8px;color:#635bff;"></i>Results by Module</h4>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Module</th>
-                        <th>Correct</th>
-                        <th>Wrong</th>
-                        <th>Total</th>
-                        <th>Score</th>
-                        <th>Performance</th>
-                        <th>Exam Date</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @if (Model != null && Model.Count > 0)
-                    {
-                        @foreach (var r in Model)
-                        {
-                            int total = r.Correct + r.Wrong;
-                            double pct = total > 0 ? Math.Round((double)r.Correct / total * 100, 1) : 0;
-                            <tr>
-                                <td><span class="module-pill">Module @r.ModuleId</span></td>
-                                <td><span class="badge-green">✓ @r.Correct</span></td>
-                                <td><span class="badge-red">✗ @r.Wrong</span></td>
-                                <td style="font-weight:700;color:#1a2236;">@total</td>
-                                <td style="font-weight:800;color:#635bff;">@pct%</td>
-                                <td>
-                                    <div style="display:flex;align-items:center;gap:6px;">
-                                        <div class="mini-bar-bg">
-                                            <div class="mini-bar-fill" style="width:@(pct)%;"></div>
-                                        </div>
-                                        <span style="font-size:12px;color:#64748b;">@pct%</span>
-                                    </div>
-                                </td>
-                                <td style="color:#64748b;font-size:12.5px;">
-                                    <i class="fa-regular fa-clock" style="margin-right:4px;"></i>
-                                    @r.ExamDate.ToString("yyyy-MM-dd HH:mm")
-                                </td>
-                            </tr>
-                        }
-                    }
-                    else
-                    {
-                        <tr>
-                            <td colspan="7" class="empty-state">📭 No module results found for this user.</td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
-
-        <!-- Question Review Section -->
-@if (userAnswers.Any())
-{
-    <div class="review-section">
-        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:16px;">
-            <div class="review-section-header" style="margin:0;">
-                <i class="fa-solid fa-list-check" style="color:#635bff;"></i>
-                Question Review
-            </div>
-            <div style="display:flex; gap:8px;">
-                <button type="button" class="mod-btn active" onclick="filterModule(0)">All Modules</button>
-                <button type="button" class="mod-btn" onclick="filterModule(1)">Module 1</button>
-                <button type="button" class="mod-btn" onclick="filterModule(2)">Module 2</button>
-                <button type="button" class="mod-btn" onclick="filterModule(3)">Module 3</button>
-            </div>
-        </div>
-
-        @{
-            var groupedByModule = userAnswers
-                .Where(a => a.Question != null)
-                .GroupBy(a => a.ModuleId)
-                .OrderBy(g => g.Key);
-        }
-
-        @foreach (var moduleGroup in groupedByModule)
+        @if (userAnswers.Any())
         {
-            <div class="module-group" data-module="@moduleGroup.Key">
-                <div class="module-group-title">
-                    <i class="fa-solid fa-layer-group" style="margin-right:6px;"></i>Module @moduleGroup.Key
-                </div>
-
-                @{ int qNum = 1; }
-                @foreach (var ans in moduleGroup)
-                {
-                    var q = ans.Question!;
-                    string cardClass = ans.IsCorrect ? "correct" : "wrong";
-                    string statusLabel = ans.IsCorrect ? "✓ Correct" : "✗ Wrong";
-
-                    var options = new[]
-                    {
-                        ("A", q.OptionA),
-                        ("B", q.OptionB),
-                        ("C", q.OptionC)
-                    };
-
-                    <div class="q-card @cardClass">
-                        <div class="q-header">
-                            <div class="q-num">@qNum</div>
-                            <div class="q-text">@q.QuestionText</div>
-                            <span class="q-status-badge">@statusLabel</span>
-                        </div>
-
-                        @if (!string.IsNullOrEmpty(q.ImagePath))
-                        {
-                            <img src="@q.ImagePath" class="q-img" alt="Question image" />
-                        }
-
-                        <div class="options-grid">
-                            @foreach (var (letter, text) in options)
-                            {
-                                bool isCorrectOpt = q.CorrectAnswer == letter;
-                                bool isSelectedWrong = !ans.IsCorrect && ans.SelectedAnswer == letter;
-
-                                string optClass = "";
-                                string optTag = "";
-                                if (isCorrectOpt) { optClass = "is-correct"; optTag = "Correct"; }
-                                else if (isSelectedWrong) { optClass = "is-selected-wrong"; optTag = "Your Answer"; }
-
-                                <div class="opt @optClass">
-                                    <div class="opt-letter">@letter</div>
-                                    <span class="opt-text">@text</span>
-                                    @if (!string.IsNullOrEmpty(optTag))
-                                    {
-                                        <span class="opt-tag">@optTag</span>
-                                    }
-                                </div>
-                            }
-                        </div>
-                    </div>
-                    qNum++;
-                }
+            <div class="review-header">
+                <i class="fa-solid fa-list-check" style="color:#635bff;"></i>
+                Question Review — Module @moduleId
             </div>
-        }
-    </div>
-}
-else
-{
-    <div class="table-card">
-        <div class="empty-state">📭 No question answers recorded for this user in this session.</div>
-    </div>
-}
-<script>
-    function filterModule(moduleId) {
-        document.querySelectorAll('.mod-btn').forEach(b => b.classList.remove('active'));
-        event.target.classList.add('active');
 
-        document.querySelectorAll('.module-group').forEach(function (group) {
-            if (moduleId === 0 || group.dataset.module == moduleId) {
-                group.style.display = 'block';
-            } else {
-                group.style.display = 'none';
+            int qNum = 1;
+            foreach (var ans in userAnswers)
+            {
+                if (ans.Question == null) { continue; }
+                var q = ans.Question;
+                string cardClass = ans.IsCorrect ? "correct" : "wrong";
+                string statusLabel = ans.IsCorrect ? "Correct" : "Wrong";
+                string statusIcon = ans.IsCorrect ? "&#10003;" : "&#10007;";
+
+                <div class="q-card @cardClass">
+                    <div class="q-header">
+                        <div class="q-num">@qNum</div>
+                        <div class="q-text">@q.QuestionText</div>
+                        <span class="q-status-badge">@Html.Raw(statusIcon) @statusLabel</span>
+                    </div>
+
+                    @if (!string.IsNullOrEmpty(q.ImagePath))
+                    {
+                        <img src="@q.ImagePath" class="q-img" alt="Question image" />
+                    }
+
+                    <div class="options-list">
+                        @{
+                            var opts = new[]
+                            {
+                                new { Letter = "A", Text = q.OptionA },
+                                new { Letter = "B", Text = q.OptionB },
+                                new { Letter = "C", Text = q.OptionC }
+                            };
+                        }
+                        @foreach (var opt in opts)
+                        {
+                            bool isCorrectOpt = q.CorrectAnswer == opt.Letter;
+                            bool isSelectedWrong = !ans.IsCorrect && ans.SelectedAnswer == opt.Letter;
+                            string optClass = isCorrectOpt ? "is-correct" : (isSelectedWrong ? "is-selected-wrong" : "");
+                            string optTag = isCorrectOpt ? "Correct" : (isSelectedWrong ? "Your Answer" : "");
+                            <div class="opt @optClass">
+                                <div class="opt-letter">@opt.Letter</div>
+                                <span style="flex:1;color:#374151;">@opt.Text</span>
+                                @if (!string.IsNullOrEmpty(optTag))
+                                {
+                                    <span class="opt-tag">@optTag</span>
+                                }
+                            </div>
+                        }
+                    </div>
+                </div>
+                qNum++;
             }
-        });
-    }
-</script>
+        }
+        else
+        {
+            <div class="empty-state">No answers recorded for this module.</div>
+        }
 
     </div>
 </div>
+</body>
+</html>

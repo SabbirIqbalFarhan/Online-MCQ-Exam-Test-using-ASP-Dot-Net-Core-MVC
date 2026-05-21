@@ -1,273 +1,59 @@
 ﻿@{
-    ViewData["Title"] = "Admin Panel";
+    ViewData["Title"] = "Admin Dashboard";
 }
 
 <style>
-    .admin-wrap {
-        display: flex;
-        min-height: calc(100vh - 60px);
-        background: #f1f4fb;
-    }
-
-    .dash-sidebar {
-        width: 230px;
-        background: #1a2236;
-        flex-shrink: 0;
-        padding: 24px 0;
-        display: flex;
-        flex-direction: column;
-    }
-
-    .nav-section-label {
-        font-size: 9.5px;
-        font-weight: 700;
-        color: rgba(240,244,255,0.35);
-        text-transform: uppercase;
-        letter-spacing: 1.4px;
-        padding: 14px 20px 6px;
-    }
-
-    .sidebar-link {
-        display: flex;
-        align-items: center;
-        gap: 11px;
-        padding: 9px 20px;
-        color: rgba(240,244,255,0.62);
-        text-decoration: none;
-        font-size: 13px;
-        font-weight: 500;
-        border-left: 3px solid transparent;
-        transition: all 0.18s;
-    }
-
-    .sidebar-link:hover {
-        color: #fff;
-        background: rgba(99,91,255,0.1);
-        border-left-color: rgba(99,91,255,0.5);
-    }
-
-    .sidebar-link.active {
-        color: #fff;
-        background: rgba(99,91,255,0.15);
-        border-left-color: #635bff;
-    }
-
-    .sidebar-link .s-icon {
-        width: 30px;
-        height: 30px;
-        border-radius: 8px;
-        display: grid;
-        place-items: center;
-        font-size: 14px;
-        flex-shrink: 0;
-        background: rgba(255,255,255,0.06);
-        transition: 0.18s;
-    }
-
-    .sidebar-link:hover .s-icon,
-    .sidebar-link.active .s-icon {
-        background: rgba(99,91,255,0.25);
-    }
-
-    .dash-main {
-        flex: 1;
-        padding: 28px;
-        overflow-y: auto;
-    }
-
-    .page-header {
-        margin-bottom: 24px;
-    }
-
-    .page-header h2 {
-        font-size: 22px;
-        font-weight: 800;
-        color: #1a2236;
-        margin: 0 0 4px;
-    }
-
-    .page-header p {
-        font-size: 13px;
-        color: #64748b;
-        margin: 0;
-    }
-
-    .stats-grid {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 16px;
-        margin-bottom: 28px;
-    }
-
-    .stat-card {
-        background: #fff;
-        border: 1px solid #e5e9f2;
-        border-radius: 14px;
-        padding: 20px 22px;
-        box-shadow: 0 2px 8px rgba(26,34,54,0.04);
-    }
-
-    .stat-card .s-label {
-        font-size: 11px;
-        font-weight: 700;
-        color: #94a3b8;
-        text-transform: uppercase;
-        letter-spacing: 0.8px;
-        margin-bottom: 8px;
-    }
-
-    .stat-card .s-icon-wrap {
-        font-size: 22px;
-        margin-bottom: 10px;
-    }
-
-    .stat-card .s-value {
-        font-size: 32px;
-        font-weight: 800;
-        line-height: 1;
-    }
-
-    .stat-card.users .s-value  { color: #635bff; }
-    .stat-card.q .s-value      { color: #10b981; }
-    .stat-card.results .s-value{ color: #06b6d4; }
-    .stat-card.pending .s-value{ color: #f59e0b; }
-
-    .section-title {
-        font-size: 14px;
-        font-weight: 700;
-        color: #1a2236;
-        margin-bottom: 14px;
-    }
-
-    .actions-grid {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 14px;
-        margin-bottom: 28px;
-    }
-
-    .action-card {
-        background: #fff;
-        border: 1px solid #e5e9f2;
-        border-radius: 16px;
-        padding: 22px;
-        text-decoration: none;
-        color: #1a2236;
-        transition: 0.2s;
-        display: flex;
-        flex-direction: column;
-        gap: 6px;
-        box-shadow: 0 2px 8px rgba(26,34,54,0.04);
-    }
-
-    .action-card:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 10px 28px rgba(26,34,54,0.1);
-        border-color: #d4d0ff;
-        color: #1a2236;
-    }
-
-    .action-card .a-icon {
-        width: 46px;
-        height: 46px;
-        border-radius: 12px;
-        background: rgba(99,91,255,0.1);
-        display: grid;
-        place-items: center;
-        font-size: 22px;
-        margin-bottom: 6px;
-    }
-
-    .action-card .a-title {
-        font-size: 14px;
-        font-weight: 700;
-        color: #1a2236;
-    }
-
-    .action-card .a-desc {
-        font-size: 12.5px;
-        color: #64748b;
-    }
-
-    .table-card {
-        background: #fff;
-        border: 1px solid #e5e9f2;
-        border-radius: 16px;
-        overflow: hidden;
-        box-shadow: 0 2px 8px rgba(26,34,54,0.04);
-    }
-
-    .table-card table {
-        width: 100%;
-        border-collapse: collapse;
-    }
-
-    .table-card thead {
-        background: #1a2236;
-    }
-
-    .table-card th {
-        padding: 13px 16px;
-        font-size: 11px;
-        font-weight: 700;
-        color: rgba(240,244,255,0.6);
-        text-transform: uppercase;
-        letter-spacing: 0.8px;
-        text-align: left;
-    }
-
-    .table-card td {
-        padding: 12px 16px;
-        font-size: 13px;
-        color: #374151;
-        text-align: left;
-    }
-
-    .table-card tbody tr {
-        border-bottom: 1px solid #f1f5f9;
-        transition: 0.18s;
-    }
-
-    .table-card tbody tr:last-child {
-        border-bottom: none;
-    }
-
-    .table-card tbody tr:hover {
-        background: #f8f9ff;
-    }
-
-    .badge-green {
-        background: #dcfce7;
-        color: #166534;
-        padding: 4px 10px;
-        border-radius: 999px;
-        font-size: 11.5px;
-        font-weight: 700;
-    }
-
-    .badge-red {
-        background: #fee2e2;
-        color: #991b1b;
-        padding: 4px 10px;
-        border-radius: 999px;
-        font-size: 11.5px;
-        font-weight: 700;
-    }
+    .admin-wrap { display: flex; min-height: calc(100vh - 60px); background: #f1f4fb; }
+    .dash-sidebar { width: 230px; background: #1a2236; flex-shrink: 0; padding: 24px 0; display: flex; flex-direction: column; }
+    .nav-section-label { font-size: 9.5px; font-weight: 700; color: rgba(240,244,255,0.35); text-transform: uppercase; letter-spacing: 1.4px; padding: 14px 20px 6px; }
+    .sidebar-link { display: flex; align-items: center; gap: 11px; padding: 9px 20px; color: rgba(240,244,255,0.62); text-decoration: none; font-size: 13px; font-weight: 500; border-left: 3px solid transparent; transition: all 0.18s; }
+    .sidebar-link:hover { color: #fff; background: rgba(99,91,255,0.1); border-left-color: rgba(99,91,255,0.5); }
+    .sidebar-link.active { color: #fff; background: rgba(99,91,255,0.15); border-left-color: #635bff; }
+    .sidebar-link .s-icon { width: 30px; height: 30px; border-radius: 8px; display: grid; place-items: center; font-size: 14px; flex-shrink: 0; background: rgba(255,255,255,0.06); transition: 0.18s; }
+    .sidebar-link:hover .s-icon, .sidebar-link.active .s-icon { background: rgba(99,91,255,0.25); }
+    .dash-main { flex: 1; padding: 28px; overflow-y: auto; }
+    .page-header { margin-bottom: 24px; }
+    .page-header h2 { font-size: 22px; font-weight: 800; color: #1a2236; margin: 0 0 4px; }
+    .page-header p { font-size: 13px; color: #64748b; margin: 0; }
+    .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 28px; }
+    .stat-card { background: #fff; border: 1px solid #e5e9f2; border-radius: 14px; padding: 20px 22px; box-shadow: 0 2px 8px rgba(26,34,54,0.04); }
+    .stat-card .s-label { font-size: 11px; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 8px; }
+    .stat-card .s-icon-wrap { font-size: 22px; margin-bottom: 10px; }
+    .stat-card .s-value { font-size: 32px; font-weight: 800; line-height: 1; }
+    .stat-card.users .s-value { color: #635bff; }
+    .stat-card.q .s-value { color: #10b981; }
+    .stat-card.results .s-value { color: #06b6d4; }
+    .stat-card.pending .s-value { color: #f59e0b; }
+    .section-title { font-size: 14px; font-weight: 700; color: #1a2236; margin-bottom: 14px; }
+    .actions-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin-bottom: 28px; }
+    .action-card { background: #fff; border: 1px solid #e5e9f2; border-radius: 16px; padding: 22px; text-decoration: none; color: #1a2236; transition: 0.2s; display: flex; flex-direction: column; gap: 6px; box-shadow: 0 2px 8px rgba(26,34,54,0.04); }
+    .action-card:hover { transform: translateY(-3px); box-shadow: 0 10px 28px rgba(26,34,54,0.1); border-color: #d4d0ff; color: #1a2236; }
+    .action-card .a-icon { width: 46px; height: 46px; border-radius: 12px; background: rgba(99,91,255,0.1); display: grid; place-items: center; font-size: 22px; margin-bottom: 6px; }
+    .action-card .a-title { font-size: 14px; font-weight: 700; color: #1a2236; }
+    .action-card .a-desc { font-size: 12.5px; color: #64748b; }
+    .table-card { background: #fff; border: 1px solid #e5e9f2; border-radius: 16px; overflow: hidden; box-shadow: 0 2px 8px rgba(26,34,54,0.04); }
+    .table-card table { width: 100%; border-collapse: collapse; }
+    .table-card thead { background: #1a2236; }
+    .table-card th { padding: 13px 16px; font-size: 11px; font-weight: 700; color: rgba(240,244,255,0.6); text-transform: uppercase; letter-spacing: 0.8px; text-align: left; }
+    .table-card td { padding: 12px 16px; font-size: 13px; color: #374151; text-align: left; }
+    .table-card tbody tr { border-bottom: 1px solid #f1f5f9; transition: 0.18s; }
+    .table-card tbody tr:last-child { border-bottom: none; }
+    .table-card tbody tr:hover { background: #f8f9ff; }
+    .badge-green { background: #dcfce7; color: #166534; padding: 4px 10px; border-radius: 999px; font-size: 11.5px; font-weight: 700; }
+    .badge-red { background: #fee2e2; color: #991b1b; padding: 4px 10px; border-radius: 999px; font-size: 11.5px; font-weight: 700; }
+    .module-pill { background: rgba(99,91,255,0.1); color: #635bff; padding: 3px 10px; border-radius: 999px; font-size: 11.5px; font-weight: 700; }
 </style>
 
 <div class="admin-wrap">
-
     <div class="dash-sidebar">
         <div class="nav-section-label">Main</div>
         <a class="sidebar-link active" href="/Admin/Dashboard">
             <span class="s-icon">📊</span><span>Dashboard</span>
         </a>
-
         <div class="nav-section-label">Users</div>
         <a class="sidebar-link" href="/AdminUser">
             <span class="s-icon">👥</span><span>All Users</span>
         </a>
-
         <div class="nav-section-label">Questions</div>
         <a class="sidebar-link" href="/Admin/Questions?moduleId=1">
             <span class="s-icon">📝</span><span>Module 1</span>
@@ -278,15 +64,9 @@
         <a class="sidebar-link" href="/Admin/Questions?moduleId=3">
             <span class="s-icon">📝</span><span>Module 3</span>
         </a>
-
         <div class="nav-section-label">Sessions</div>
         <a class="sidebar-link" href="/AdminSession">
             <span class="s-icon">🕐</span><span>Exam Sessions</span>
-        </a>
-
-        <div class="nav-section-label">Reports</div>
-        <a class="sidebar-link" href="/AdminResult">
-            <span class="s-icon">📈</span><span>Exam Results</span>
         </a>
     </div>
 
@@ -311,7 +91,7 @@
             <div class="stat-card results">
                 <div class="s-icon-wrap">📊</div>
                 <div class="s-label">Module Results</div>
-                <div class="s-value" style="font-size:14px;line-height:1.6;">
+                <div class="s-value" style="font-size:14px;line-height:1.8;">
                     <span style="display:block;">M1: @ViewBag.Module1Results</span>
                     <span style="display:block;">M2: @ViewBag.Module2Results</span>
                     <span style="display:block;">M3: @ViewBag.Module3Results</span>
@@ -339,54 +119,19 @@
                 <div class="a-title">Manage Questions</div>
                 <div class="a-desc">Add, edit or delete exam questions</div>
             </a>
-            <a class="action-card" href="/AdminResult">
-                <div class="a-icon">📈</div>
-                <div class="a-title">View Reports</div>
-                <div class="a-desc">Check student exam performance</div>
+            <a class="action-card" href="/AdminSession">
+                <div class="a-icon">🕐</div>
+                <div class="a-title">Exam Sessions</div>
+                <div class="a-desc">Create and manage exam sessions</div>
+            </a>
+            <a class="action-card" href="/AdminUser">
+                <div class="a-icon">⏳</div>
+                <div class="a-title">Pending Requests</div>
+                <div class="a-desc">Review and approve exam access requests</div>
             </a>
         </div>
 
-        <div class="section-title">
-            <i class="fa-solid fa-clock-rotate-left" style="color:#635bff;margin-right:7px;"></i>
-            Recent Exam Results
-        </div>
-        <div class="table-card">
-            <table>
-                <thead>
-                    <tr>
-                        <th>User ID</th>
-                        <th>Module</th>
-                        <th>Correct</th>
-                        <th>Wrong</th>
-                        <th>Date</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var r in ViewBag.RecentResults)
-                    {
-                        <tr>
-                            <td style="font-weight:600;color:#1a2236;">@r.UserId</td>
-                            <td>
-                                <span style="background:rgba(99,91,255,0.1);color:#635bff;padding:3px 10px;border-radius:999px;font-size:11.5px;font-weight:700;">
-                                    Module @r.ModuleId
-                                </span>
-                            </td>
-                            <td><span class="badge-green">@r.Correct</span></td>
-                            <td><span class="badge-red">@r.Wrong</span></td>
-                            <td style="color:#64748b;">@r.ExamDate.ToString("yyyy-MM-dd HH:mm")</td>
-                        </tr>
-                    }
-                    @if (((IEnumerable<dynamic>)ViewBag.RecentResults).Count() == 0)
-                    {
-                        <tr>
-                            <td colspan="5" style="text-align:center;color:#94a3b8;padding:40px;font-size:13px;">
-                                📭 No exam results yet.
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
+        
 
     </div>
 </div>

@@ -242,68 +242,64 @@
         <div class="nav-section-label">Sessions</div>
         <a class="sidebar-link active" href="/AdminSession">
             <span class="s-icon">🕐</span><span>Exam Sessions</span>
-        </a>
-        <div class="nav-section-label">Reports</div>
-        <a class="sidebar-link" href="/AdminResult">
-            <span class="s-icon">📈</span><span>Exam Results</span>
-        </a>
+        
+</div>
+
+<div class="dash-main">
+
+    <a class="btn-back" href="/AdminSession">
+        <i class="fa-solid fa-arrow-left"></i> Back to Sessions
+    </a>
+
+    <div class="page-header-block">
+        <div class="page-header-icon">
+            <i class="fa-solid fa-calendar-plus"></i>
+        </div>
+        <div>
+            <h2>Create Exam Session</h2>
+            <p>Set the title, start time and end time for this exam session</p>
+        </div>
     </div>
 
-    <div class="dash-main">
+    <div class="form-card">
+        <form method="post" action="/AdminSession/Create">
 
-        <a class="btn-back" href="/AdminSession">
-            <i class="fa-solid fa-arrow-left"></i> Back to Sessions
-        </a>
-
-        <div class="page-header-block">
-            <div class="page-header-icon">
-                <i class="fa-solid fa-calendar-plus"></i>
+            <div class="form-group">
+                <label class="field-label">Session Title</label>
+                <div class="field-wrap">
+                    <i class="fa-solid fa-heading f-icon"></i>
+                    <input type="text" name="title"
+                           placeholder="e.g. May 2026 Exam Session" required />
+                </div>
             </div>
-            <div>
-                <h2>Create Exam Session</h2>
-                <p>Set the title, start time and end time for this exam session</p>
+
+            <hr class="divider" />
+
+            <div class="form-group">
+                <label class="field-label">Start Date &amp; Time</label>
+                <div class="field-wrap">
+                    <i class="fa-solid fa-calendar-day f-icon"></i>
+                    <input type="datetime-local" name="startTime" required />
+                </div>
             </div>
-        </div>
 
-        <div class="form-card">
-            <form method="post" action="/AdminSession/Create">
-
-                <div class="form-group">
-                    <label class="field-label">Session Title</label>
-                    <div class="field-wrap">
-                        <i class="fa-solid fa-heading f-icon"></i>
-                        <input type="text" name="title"
-                               placeholder="e.g. May 2026 Exam Session" required />
-                    </div>
+            <div class="form-group">
+                <label class="field-label">End Date &amp; Time</label>
+                <div class="field-wrap">
+                    <i class="fa-solid fa-calendar-check f-icon"></i>
+                    <input type="datetime-local" name="endTime" required />
                 </div>
+            </div>
 
-                <hr class="divider" />
+            <hr class="divider" />
 
-                <div class="form-group">
-                    <label class="field-label">Start Date &amp; Time</label>
-                    <div class="field-wrap">
-                        <i class="fa-solid fa-calendar-day f-icon"></i>
-                        <input type="datetime-local" name="startTime" required />
-                    </div>
-                </div>
+            <button type="submit" class="btn-submit">
+                <i class="fa-solid fa-circle-check" style="margin-right:8px;"></i>
+                Create Session
+            </button>
 
-                <div class="form-group">
-                    <label class="field-label">End Date &amp; Time</label>
-                    <div class="field-wrap">
-                        <i class="fa-solid fa-calendar-check f-icon"></i>
-                        <input type="datetime-local" name="endTime" required />
-                    </div>
-                </div>
-
-                <hr class="divider" />
-
-                <button type="submit" class="btn-submit">
-                    <i class="fa-solid fa-circle-check" style="margin-right:8px;"></i>
-                    Create Session
-                </button>
-
-            </form>
-        </div>
-
+        </form>
     </div>
+
+</div>
 </div>

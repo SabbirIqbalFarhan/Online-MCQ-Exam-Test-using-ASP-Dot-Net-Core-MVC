@@ -28,6 +28,8 @@ namespace Exam_Test.Controllers
             ViewBag.Module2Results = _context.Results.Count(r => r.ModuleId == 2);
             ViewBag.Module3Results = _context.Results.Count(r => r.ModuleId == 3);
 
+            ViewBag.Profiles = _context.UserProfiles.ToList();
+
             ViewBag.RecentResults = _context.Results
                 .OrderByDescending(r => r.ExamDate)
                 .Take(5)

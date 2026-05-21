@@ -117,25 +117,32 @@ namespace Exam_Test.Controllers
 
             return View(data);
         }
-        public IActionResult ViewResult(string userId, int sessionId)
+        public IActionResult ViewResult(string userId, int sessionId, int moduleId)
         {
             var session = _context.ExamSessions.Find(sessionId);
             if (session == null) return NotFound();
 
-            var results = _context.Results
-                .Where(r => r.UserId == userId && r.SessionId == sessionId)
-                .OrderBy(r => r.ModuleId)
-                .ToList();
+            var result = _context.Results
+                .FirstOrDefault(r => r.UserId == userId && r.SessionId == sessionId && r.ModuleId == moduleId);
 
             var profile = _context.UserProfiles.FirstOrDefault(p => p.UserId == userId);
 
-            int totalCorrect = results.Sum(r => r.Correct);
-            int totalWrong = results.Sum(r => r.Wrong);
+            int totalCorrect = result?.Correct ?? 0;
+            int totalWrong = result?.Wrong ?? 0;
             int totalQuestions = totalCorrect + totalWrong;
 
-            // Load user answers with their questions for the review section
+            // Get question IDs that belong to this module
+            var moduleQuestionIds = _context.Questions
+                .Where(q => q.ModuleId == moduleId)
+                .Select(q => q.Id)
+                .ToList();
+
+            // Filter UserAnswers by userId + only questions in this module
+            // Then take only the latest N answers matching the result count (totalQuestions)
             var userAnswers = _context.UserAnswers
-                .Where(a => a.UserId == userId)
+                .Where(a => a.UserId == userId && a.ModuleId == moduleId && moduleQuestionIds.Contains(a.QuestionId))
+                .OrderByDescending(a => a.Id)
+                .Take(totalQuestions)
                 .ToList();
 
             var questionIds = userAnswers.Select(a => a.QuestionId).Distinct().ToList();
@@ -143,22 +150,21 @@ namespace Exam_Test.Controllers
                 .Where(q => questionIds.Contains(q.Id))
                 .ToList();
 
-            // Attach question objects to answers
             foreach (var ans in userAnswers)
-            {
                 ans.Question = questions.FirstOrDefault(q => q.Id == ans.QuestionId);
-            }
 
             ViewBag.Session = session;
             ViewBag.Profile = profile;
             ViewBag.UserId = userId;
             ViewBag.SessionId = sessionId;
+            ViewBag.ModuleId = moduleId;
             ViewBag.TotalCorrect = totalCorrect;
             ViewBag.TotalWrong = totalWrong;
             ViewBag.TotalQuestions = totalQuestions;
             ViewBag.UserAnswers = userAnswers;
+            ViewBag.Result = result;
 
-            return View(results);
+            return View();
         }
     }
 }

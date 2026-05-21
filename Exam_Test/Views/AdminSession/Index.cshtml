@@ -1,284 +1,72 @@
-﻿@model List<Exam_Test.Models.ExamSession>
-
-@{
+﻿@{
     ViewData["Title"] = "Exam Sessions";
+    int currentPage = ViewBag.CurrentPage ?? 1;
+    int totalPages = ViewBag.TotalPages ?? 1;
 }
 
 <style>
-    .admin-wrap {
-        display: flex;
-        min-height: calc(100vh - 60px);
-        background: #f1f4fb;
-    }
-
-    .dash-sidebar {
-        width: 230px;
-        background: #1a2236;
-        flex-shrink: 0;
-        padding: 24px 0;
-        display: flex;
-        flex-direction: column;
-    }
-
-    .nav-section-label {
-        font-size: 9.5px;
-        font-weight: 700;
-        color: rgba(240,244,255,0.35);
-        text-transform: uppercase;
-        letter-spacing: 1.4px;
-        padding: 14px 20px 6px;
-    }
-
-    .sidebar-link {
-        display: flex;
-        align-items: center;
-        gap: 11px;
-        padding: 9px 20px;
-        color: rgba(240,244,255,0.62);
-        text-decoration: none;
-        font-size: 13px;
-        font-weight: 500;
-        border-left: 3px solid transparent;
-        transition: all 0.18s;
-    }
-
-    .sidebar-link:hover {
-        color: #fff;
-        background: rgba(99,91,255,0.1);
-        border-left-color: rgba(99,91,255,0.5);
-    }
-
-    .sidebar-link.active {
-        color: #fff;
-        background: rgba(99,91,255,0.15);
-        border-left-color: #635bff;
-    }
-
-    .sidebar-link .s-icon {
-        width: 30px;
-        height: 30px;
-        border-radius: 8px;
-        display: grid;
-        place-items: center;
-        font-size: 14px;
-        flex-shrink: 0;
-        background: rgba(255,255,255,0.06);
-        transition: 0.18s;
-    }
-
-    .sidebar-link:hover .s-icon,
-    .sidebar-link.active .s-icon {
-        background: rgba(99,91,255,0.25);
-    }
-
-    .dash-main {
-        flex: 1;
-        padding: 28px;
-        overflow-y: auto;
-    }
-
-    .top-row {
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-start;
-        margin-bottom: 24px;
-        gap: 16px;
-        flex-wrap: wrap;
-    }
-
-    .top-row h2 {
-        font-size: 22px;
-        font-weight: 800;
-        color: #1a2236;
-        margin: 0 0 4px;
-    }
-
-    .top-row p {
-        font-size: 13px;
-        color: #64748b;
-        margin: 0;
-    }
-
-    .btn-new {
-        display: inline-flex;
-        align-items: center;
-        gap: 7px;
-        padding: 10px 20px;
-        border-radius: 10px;
-        background: #635bff;
-        color: #fff !important;
-        text-decoration: none;
-        font-size: 13px;
-        font-weight: 700;
-        transition: 0.2s;
-        box-shadow: 0 4px 12px rgba(99,91,255,0.3);
-        white-space: nowrap;
-        font-family: 'Plus Jakarta Sans', sans-serif;
-    }
-
-    .btn-new:hover {
-        background: #4f46e5;
-        transform: translateY(-1px);
-        box-shadow: 0 6px 16px rgba(99,91,255,0.4);
-    }
-
-    .table-card {
-        background: #fff;
-        border: 1px solid #e5e9f2;
-        border-radius: 16px;
-        overflow: hidden;
-        box-shadow: 0 2px 8px rgba(26,34,54,0.04);
-    }
-
-    .table-card table {
-        width: 100%;
-        border-collapse: collapse;
-    }
-
-    .table-card thead {
-        background: #1a2236;
-    }
-
-    .table-card th {
-        padding: 13px 16px;
-        font-size: 11px;
-        font-weight: 700;
-        color: rgba(240,244,255,0.6);
-        text-transform: uppercase;
-        letter-spacing: 0.8px;
-        text-align: left;
-    }
-
-    .table-card td {
-        padding: 14px 16px;
-        font-size: 13px;
-        color: #374151;
-        text-align: left;
-    }
-
-    .table-card tbody tr {
-        border-bottom: 1px solid #f1f5f9;
-        transition: 0.18s;
-    }
-
-    .table-card tbody tr:last-child {
-        border-bottom: none;
-    }
-
-    .table-card tbody tr:hover {
-        background: #f8f9ff;
-    }
-
-    .session-title {
-        font-weight: 700;
-        color: #1a2236;
-        font-size: 13.5px;
-    }
-
-    .date-text {
-        font-size: 12.5px;
-        color: #64748b;
-    }
-
-    .badge-active {
-        background: #dcfce7;
-        color: #166534;
-        padding: 5px 12px;
-        border-radius: 999px;
-        font-size: 11.5px;
-        font-weight: 700;
-    }
-
-    .badge-inactive {
-        background: #f1f5f9;
-        color: #64748b;
-        padding: 5px 12px;
-        border-radius: 999px;
-        font-size: 11.5px;
-        font-weight: 700;
-    }
-
-    .actions-cell {
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        flex-wrap: wrap;
-    }
-
-    .btn-action {
-        display: inline-flex;
-        align-items: center;
-        gap: 5px;
-        padding: 6px 12px;
-        border-radius: 8px;
-        font-size: 12px;
-        font-weight: 700;
-        text-decoration: none;
-        color: #fff;
-        transition: 0.18s;
-        font-family: 'Plus Jakarta Sans', sans-serif;
-        white-space: nowrap;
-    }
-
-    .btn-activate   { background: #10b981; }
+    .admin-wrap { display: flex; min-height: calc(100vh - 60px); background: #f1f4fb; }
+    .dash-sidebar { width: 230px; background: #1a2236; flex-shrink: 0; padding: 24px 0; display: flex; flex-direction: column; }
+    .nav-section-label { font-size: 9.5px; font-weight: 700; color: rgba(240,244,255,0.35); text-transform: uppercase; letter-spacing: 1.4px; padding: 14px 20px 6px; }
+    .sidebar-link { display: flex; align-items: center; gap: 11px; padding: 9px 20px; color: rgba(240,244,255,0.62); text-decoration: none; font-size: 13px; font-weight: 500; border-left: 3px solid transparent; transition: all 0.18s; }
+    .sidebar-link:hover { color: #fff; background: rgba(99,91,255,0.1); border-left-color: rgba(99,91,255,0.5); }
+    .sidebar-link.active { color: #fff; background: rgba(99,91,255,0.15); border-left-color: #635bff; }
+    .sidebar-link .s-icon { width: 30px; height: 30px; border-radius: 8px; display: grid; place-items: center; font-size: 14px; flex-shrink: 0; background: rgba(255,255,255,0.06); transition: 0.18s; }
+    .sidebar-link:hover .s-icon, .sidebar-link.active .s-icon { background: rgba(99,91,255,0.25); }
+    .dash-main { flex: 1; padding: 28px; overflow-y: auto; }
+    .top-row { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px; gap: 16px; flex-wrap: wrap; }
+    .top-row h2 { font-size: 22px; font-weight: 800; color: #1a2236; margin: 0 0 4px; }
+    .top-row p { font-size: 13px; color: #64748b; margin: 0; }
+    .btn-new { display: inline-flex; align-items: center; gap: 7px; padding: 10px 20px; border-radius: 10px; background: #635bff; color: #fff !important; text-decoration: none; font-size: 13px; font-weight: 700; transition: 0.2s; box-shadow: 0 4px 12px rgba(99,91,255,0.3); white-space: nowrap; }
+    .btn-new:hover { background: #4f46e5; transform: translateY(-1px); }
+    .table-card { background: #fff; border: 1px solid #e5e9f2; border-radius: 16px; overflow: hidden; box-shadow: 0 2px 8px rgba(26,34,54,0.04); }
+    .table-card table { width: 100%; border-collapse: collapse; }
+    .table-card thead { background: #1a2236; }
+    .table-card th { padding: 13px 16px; font-size: 11px; font-weight: 700; color: rgba(240,244,255,0.6); text-transform: uppercase; letter-spacing: 0.8px; text-align: left; }
+    .table-card td { padding: 14px 16px; font-size: 13px; color: #374151; text-align: left; }
+    .table-card tbody tr { border-bottom: 1px solid #f1f5f9; transition: 0.18s; }
+    .table-card tbody tr:last-child { border-bottom: none; }
+    .table-card tbody tr:hover { background: #f8f9ff; }
+    .session-title { font-weight: 700; color: #1a2236; font-size: 13.5px; }
+    .date-text { font-size: 12.5px; color: #64748b; }
+    .badge-active { background: #dcfce7; color: #166534; padding: 5px 12px; border-radius: 999px; font-size: 11.5px; font-weight: 700; }
+    .badge-inactive { background: #f1f5f9; color: #64748b; padding: 5px 12px; border-radius: 999px; font-size: 11.5px; font-weight: 700; }
+    .actions-cell { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+    .btn-action { display: inline-flex; align-items: center; gap: 5px; padding: 6px 12px; border-radius: 8px; font-size: 12px; font-weight: 700; text-decoration: none; color: #fff; transition: 0.18s; white-space: nowrap; }
+    .btn-activate { background: #10b981; }
     .btn-activate:hover { background: #059669; color: #fff; }
-
     .btn-deactivate { background: #f59e0b; }
     .btn-deactivate:hover { background: #d97706; color: #fff; }
-
-    .btn-results    { background: #635bff; }
+    .btn-results { background: #635bff; }
     .btn-results:hover { background: #4f46e5; color: #fff; }
-
-    .btn-delete     { background: #ef4444; }
+    .btn-delete { background: #ef4444; }
     .btn-delete:hover { background: #dc2626; color: #fff; }
-
-    .empty-state {
-        text-align: center;
-        padding: 50px 20px;
-        color: #94a3b8;
-        font-size: 13px;
-    }
+    .empty-state { text-align: center; padding: 50px 20px; color: #94a3b8; font-size: 13px; }
+    .page-btn { padding: 8px 14px; border-radius: 8px; border: 1.5px solid #e2e8f0; background: #fff; color: #374151; font-size: 13px; font-weight: 600; text-decoration: none; transition: 0.18s; }
+    .page-btn:hover { border-color: #635bff; color: #635bff; }
+    .page-btn.active { background: #635bff; color: #fff; border-color: #635bff; }
+    .page-btn.disabled { opacity: 0.4; pointer-events: none; }
 </style>
 
 <div class="admin-wrap">
-
     <div class="dash-sidebar">
         <div class="nav-section-label">Main</div>
-        <a class="sidebar-link" href="/Admin/Dashboard">
-            <span class="s-icon">📊</span><span>Dashboard</span>
-        </a>
+        <a class="sidebar-link" href="/Admin/Dashboard"><span class="s-icon">📊</span><span>Dashboard</span></a>
         <div class="nav-section-label">Users</div>
-        <a class="sidebar-link" href="/AdminUser">
-            <span class="s-icon">👥</span><span>All Users</span>
-        </a>
+        <a class="sidebar-link" href="/AdminUser"><span class="s-icon">👥</span><span>All Users</span></a>
         <div class="nav-section-label">Questions</div>
-        <a class="sidebar-link" href="/Admin/Questions?moduleId=1">
-            <span class="s-icon">📝</span><span>Module 1</span>
-        </a>
-        <a class="sidebar-link" href="/Admin/Questions?moduleId=2">
-            <span class="s-icon">📝</span><span>Module 2</span>
-        </a>
-        <a class="sidebar-link" href="/Admin/Questions?moduleId=3">
-            <span class="s-icon">📝</span><span>Module 3</span>
-        </a>
+        <a class="sidebar-link" href="/Admin/Questions?moduleId=1"><span class="s-icon">📝</span><span>Module 1</span></a>
+        <a class="sidebar-link" href="/Admin/Questions?moduleId=2"><span class="s-icon">📝</span><span>Module 2</span></a>
+        <a class="sidebar-link" href="/Admin/Questions?moduleId=3"><span class="s-icon">📝</span><span>Module 3</span></a>
         <div class="nav-section-label">Sessions</div>
-        <a class="sidebar-link active" href="/AdminSession">
-            <span class="s-icon">🕐</span><span>Exam Sessions</span>
-        </a>
-        <div class="nav-section-label">Reports</div>
-        <a class="sidebar-link" href="/AdminResult">
-            <span class="s-icon">📈</span><span>Exam Results</span>
-        </a>
+        <a class="sidebar-link active" href="/AdminSession"><span class="s-icon">🕐</span><span>Exam Sessions</span></a>
     </div>
 
     <div class="dash-main">
 
         <div class="top-row">
             <div>
-                <h2>
-                    <i class="fa-solid fa-clock" style="color:#635bff;margin-right:8px;"></i>
-                    Exam Sessions
-                </h2>
+                <h2><i class="fa-solid fa-clock" style="color:#635bff;margin-right:8px;"></i>Exam Sessions</h2>
                 <p>Create and manage exam sessions</p>
             </div>
             <a class="btn-new" href="/AdminSession/Create">
@@ -300,12 +88,10 @@
                 <tbody>
                     @if (Model != null && Model.Count > 0)
                     {
-                        @foreach (var s in Model)
+                        foreach (var s in Model)
                         {
                             <tr>
-                                <td>
-                                    <span class="session-title">@s.Title</span>
-                                </td>
+                                <td><span class="session-title">@s.Title</span></td>
                                 <td>
                                     <span class="date-text">
                                         <i class="fa-regular fa-calendar" style="margin-right:5px;color:#94a3b8;"></i>
@@ -321,11 +107,11 @@
                                 <td>
                                     @if (s.IsActive)
                                     {
-                                        <span class="badge-active">🟢 Active</span>
+                                        <span class="badge-active">&#11044; Active</span>
                                     }
                                     else
                                     {
-                                        <span class="badge-inactive">⚫ Inactive</span>
+                                        <span class="badge-inactive">&#9679; Inactive</span>
                                     }
                                 </td>
                                 <td>
@@ -345,7 +131,7 @@
                                         <a class="btn-action btn-results" href="/AdminSession/Results?id=@s.Id">
                                             <i class="fa-solid fa-chart-bar"></i> Results
                                         </a>
-                                        <a class="btn-action btn-delete" href="/AdminSession/Delete?id=@s.Id">
+                                        <a class="btn-action btn-delete" href="/AdminSession/Delete?id=@s.Id" onclick="return confirm('Delete this session?')">
                                             <i class="fa-solid fa-trash"></i> Delete
                                         </a>
                                     </div>
@@ -368,27 +154,17 @@
             </table>
         </div>
 
-        @{
-            int currentPage = ViewBag.CurrentPage ?? 1;
-            int totalPages = ViewBag.TotalPages ?? 1;
-        }
-
         @if (totalPages > 1)
         {
             <div style="display:flex;align-items:center;gap:6px;margin-top:20px;justify-content:center;">
-                <a href="?page=@(currentPage - 1)"
-                   style="padding:8px 14px;border-radius:8px;border:1.5px solid #e2e8f0;background:#fff;color:#374151;font-size:13px;font-weight:600;text-decoration:none;@(currentPage == 1 ? "opacity:0.4;pointer-events:none;" : "")">
+                <a href="?page=@(currentPage - 1)" class="page-btn @(currentPage == 1 ? "disabled" : "")">
                     <i class="fa-solid fa-chevron-left"></i>
                 </a>
                 @for (int i = 1; i <= totalPages; i++)
                 {
-                    <a href="?page=@i"
-                       style="padding:8px 14px;border-radius:8px;border:1.5px solid #e2e8f0;font-size:13px;font-weight:600;text-decoration:none;@(i == currentPage ? "background:#635bff;color:#fff;border-color:#635bff;" : "background:#fff;color:#374151;")">
-                        @i
-                    </a>
+                    <a href="?page=@i" class="page-btn @(i == currentPage ? "active" : "")">@i</a>
                 }
-                <a href="?page=@(currentPage + 1)"
-                   style="padding:8px 14px;border-radius:8px;border:1.5px solid #e2e8f0;background:#fff;color:#374151;font-size:13px;font-weight:600;text-decoration:none;@(currentPage == totalPages ? "opacity:0.4;pointer-events:none;" : "")">
+                <a href="?page=@(currentPage + 1)" class="page-btn @(currentPage == totalPages ? "disabled" : "")">
                     <i class="fa-solid fa-chevron-right"></i>
                 </a>
             </div>

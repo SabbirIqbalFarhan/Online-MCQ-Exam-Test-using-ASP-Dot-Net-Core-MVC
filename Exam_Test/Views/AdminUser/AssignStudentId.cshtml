@@ -283,72 +283,70 @@
         <a class="sidebar-link" href="/AdminSession">
             <span class="s-icon">🕐</span><span>Exam Sessions</span>
         </a>
-        <div class="nav-section-label">Reports</div>
-        <a class="sidebar-link" href="/AdminResult">
-            <span class="s-icon">📈</span><span>Exam Results</span>
-        </a>
+        <span class="s-icon">📈</span><span>Exam Results</span>
+    </a>
+</div>
+
+<div class="dash-main">
+
+    <a class="btn-back" href="/AdminUser/Details/@ViewBag.UserId">
+        <i class="fa-solid fa-arrow-left"></i> Back to User
+    </a>
+
+    <div class="page-header-block">
+        <div class="page-header-icon">
+            <i class="fa-solid fa-id-card"></i>
+        </div>
+        <div>
+            <h2>Assign Student ID</h2>
+            <p>Assign a student ID and full name to identify this user in exam results</p>
+        </div>
     </div>
 
-    <div class="dash-main">
-
-        <a class="btn-back" href="/AdminUser/Details/@ViewBag.UserId">
-            <i class="fa-solid fa-arrow-left"></i> Back to User
-        </a>
-
-        <div class="page-header-block">
-            <div class="page-header-icon">
-                <i class="fa-solid fa-id-card"></i>
-            </div>
-            <div>
-                <h2>Assign Student ID</h2>
-                <p>Assign a student ID and full name to identify this user in exam results</p>
-            </div>
+    <div class="info-banner">
+        <div class="i-icon">👤</div>
+        <div>
+            <strong>@ViewBag.UserEmail</strong>
+            @if (ViewBag.CurrentStudentId != null)
+            {
+                <span>— Current ID:</span>
+                <span class="current-id-pill">@ViewBag.CurrentStudentId</span>
+            }
         </div>
-
-        <div class="info-banner">
-            <div class="i-icon">👤</div>
-            <div>
-                <strong>@ViewBag.UserEmail</strong>
-                @if (ViewBag.CurrentStudentId != null)
-                {
-                    <span>— Current ID:</span>
-                    <span class="current-id-pill">@ViewBag.CurrentStudentId</span>
-                }
-            </div>
-        </div>
-
-        <div class="form-card">
-            <form method="post" action="/AdminUser/AssignStudentId/@ViewBag.UserId">
-
-                <div class="form-group">
-                    <label class="field-label">Student ID</label>
-                    <div class="field-wrap">
-                        <i class="fa-solid fa-fingerprint f-icon"></i>
-                        <input type="text" name="studentId"
-                               value="@ViewBag.CurrentStudentId"
-                               placeholder="e.g. TVD73741905" required />
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label class="field-label">Full Name</label>
-                    <div class="field-wrap">
-                        <i class="fa-solid fa-user f-icon"></i>
-                        <input type="text" name="fullName"
-                               value="@ViewBag.CurrentFullName"
-                               placeholder="e.g. John Smith" required />
-                    </div>
-                </div>
-
-                <hr class="divider" />
-
-                <button type="submit" class="btn-submit">
-                    <i class="fa-solid fa-floppy-disk" style="margin-right:8px;"></i>
-                    Save Changes
-                </button>
-
-            </form>
-        </div>
-
     </div>
+
+    <div class="form-card">
+        <form method="post" action="/AdminUser/AssignStudentId/@ViewBag.UserId">
+
+            <div class="form-group">
+                <label class="field-label">Student ID</label>
+                <div class="field-wrap">
+                    <i class="fa-solid fa-fingerprint f-icon"></i>
+                    <input type="text" name="studentId"
+                           value="@ViewBag.CurrentStudentId"
+                           placeholder="e.g. TVD73741905" required />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="field-label">Full Name</label>
+                <div class="field-wrap">
+                    <i class="fa-solid fa-user f-icon"></i>
+                    <input type="text" name="fullName"
+                           value="@ViewBag.CurrentFullName"
+                           placeholder="e.g. John Smith" required />
+                </div>
+            </div>
+
+            <hr class="divider" />
+
+            <button type="submit" class="btn-submit">
+                <i class="fa-solid fa-floppy-disk" style="margin-right:8px;"></i>
+                Save Changes
+            </button>
+
+        </form>
+    </div>
+
+</div>
 </div>
