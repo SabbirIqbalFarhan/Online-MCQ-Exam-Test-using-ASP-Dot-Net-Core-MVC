@@ -233,6 +233,7 @@
 
     <div class="form-card">
         <form method="post" action="/Admin/AddQuestion" enctype="multipart/form-data">
+            @Html.AntiForgeryToken()
 
             <input type="hidden" name="ModuleId" value="@ViewBag.ModuleId" />
 

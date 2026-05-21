@@ -344,12 +344,17 @@
             <a class="btn-action btn-purple" href="/AdminUser/AssignStudentId/@Model.Id">
                 <i class="fa-solid fa-id-card"></i> Assign Student ID
             </a>
-            <a class="btn-action btn-green" href="/AdminUser/GrantPermission?id=@Model.Id">
-                <i class="fa-solid fa-circle-check"></i> Grant Permission
-            </a>
-            <a class="btn-action btn-red" href="/AdminUser/RevokePermission?id=@Model.Id">
-                <i class="fa-solid fa-ban"></i> Revoke Permission
-            </a>
+            <form method="post" action="/AdminUser/GrantPermission" style="display:inline;">
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="id" value="@Model.Id" />
+                <button type="submit" class="btn-action btn-green">Grant Permission</button>
+            </form>
+
+            <form method="post" action="/AdminUser/RevokePermission" style="display:inline;">
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="id" value="@Model.Id" />
+                <button type="submit" class="btn-action btn-red">Revoke Permission</button>
+            </form>
             <a class="btn-action btn-dark" href="/AdminUser/ResetPassword/@Model.Id">
                 <i class="fa-solid fa-key"></i> Reset Password
             </a>

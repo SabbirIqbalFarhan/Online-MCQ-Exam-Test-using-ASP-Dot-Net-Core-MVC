@@ -231,7 +231,8 @@
     </div>
 
     <div class="form-card">
-        <form method="post" enctype="multipart/form-data">
+        <form method="post" action="/Admin/EditQuestion" enctype="multipart/form-data">
+            @Html.AntiForgeryToken()
 
             <input type="hidden" name="Id" value="@Model.Id" />
             <input type="hidden" name="ModuleId" value="@Model.ModuleId" />

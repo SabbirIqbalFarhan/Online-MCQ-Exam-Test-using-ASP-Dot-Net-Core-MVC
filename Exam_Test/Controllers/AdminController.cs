@@ -172,7 +172,6 @@ namespace Exam_Test.Controllers
         public IActionResult DeleteQuestion(int id)
         {
             var question = _context.Questions.Find(id);
-
             if (question == null) return NotFound();
 
             if (!string.IsNullOrEmpty(question.ImagePath))
@@ -183,6 +182,10 @@ namespace Exam_Test.Controllers
             }
 
             int moduleId = question.ModuleId;
+
+            // Delete related UserAnswers first
+            var relatedAnswers = _context.UserAnswers.Where(a => a.QuestionId == id).ToList();
+            _context.UserAnswers.RemoveRange(relatedAnswers);
 
             _context.Questions.Remove(question);
             _context.SaveChanges();

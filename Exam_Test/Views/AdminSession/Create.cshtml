@@ -244,6 +244,7 @@
         <div class="nav-section-label">Sessions</div>
         <a class="sidebar-link active" href="/AdminSession">
             <span class="s-icon">🕐</span><span>Exam Sessions</span>
+        </a>
         
 </div>
 
@@ -272,7 +273,7 @@
             <div class="form-card">
     <div class="form-card">
         <form method="post" action="/AdminSession/Create">
-
+                        @Html.AntiForgeryToken()
             <div class="form-group">
                 <label class="field-label">Session Title</label>
                 <div class="field-wrap">

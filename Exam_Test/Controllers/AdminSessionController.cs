@@ -99,13 +99,8 @@ namespace Exam_Test.Controllers
 
             foreach (var res in results)
             {
-                var moduleQIds = _context.Questions
-                    .Where(q => q.ModuleId == res.ModuleId)
-                    .Select(q => q.Id)
-                    .ToList();
-
                 var answers = _context.UserAnswers
-                    .Where(a => a.UserId == res.UserId && a.ModuleId == res.ModuleId && moduleQIds.Contains(a.QuestionId))
+                    .Where(a => a.UserId == res.UserId && a.ModuleId == res.ModuleId)
                     .ToList();
 
                 _context.UserAnswers.RemoveRange(answers);

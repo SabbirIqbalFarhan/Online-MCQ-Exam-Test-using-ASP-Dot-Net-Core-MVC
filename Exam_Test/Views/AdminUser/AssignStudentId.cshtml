@@ -319,7 +319,7 @@
 
     <div class="form-card">
         <form method="post" action="/AdminUser/AssignStudentId/@ViewBag.UserId">
-
+            @Html.AntiForgeryToken()
             <div class="form-group">
                 <label class="field-label">Student ID</label>
                 <div class="field-wrap">

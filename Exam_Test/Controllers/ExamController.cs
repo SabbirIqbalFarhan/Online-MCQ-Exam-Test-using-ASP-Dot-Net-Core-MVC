@@ -32,14 +32,11 @@ namespace Exam_Test.Controllers
                 return RedirectToAction("Dashboard", "User");
             }
 
+            var now = DateTime.Now;
             var session = _context.ExamSessions
-    .Where(s => s.IsActive)
-    .OrderByDescending(s => s.StartTime)
-    .FirstOrDefault()
-    ?? _context.ExamSessions
-    .Where(s => s.StartTime <= DateTime.Now && s.EndTime >= DateTime.Now)
-    .OrderByDescending(s => s.StartTime)
-    .FirstOrDefault();
+                .Where(s => s.IsActive && s.StartTime <= now && s.EndTime >= now)
+                .OrderByDescending(s => s.StartTime)
+                .FirstOrDefault();
 
             if (session == null)
             {
@@ -156,6 +153,8 @@ namespace Exam_Test.Controllers
                 .ToList();
 
             int totalQ = result.Correct + result.Wrong;
+
+            var resultId = result.Id;
 
             var userAnswers = _context.UserAnswers
                 .Where(a => a.UserId == user.Id && a.ModuleId == moduleId && moduleQuestionIds.Contains(a.QuestionId))

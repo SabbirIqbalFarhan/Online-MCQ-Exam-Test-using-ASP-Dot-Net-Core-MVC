@@ -106,7 +106,11 @@ namespace Exam_Test.Controllers
             var user = await _userManager.GetUserAsync(User);
             if (user == null) return RedirectToAction("Login", "Account");
 
-            var session = _context.ExamSessions.Find(sessionId);
+            var now = DateTime.Now;
+            var session = _context.ExamSessions
+                .Where(s => s.IsActive && s.StartTime <= now && s.EndTime >= now)
+                .OrderByDescending(s => s.StartTime)
+                .FirstOrDefault();
             if (session == null) return NotFound();
 
             var result = _context.Results
