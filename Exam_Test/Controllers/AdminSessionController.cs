@@ -38,9 +38,9 @@ namespace Exam_Test.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult Create(string title, DateTime startTime, DateTime endTime)
         {
-            // Check for time overlap with existing sessions
             bool overlap = _context.ExamSessions.Any(s =>
                 startTime < s.EndTime && endTime > s.StartTime
             );
@@ -63,6 +63,8 @@ namespace Exam_Test.Controllers
             return RedirectToAction("Index");
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult Activate(int id)
         {
             var all = _context.ExamSessions.ToList();
@@ -75,6 +77,8 @@ namespace Exam_Test.Controllers
             return RedirectToAction("Index");
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult Deactivate(int id)
         {
             var session = _context.ExamSessions.Find(id);
@@ -84,12 +88,33 @@ namespace Exam_Test.Controllers
             return RedirectToAction("Index");
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult Delete(int id)
         {
             var session = _context.ExamSessions.Find(id);
-            if (session != null) _context.ExamSessions.Remove(session);
+            if (session == null) return NotFound();
 
+            var results = _context.Results.Where(r => r.SessionId == id).ToList();
+
+            foreach (var res in results)
+            {
+                var moduleQIds = _context.Questions
+                    .Where(q => q.ModuleId == res.ModuleId)
+                    .Select(q => q.Id)
+                    .ToList();
+
+                var answers = _context.UserAnswers
+                    .Where(a => a.UserId == res.UserId && a.ModuleId == res.ModuleId && moduleQIds.Contains(a.QuestionId))
+                    .ToList();
+
+                _context.UserAnswers.RemoveRange(answers);
+            }
+
+            _context.Results.RemoveRange(results);
+            _context.ExamSessions.Remove(session);
             _context.SaveChanges();
+
             return RedirectToAction("Index");
         }
 
@@ -128,6 +153,7 @@ namespace Exam_Test.Controllers
 
             return View(data);
         }
+
         public IActionResult ViewResult(string userId, int sessionId, int moduleId)
         {
             var session = _context.ExamSessions.Find(sessionId);
@@ -142,14 +168,11 @@ namespace Exam_Test.Controllers
             int totalWrong = result?.Wrong ?? 0;
             int totalQuestions = totalCorrect + totalWrong;
 
-            // Get question IDs that belong to this module
             var moduleQuestionIds = _context.Questions
                 .Where(q => q.ModuleId == moduleId)
                 .Select(q => q.Id)
                 .ToList();
 
-            // Filter UserAnswers by userId + only questions in this module
-            // Then take only the latest N answers matching the result count (totalQuestions)
             var userAnswers = _context.UserAnswers
                 .Where(a => a.UserId == userId && a.ModuleId == moduleId && moduleQuestionIds.Contains(a.QuestionId))
                 .OrderByDescending(a => a.Id)
@@ -177,6 +200,9 @@ namespace Exam_Test.Controllers
 
             return View();
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult DeleteResult(int id, int sessionId)
         {
             var result = _context.Results.Find(id);

@@ -141,22 +141,32 @@
                                     <div class="actions-cell">
                                         @if (!s.IsActive)
                                         {
-                                            <a class="btn-action btn-activate" href="/AdminSession/Activate?id=@s.Id">
-                                                <i class="fa-solid fa-circle-play"></i> Activate
-                                            </a>
+                                            <form method="post" action="/AdminSession/Activate" style="display:inline;">
+                                                @Html.AntiForgeryToken()
+                                                <input type="hidden" name="id" value="@s.Id" />
+                                                <button type="submit" class="btn-action btn-grant">
+                                                    <i class="fa-solid fa-circle-play"></i> Activate</button>
+                                            </form>
                                         }
                                         else
                                         {
-                                            <a class="btn-action btn-deactivate" href="/AdminSession/Deactivate?id=@s.Id">
-                                                <i class="fa-solid fa-circle-pause"></i> Deactivate
-                                            </a>
+                                            <form method="post" action="/AdminSession/Deactivate" style="display:inline;">
+                                                @Html.AntiForgeryToken()
+                                                <input type="hidden" name="id" value="@s.Id" />
+                                                <button type="submit" class="btn-action btn-revoke">
+                                                    <i class="fa-solid fa-circle-pause"></i>Deactivate</button>
+                                            </form>
                                         }
                                         <a class="btn-action btn-results" href="/AdminSession/Results?id=@s.Id">
                                             <i class="fa-solid fa-chart-bar"></i> Results
                                         </a>
-                                        <a class="btn-action btn-delete" href="/AdminSession/Delete?id=@s.Id" onclick="return confirm('Delete this session?')">
-                                            <i class="fa-solid fa-trash"></i> Delete
-                                        </a>
+                                        <form method="post" action="/AdminSession/Delete" style="display:inline;"
+                                              onsubmit="return confirm('Delete this session and all its results?')">
+                                            @Html.AntiForgeryToken()
+                                            <input type="hidden" name="id" value="@s.Id" />
+                                            <button type="submit" class="btn-action btn-delete">
+                                                <i class="fa-solid fa-trash"></i> Delete</button>
+                                        </form>
                                     </div>
                                 </td>
                             </tr>
