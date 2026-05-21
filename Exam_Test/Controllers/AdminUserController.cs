@@ -97,6 +97,7 @@ namespace Exam_Test.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> ResetPassword(string id, string newPassword)
         {
             var user = await _userManager.FindByIdAsync(id);
@@ -149,6 +150,7 @@ namespace Exam_Test.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> AssignStudentId(string id, string studentId, string fullName)
         {
             var user = await _userManager.FindByIdAsync(id);
@@ -218,12 +220,13 @@ namespace Exam_Test.Controllers
         }
 
         // NEW: Delete User
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteUser(string id)
         {
             var user = await _userManager.FindByIdAsync(id);
             if (user == null) return NotFound();
 
-            // Block deletion of any Admin-role user
             if (await _userManager.IsInRoleAsync(user, "Admin"))
             {
                 TempData["Error"] = "Admin accounts cannot be deleted.";
@@ -242,6 +245,10 @@ namespace Exam_Test.Controllers
 
             var results = _context.Results.Where(r => r.UserId == id).ToList();
             _context.Results.RemoveRange(results);
+
+            // Fix #3: Also delete UserAnswers
+            var answers = _context.UserAnswers.Where(a => a.UserId == id).ToList();
+            _context.UserAnswers.RemoveRange(answers);
 
             _context.SaveChanges();
 
