@@ -81,6 +81,7 @@ namespace Exam_Test.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Submit(int moduleId, int sessionId, Dictionary<int, string> answers)
         {
             var user = await _userManager.GetUserAsync(User);
