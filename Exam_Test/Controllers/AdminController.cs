@@ -140,6 +140,8 @@ namespace Exam_Test.Controllers
             return RedirectToAction("Questions", new { moduleId = model.ModuleId });
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult DeleteQuestion(int id)
         {
             var question = _context.Questions.Find(id);
