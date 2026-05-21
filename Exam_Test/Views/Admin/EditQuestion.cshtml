@@ -1,5 +1,8 @@
 ﻿@model Exam_Test.Models.Question
-
+@if (ViewBag.Error != null)
+{
+    <div class="alert-error">@ViewBag.Error</div>
+}
 @{
     ViewData["Title"] = "Edit Question";
 }

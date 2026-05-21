@@ -1,7 +1,10 @@
 ﻿@{
     ViewData["Title"] = "Add Question";
 }
-
+@if (ViewBag.Error != null)
+{
+    <div class="alert-error">@ViewBag.Error</div>
+}
 <style>
     .page-wrap {
         max-width: 720px;

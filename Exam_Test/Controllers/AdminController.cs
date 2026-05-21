@@ -63,6 +63,19 @@ namespace Exam_Test.Controllers
             if (existingCount >= 30)
                 return RedirectToAction("Questions", new { moduleId = ModuleId });
 
+            if (imageFile != null)
+            {
+                var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".webp" };
+                var ext = Path.GetExtension(imageFile.FileName).ToLowerInvariant();
+
+                if (!allowedExtensions.Contains(ext))
+                {
+                    ViewBag.ModuleId = ModuleId;
+                    ViewBag.Error = "Only .jpg, .jpeg, .png, and .webp image files are allowed.";
+                    return View();
+                }
+            }
+
             var model = new Question
             {
                 ModuleId = ModuleId,
@@ -108,6 +121,18 @@ namespace Exam_Test.Controllers
             var question = _context.Questions.Find(model.Id);
 
             if (question == null) return NotFound();
+
+            if (imageFile != null)
+            {
+                var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".webp" };
+                var ext = Path.GetExtension(imageFile.FileName).ToLowerInvariant();
+
+                if (!allowedExtensions.Contains(ext))
+                {
+                    ViewBag.Error = "Only .jpg, .jpeg, .png, and .webp image files are allowed.";
+                    return View(model);
+                }
+            }
 
             question.QuestionText = model.QuestionText;
             question.OptionA = model.OptionA;
