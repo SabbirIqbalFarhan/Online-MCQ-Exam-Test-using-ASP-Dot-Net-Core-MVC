@@ -153,6 +153,7 @@ namespace Exam_Test.Controllers
         public IActionResult ChangePassword() => View();
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> ChangePassword(string currentPassword, string newPassword)
         {
             var user = await _userManager.GetUserAsync(User);
