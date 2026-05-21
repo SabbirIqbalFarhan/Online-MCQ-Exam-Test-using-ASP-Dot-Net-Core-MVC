@@ -206,15 +206,23 @@
                                         {
                                             @if (perm == null || !perm.IsPermitted)
                                             {
-                                                <a class="btn-action btn-grant" href="/AdminUser/GrantPermission?id=@user.Id">
-                                                    <i class="fa-solid fa-circle-check"></i> Grant
-                                                </a>
+                                               <form method="post" action="/AdminUser/GrantPermission" style="display:inline;">
+                                                    @Html.AntiForgeryToken()
+                                                    <input type="hidden" name="id" value="@user.Id" />
+                                                    <button type="submit" class="btn-action btn-grant">
+                                                        <i class="fa-solid fa-check"></i> Grant
+                                                    </button>
+                                                </form>
                                             }
                                             else
                                             {
-                                                <a class="btn-action btn-revoke" href="/AdminUser/RevokePermission?id=@user.Id">
-                                                    <i class="fa-solid fa-ban"></i> Revoke
-                                                </a>
+                                                <form method="post" action="/AdminUser/RevokePermission" style="display:inline;">
+                                                    @Html.AntiForgeryToken()
+                                                    <input type="hidden" name="id" value="@user.Id" />
+                                                    <button type="submit" class="btn-action btn-revoke">
+                                                        <i class="fa-solid fa-ban"></i> Revoke
+                                                    </button>
+                                                </form>
                                             }
                                         }
                                         <a class="btn-action btn-view" href="/AdminUser/Details/@user.Id">
@@ -222,11 +230,14 @@
                                         </a>
                                         @if (!isAdmin)
                                         {
-                                            <a class="btn-action btn-delete"
-                                               href="/AdminUser/DeleteUser/@user.Id"
-                                               onclick="return confirm('Delete this user and all their data?')">
-                                                <i class="fa-solid fa-trash"></i> Delete
-                                            </a>
+                                            <form method="post" action="/AdminUser/DeleteUser" style="display:inline;"
+                                                  onsubmit="return confirm('Delete this user and all their data?')">
+                                                @Html.AntiForgeryToken()
+                                                <input type="hidden" name="id" value="@user.Id" />
+                                                <button type="submit" class="btn-action btn-delete">
+                                                    <i class="fa-solid fa-trash"></i> Delete
+                                                </button>
+                                            </form>
                                         }
                                     </div>
                                 </td>
