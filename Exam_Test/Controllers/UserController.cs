@@ -26,7 +26,14 @@ namespace Exam_Test.Controllers
             var totalResults = _context.Results.Where(r => r.UserId == user.Id).ToList();
             var permission = _context.ExamPermissions.FirstOrDefault(p => p.UserId == user.Id);
             var examRequest = _context.ExamRequests.FirstOrDefault(r => r.UserId == user.Id);
-            var activeSession = _context.ExamSessions.FirstOrDefault(s => s.IsActive);
+            var activeSession = _context.ExamSessions
+    .Where(s => s.IsActive)
+    .OrderByDescending(s => s.StartTime)
+    .FirstOrDefault()
+    ?? _context.ExamSessions
+    .Where(s => s.StartTime <= DateTime.Now && s.EndTime >= DateTime.Now)
+    .OrderByDescending(s => s.StartTime)
+    .FirstOrDefault();
             var allSessions = _context.ExamSessions.OrderByDescending(s => s.CreatedAt).ToList();
             ViewBag.AllSessions = allSessions;
             var profile = _context.UserProfiles.FirstOrDefault(p => p.UserId == user.Id);
@@ -37,8 +44,14 @@ namespace Exam_Test.Controllers
             ViewBag.ExamRequest = examRequest;
             ViewBag.ActiveSession = activeSession;
             ViewBag.Profile = profile;
+            var completedModules = _context.Results
+    .Where(r => r.UserId == user.Id)
+    .Select(r => r.ModuleId)
+    .Distinct()
+    .ToList();
 
-            
+            ViewBag.CompletedModules = completedModules;
+
 
             return View();
         }

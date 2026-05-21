@@ -32,7 +32,14 @@ namespace Exam_Test.Controllers
                 return RedirectToAction("Dashboard", "User");
             }
 
-            var session = _context.ExamSessions.FirstOrDefault(s => s.IsActive);
+            var session = _context.ExamSessions
+    .Where(s => s.IsActive)
+    .OrderByDescending(s => s.StartTime)
+    .FirstOrDefault()
+    ?? _context.ExamSessions
+    .Where(s => s.StartTime <= DateTime.Now && s.EndTime >= DateTime.Now)
+    .OrderByDescending(s => s.StartTime)
+    .FirstOrDefault();
 
             if (session == null)
             {

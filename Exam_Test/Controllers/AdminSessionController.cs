@@ -40,6 +40,17 @@ namespace Exam_Test.Controllers
         [HttpPost]
         public IActionResult Create(string title, DateTime startTime, DateTime endTime)
         {
+            // Check for time overlap with existing sessions
+            bool overlap = _context.ExamSessions.Any(s =>
+                startTime < s.EndTime && endTime > s.StartTime
+            );
+
+            if (overlap)
+            {
+                TempData["Error"] = "A session already exists that overlaps with this time range. Please choose a different time.";
+                return RedirectToAction("Create");
+            }
+
             _context.ExamSessions.Add(new ExamSession
             {
                 Title = title,
