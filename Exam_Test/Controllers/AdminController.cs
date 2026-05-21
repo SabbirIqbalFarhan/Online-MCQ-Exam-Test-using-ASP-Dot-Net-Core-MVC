@@ -55,6 +55,7 @@ namespace Exam_Test.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> AddQuestion(int ModuleId, string? QuestionText, string? OptionA, string? OptionB, string? OptionC, string? CorrectAnswer, IFormFile? imageFile)
         {
             var existingCount = _context.Questions.Count(q => q.ModuleId == ModuleId);
@@ -101,6 +102,7 @@ namespace Exam_Test.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> EditQuestion(Question model, IFormFile? imageFile)
         {
             var question = _context.Questions.Find(model.Id);
