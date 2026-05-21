@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Exam_Test.Models
 {
@@ -11,6 +12,7 @@ namespace Exam_Test.Models
 
         public int QuestionId { get; set; }
 
+        [NotMapped]
         public Question? Question { get; set; }
 
         public string? SelectedAnswer { get; set; }
