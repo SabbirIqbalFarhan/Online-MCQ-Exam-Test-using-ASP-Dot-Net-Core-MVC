@@ -175,7 +175,8 @@ namespace Exam_Test.Controllers
             return RedirectToAction("Details", new { id = id });
         }
 
-        [HttpGet]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult GrantPermission(string id)
         {
             var existing = _context.ExamPermissions.FirstOrDefault(p => p.UserId == id);
@@ -202,7 +203,8 @@ namespace Exam_Test.Controllers
             return RedirectToAction("Index");
         }
 
-        [HttpGet]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult RevokePermission(string id)
         {
             var existing = _context.ExamPermissions.FirstOrDefault(p => p.UserId == id);
