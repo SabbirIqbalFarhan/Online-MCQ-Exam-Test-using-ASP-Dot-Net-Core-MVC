@@ -2,7 +2,6 @@ using Exam_Test.Data;
 using Exam_Test.Seed;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Exam_Test.Seed;
 
 var builder = WebApplication.CreateBuilder(args);
 
