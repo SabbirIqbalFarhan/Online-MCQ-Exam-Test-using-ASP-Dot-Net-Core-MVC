@@ -437,9 +437,14 @@
                             <a class="btn-action btn-edit-q" href="/Admin/EditQuestion/@q.Id">
                                 <i class="fa-solid fa-pen" style="margin-right:3px;"></i>Edit
                             </a>
-                            <a class="btn-action btn-delete-q" href="/Admin/DeleteQuestion/@q.Id">
-                                <i class="fa-solid fa-trash" style="margin-right:3px;"></i>Delete
-                            </a>
+                            <form method="post" action="/Admin/DeleteQuestion" style="display:inline;"
+                                  onsubmit="return confirm('Delete this question?')">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="id" value="@q.Id" />
+                                <button type="submit" class="btn-action btn-delete-q">
+                                    <i class="fa-solid fa-trash" style="margin-right:3px;"></i>Delete
+                                </button>
+                            </form>
                         </div>
                     </div>
                     serial++;
