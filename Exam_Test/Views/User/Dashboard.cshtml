@@ -417,9 +417,7 @@
 
         <!-- SESSION STATUS BOX -->
         @{
-            bool sessionIsLive  = activeSession != null && DateTime.UtcNow.AddHours(6) >= activeSession.StartTime && DateTime.UtcNow.AddHours(6) <= activeSession.EndTime;
-            bool sessionIsSoon  = activeSession != null && DateTime.UtcNow.AddHours(6) < activeSession.StartTime;
-            bool sessionIsEnded = activeSession != null && DateTime.UtcNow.AddHours(6) > activeSession.EndTime;
+            bool sessionIsLive = activeSession != null && activeSession.IsActive;
         }
 
         @if (activeSession != null)
@@ -431,20 +429,10 @@
                         @activeSession.Title
                     </div>
                     <div class="s-time">
-                        Start: @activeSession.StartTime.ToString("dd MMM yyyy, hh:mm tt")
-                        &nbsp;·&nbsp;
-                        End: @activeSession.EndTime.ToString("dd MMM yyyy, hh:mm tt")
+                        Created: @activeSession.CreatedAt.ToString("dd MMM yyyy, hh:mm tt")
                     </div>
                 </div>
-                @if (sessionIsSoon)
-                {
-                    <span class="badge-soon">⏰ Starting Soon</span>
-                }
-                else if (sessionIsEnded)
-                {
-                    <span class="badge-ended">🔴 Session Ended</span>
-                }
-                else if (sessionIsLive)
+                @if (sessionIsLive)
                 {
                     <span class="badge-live">🟢 Live Now</span>
                 }
@@ -472,25 +460,16 @@
 
         @foreach (var sess in allSessions)
         {
-            bool live = DateTime.UtcNow.AddHours(6) >= sess.StartTime && DateTime.UtcNow.AddHours(6) <= sess.EndTime;
-            bool soon = DateTime.UtcNow.AddHours(6) < sess.StartTime;
-
             <div class="session-box" style="margin-bottom:10px;">
                 <div>
                     <div class="s-title">@sess.Title</div>
                     <div class="s-time">
-                        Start: @sess.StartTime.ToString("dd MMM yyyy, hh:mm tt")
-                        &nbsp;·&nbsp;
-                        End: @sess.EndTime.ToString("dd MMM yyyy, hh:mm tt")
+                        Created: @sess.CreatedAt.ToString("dd MMM yyyy, hh:mm tt")
                     </div>
                 </div>
-                @if (live)
+                @if (sess.IsActive)
                 {
                     <span class="badge-live">🟢 Live Now</span>
-                }
-                else if (soon)
-                {
-                    <span class="badge-soon">⏰ Starting Soon</span>
                 }
                 else
                 {
@@ -532,8 +511,7 @@
 
         @{
             var completedModules = ViewBag.CompletedModules as List<int> ?? new List<int>();
-            bool sessionLive = activeSession != null && DateTime.UtcNow.AddHours(6) >= activeSession.StartTime && DateTime.UtcNow.AddHours(6) <= activeSession.EndTime;
-            bool canStart = isPermitted && sessionLive;
+            bool canStart = isPermitted && sessionIsLive;
         }
 
         <div class="modules-grid">

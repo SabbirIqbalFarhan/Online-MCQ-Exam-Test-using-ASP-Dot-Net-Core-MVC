@@ -32,10 +32,9 @@ namespace Exam_Test.Controllers
                 return RedirectToAction("Dashboard", "User");
             }
 
-            var now = DateTime.UtcNow.AddHours(6);
             var session = _context.ExamSessions
-                .Where(s => s.IsActive && s.StartTime <= now && s.EndTime >= now)
-                .OrderByDescending(s => s.StartTime)
+                .Where(s => s.IsActive)
+                .OrderByDescending(s => s.CreatedAt)
                 .FirstOrDefault();
 
             if (session == null)
@@ -44,30 +43,9 @@ namespace Exam_Test.Controllers
                 return RedirectToAction("Dashboard", "User");
             }
 
-            if (DateTime.UtcNow.AddHours(6) < session.StartTime)
-            {
-                TempData["Error"] = $"The exam session has not started yet. It will begin at {session.StartTime:dd MMM yyyy, hh:mm tt}.";
-                return RedirectToAction("Dashboard", "User");
-            }
-
-            if (DateTime.UtcNow.AddHours(6) > session.EndTime)
-            {
-                TempData["Error"] = "The exam session has ended.";
-                return RedirectToAction("Dashboard", "User");
-            }
-
-            // Prevent re-taking the same module in the same session
-            bool alreadyAttempted = _context.Results
-                .Any(r => r.UserId == user.Id && r.ModuleId == moduleId && r.SessionId == session.Id);
-
-            if (alreadyAttempted)
-            {
-                TempData["Error"] = $"You have already completed Module {moduleId} in this session.";
-                return RedirectToAction("Dashboard", "User");
-            }
-
             var questions = _context.Questions
                 .Where(q => q.ModuleId == moduleId)
+                .OrderBy(q => Guid.NewGuid())
                 .ToList();
 
             ViewBag.ModuleId = moduleId;
@@ -87,13 +65,6 @@ namespace Exam_Test.Controllers
                 .FirstOrDefault(p => p.UserId == user.Id && p.IsPermitted == true);
 
             if (permission == null)
-                return RedirectToAction("Dashboard", "User");
-
-            // Prevent double-submit
-            bool alreadySubmitted = _context.Results
-                .Any(r => r.UserId == user.Id && r.ModuleId == moduleId && r.SessionId == sessionId);
-
-            if (alreadySubmitted)
                 return RedirectToAction("Dashboard", "User");
 
             var questions = await _context.Questions
@@ -133,7 +104,6 @@ namespace Exam_Test.Controllers
 
             await _context.SaveChangesAsync();
 
-            // Always redirect to result page after submitting
             return RedirectToAction("Result", new { moduleId = moduleId, sessionId = sessionId });
         }
 
@@ -142,6 +112,7 @@ namespace Exam_Test.Controllers
             var user = await _userManager.GetUserAsync(User);
 
             var result = _context.Results
+                .OrderByDescending(r => r.Id)
                 .FirstOrDefault(r => r.UserId == user.Id && r.ModuleId == moduleId && r.SessionId == sessionId);
 
             if (result == null)
@@ -153,8 +124,6 @@ namespace Exam_Test.Controllers
                 .ToList();
 
             int totalQ = result.Correct + result.Wrong;
-
-            var resultId = result.Id;
 
             var userAnswers = _context.UserAnswers
                 .Where(a => a.UserId == user.Id && a.ModuleId == moduleId && moduleQuestionIds.Contains(a.QuestionId))

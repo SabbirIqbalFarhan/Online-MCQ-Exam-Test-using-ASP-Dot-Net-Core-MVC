@@ -26,18 +26,11 @@ namespace Exam_Test.Controllers
             var totalResults = _context.Results.Where(r => r.UserId == user.Id).ToList();
             var permission = _context.ExamPermissions.FirstOrDefault(p => p.UserId == user.Id);
             var examRequest = _context.ExamRequests.FirstOrDefault(r => r.UserId == user.Id);
-            var now = DateTime.UtcNow.AddHours(6);
+
             var activeSession = _context.ExamSessions
-                .Where(s => s.IsActive && s.StartTime <= now && s.EndTime >= now)
-                .OrderByDescending(s => s.StartTime)
+                .Where(s => s.IsActive)
+                .OrderByDescending(s => s.CreatedAt)
                 .FirstOrDefault();
-
-            var upcomingSession = _context.ExamSessions
-                .Where(s => s.IsActive && s.StartTime > now)
-                .OrderBy(s => s.StartTime)
-                .FirstOrDefault();
-
-            ViewBag.UpcomingSession = upcomingSession;
 
             var allSessions = _context.ExamSessions.OrderByDescending(s => s.CreatedAt).ToList();
             ViewBag.AllSessions = allSessions;
@@ -112,12 +105,11 @@ namespace Exam_Test.Controllers
             var user = await _userManager.GetUserAsync(User);
             if (user == null) return RedirectToAction("Login", "Account");
 
-            // FIX: look up session directly by ID so users can view past results
-            // (previously required the session to be currently active, causing 404 for ended sessions)
             var session = _context.ExamSessions.Find(sessionId);
             if (session == null) return NotFound();
 
             var result = _context.Results
+                .OrderByDescending(r => r.Id)
                 .FirstOrDefault(r => r.UserId == user.Id && r.SessionId == sessionId && r.ModuleId == moduleId);
 
             var profile = _context.UserProfiles.FirstOrDefault(p => p.UserId == user.Id);

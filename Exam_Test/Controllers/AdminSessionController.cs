@@ -39,23 +39,11 @@ namespace Exam_Test.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(string title, DateTime startTime, DateTime endTime)
+        public IActionResult Create(string title)
         {
-            bool overlap = _context.ExamSessions.Any(s =>
-                startTime < s.EndTime && endTime > s.StartTime
-            );
-
-            if (overlap)
-            {
-                TempData["Error"] = "A session already exists that overlaps with this time range. Please choose a different time.";
-                return RedirectToAction("Create");
-            }
-
             _context.ExamSessions.Add(new ExamSession
             {
                 Title = title,
-                StartTime = startTime,
-                EndTime = endTime,
                 IsActive = false,
                 CreatedAt = DateTime.UtcNow.AddHours(6)
             });
