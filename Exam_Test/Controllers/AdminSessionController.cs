@@ -57,7 +57,7 @@ namespace Exam_Test.Controllers
                 StartTime = startTime,
                 EndTime = endTime,
                 IsActive = false,
-                CreatedAt = DateTime.Now
+                CreatedAt = DateTime.UtcNow.AddHours(6)
             });
             _context.SaveChanges();
             return RedirectToAction("Index");

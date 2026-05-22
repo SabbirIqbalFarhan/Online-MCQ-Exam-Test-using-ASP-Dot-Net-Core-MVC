@@ -185,13 +185,13 @@ namespace Exam_Test.Controllers
                 {
                     UserId = id,
                     IsPermitted = true,
-                    GrantedAt = DateTime.Now
+                    GrantedAt = DateTime.UtcNow.AddHours(6)
                 });
             }
             else
             {
                 existing.IsPermitted = true;
-                existing.GrantedAt = DateTime.Now;
+                existing.GrantedAt = DateTime.UtcNow.AddHours(6);
             }
 
             var request = _context.ExamRequests.FirstOrDefault(r => r.UserId == id);

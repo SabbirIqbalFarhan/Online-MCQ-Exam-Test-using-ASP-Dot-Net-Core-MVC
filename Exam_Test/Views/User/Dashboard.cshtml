@@ -417,9 +417,9 @@
 
         <!-- SESSION STATUS BOX -->
         @{
-            bool sessionIsLive  = activeSession != null && DateTime.Now >= activeSession.StartTime && DateTime.Now <= activeSession.EndTime;
-            bool sessionIsSoon  = activeSession != null && DateTime.Now < activeSession.StartTime;
-            bool sessionIsEnded = activeSession != null && DateTime.Now > activeSession.EndTime;
+            bool sessionIsLive  = activeSession != null && DateTime.UtcNow.AddHours(6) >= activeSession.StartTime && DateTime.UtcNow.AddHours(6) <= activeSession.EndTime;
+            bool sessionIsSoon  = activeSession != null && DateTime.UtcNow.AddHours(6) < activeSession.StartTime;
+            bool sessionIsEnded = activeSession != null && DateTime.UtcNow.AddHours(6) > activeSession.EndTime;
         }
 
         @if (activeSession != null)
@@ -472,8 +472,8 @@
 
         @foreach (var sess in allSessions)
         {
-            bool live = DateTime.Now >= sess.StartTime && DateTime.Now <= sess.EndTime;
-            bool soon = DateTime.Now < sess.StartTime;
+            bool live = DateTime.UtcNow.AddHours(6) >= sess.StartTime && DateTime.UtcNow.AddHours(6) <= sess.EndTime;
+            bool soon = DateTime.UtcNow.AddHours(6) < sess.StartTime;
 
             <div class="session-box" style="margin-bottom:10px;">
                 <div>
@@ -532,7 +532,7 @@
 
         @{
             var completedModules = ViewBag.CompletedModules as List<int> ?? new List<int>();
-            bool sessionLive = activeSession != null && DateTime.Now >= activeSession.StartTime && DateTime.Now <= activeSession.EndTime;
+            bool sessionLive = activeSession != null && DateTime.UtcNow.AddHours(6) >= activeSession.StartTime && DateTime.UtcNow.AddHours(6) <= activeSession.EndTime;
             bool canStart = isPermitted && sessionLive;
         }
 

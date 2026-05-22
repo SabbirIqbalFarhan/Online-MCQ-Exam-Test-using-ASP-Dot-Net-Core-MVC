@@ -32,7 +32,7 @@ namespace Exam_Test.Controllers
                 return RedirectToAction("Dashboard", "User");
             }
 
-            var now = DateTime.Now;
+            var now = DateTime.UtcNow.AddHours(6);
             var session = _context.ExamSessions
                 .Where(s => s.IsActive && s.StartTime <= now && s.EndTime >= now)
                 .OrderByDescending(s => s.StartTime)
@@ -44,13 +44,13 @@ namespace Exam_Test.Controllers
                 return RedirectToAction("Dashboard", "User");
             }
 
-            if (DateTime.Now < session.StartTime)
+            if (DateTime.UtcNow.AddHours(6) < session.StartTime)
             {
                 TempData["Error"] = $"The exam session has not started yet. It will begin at {session.StartTime:dd MMM yyyy, hh:mm tt}.";
                 return RedirectToAction("Dashboard", "User");
             }
 
-            if (DateTime.Now > session.EndTime)
+            if (DateTime.UtcNow.AddHours(6) > session.EndTime)
             {
                 TempData["Error"] = "The exam session has ended.";
                 return RedirectToAction("Dashboard", "User");
@@ -127,7 +127,7 @@ namespace Exam_Test.Controllers
                 ModuleId = moduleId,
                 Correct = correct,
                 Wrong = wrong,
-                ExamDate = DateTime.Now,
+                ExamDate = DateTime.UtcNow.AddHours(6),
                 SessionId = sessionId
             });
 

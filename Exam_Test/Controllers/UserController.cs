@@ -26,7 +26,7 @@ namespace Exam_Test.Controllers
             var totalResults = _context.Results.Where(r => r.UserId == user.Id).ToList();
             var permission = _context.ExamPermissions.FirstOrDefault(p => p.UserId == user.Id);
             var examRequest = _context.ExamRequests.FirstOrDefault(r => r.UserId == user.Id);
-            var now = DateTime.Now;
+            var now = DateTime.UtcNow.AddHours(6);
             var activeSession = _context.ExamSessions
                 .Where(s => s.IsActive && s.StartTime <= now && s.EndTime >= now)
                 .OrderByDescending(s => s.StartTime)
@@ -76,7 +76,7 @@ namespace Exam_Test.Controllers
                 _context.ExamRequests.Add(new ExamRequest
                 {
                     UserId = user.Id,
-                    RequestedAt = DateTime.Now,
+                    RequestedAt = DateTime.UtcNow.AddHours(6),
                     Status = "Pending"
                 });
                 _context.SaveChanges();
