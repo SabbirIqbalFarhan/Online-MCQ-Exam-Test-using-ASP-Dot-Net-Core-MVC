@@ -26,14 +26,18 @@ namespace Exam_Test.Controllers
             var totalResults = _context.Results.Where(r => r.UserId == user.Id).ToList();
             var permission = _context.ExamPermissions.FirstOrDefault(p => p.UserId == user.Id);
             var examRequest = _context.ExamRequests.FirstOrDefault(r => r.UserId == user.Id);
+            var now = DateTime.Now;
             var activeSession = _context.ExamSessions
-                .Where(s => s.IsActive)
-                .OrderByDescending(s => s.StartTime)
-                .FirstOrDefault()
-                ?? _context.ExamSessions
-                .Where(s => s.StartTime <= DateTime.Now && s.EndTime >= DateTime.Now)
+                .Where(s => s.IsActive && s.StartTime <= now && s.EndTime >= now)
                 .OrderByDescending(s => s.StartTime)
                 .FirstOrDefault();
+
+            var upcomingSession = _context.ExamSessions
+                .Where(s => s.IsActive && s.StartTime > now)
+                .OrderBy(s => s.StartTime)
+                .FirstOrDefault();
+
+            ViewBag.UpcomingSession = upcomingSession;
 
             var allSessions = _context.ExamSessions.OrderByDescending(s => s.CreatedAt).ToList();
             ViewBag.AllSessions = allSessions;
