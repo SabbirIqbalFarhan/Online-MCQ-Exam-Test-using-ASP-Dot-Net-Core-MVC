@@ -7,7 +7,7 @@
         display: flex;
         min-height: calc(100vh - 60px);
         background: #f1f4fb;
-        margin: -28px; /* cancel page-wrapper padding */
+        margin: -28px;
     }
 
     .dash-main {
@@ -20,296 +20,86 @@
         width: 230px;
         background: #1a2236;
         flex-shrink: 0;
-        padding: 60px 0 24px; /* was 24px 0 */
+        padding: 60px 0 24px;
         display: flex;
         flex-direction: column;
         min-height: 100vh;
     }
 
-    .nav-section-label {
-        font-size: 9.5px;
-        font-weight: 700;
-        color: rgba(240,244,255,0.35);
-        text-transform: uppercase;
-        letter-spacing: 1.4px;
-        padding: 14px 20px 6px;
-    }
+    .nav-section-label { font-size: 9.5px; font-weight: 700; color: rgba(240,244,255,0.35); text-transform: uppercase; letter-spacing: 1.4px; padding: 14px 20px 6px; }
+    .sidebar-link { display: flex; align-items: center; gap: 11px; padding: 9px 20px; color: rgba(240,244,255,0.62); text-decoration: none; font-size: 13px; font-weight: 500; border-left: 3px solid transparent; transition: all 0.18s; }
+    .sidebar-link:hover { color: #fff; background: rgba(99,91,255,0.1); border-left-color: rgba(99,91,255,0.5); }
+    .sidebar-link.active { color: #fff; background: rgba(99,91,255,0.15); border-left-color: #635bff; }
+    .sidebar-link .s-icon { width: 30px; height: 30px; border-radius: 8px; display: grid; place-items: center; font-size: 14px; flex-shrink: 0; background: rgba(255,255,255,0.06); transition: 0.18s; }
+    .sidebar-link:hover .s-icon, .sidebar-link.active .s-icon { background: rgba(99,91,255,0.25); }
 
-    .sidebar-link {
-        display: flex;
-        align-items: center;
-        gap: 11px;
-        padding: 9px 20px;
-        color: rgba(240,244,255,0.62);
-        text-decoration: none;
-        font-size: 13px;
-        font-weight: 500;
-        border-left: 3px solid transparent;
-        transition: all 0.18s;
-    }
+    .btn-back { display: inline-flex; align-items: center; gap: 7px; padding: 8px 16px; border-radius: 10px; background: #1a2236; color: rgba(255,255,255,0.8) !important; text-decoration: none; font-size: 13px; font-weight: 600; margin-bottom: 22px; transition: 0.18s; }
+    .btn-back:hover { background: #243050; color: #fff !important; }
 
-        .sidebar-link:hover {
-            color: #fff;
-            background: rgba(99,91,255,0.1);
-            border-left-color: rgba(99,91,255,0.5);
-        }
+    .page-header-block { background: #1a2236; border-radius: 20px; padding: 28px 32px; margin-bottom: 24px; display: flex; align-items: center; gap: 18px; }
+    .page-header-icon { width: 52px; height: 52px; background: #635bff; border-radius: 14px; display: grid; place-items: center; font-size: 22px; color: #fff; flex-shrink: 0; box-shadow: 0 6px 20px rgba(99,91,255,0.45); }
+    .page-header-block h2 { font-size: 20px; font-weight: 800; color: #fff; margin: 0 0 4px; }
+    .page-header-block p { font-size: 13px; color: rgba(255,255,255,0.5); margin: 0; }
 
-        .sidebar-link.active {
-            color: #fff;
-            background: rgba(99,91,255,0.15);
-            border-left-color: #635bff;
-        }
+    .form-card { background: #fff; border: 1px solid #e5e9f2; border-radius: 20px; padding: 28px 32px; max-width: 560px; box-shadow: 0 4px 20px rgba(26,34,54,0.06); }
+    .field-label { font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.7px; margin-bottom: 7px; display: block; }
+    .form-group { margin-bottom: 18px; }
+    .field-wrap { position: relative; }
+    .field-wrap .f-icon { position: absolute; left: 13px; top: 50%; transform: translateY(-50%); color: #94a3b8; font-size: 13px; pointer-events: none; }
+    .field-wrap input { width: 100%; padding: 11px 14px 11px 36px; border-radius: 10px; border: 1.5px solid #e2e8f0; font-size: 13.5px; font-family: 'Plus Jakarta Sans', sans-serif; color: #1e293b; background: #f8fafc; outline: none; transition: 0.18s; box-sizing: border-box; }
+    .field-wrap input:focus { border-color: #635bff; background: #fff; box-shadow: 0 0 0 3px rgba(99,91,255,0.1); }
 
-        .sidebar-link .s-icon {
-            width: 30px;
-            height: 30px;
-            border-radius: 8px;
-            display: grid;
-            place-items: center;
-            font-size: 14px;
-            flex-shrink: 0;
-            background: rgba(255,255,255,0.06);
-            transition: 0.18s;
-        }
-
-        .sidebar-link:hover .s-icon,
-        .sidebar-link.active .s-icon {
-            background: rgba(99,91,255,0.25);
-        }
-
-    .btn-back {
-        display: inline-flex;
-        align-items: center;
-        gap: 7px;
-        padding: 8px 16px;
-        border-radius: 10px;
-        background: #1a2236;
-        color: rgba(255,255,255,0.8) !important;
-        text-decoration: none;
-        font-size: 13px;
-        font-weight: 600;
-        margin-bottom: 22px;
-        transition: 0.18s;
-        font-family: 'Plus Jakarta Sans', sans-serif;
-    }
-
-        .btn-back:hover {
-            background: #243050;
-            color: #fff !important;
-        }
-
-    .page-header-block {
-        background: #1a2236;
-        border-radius: 20px;
-        padding: 28px 32px;
-        margin-bottom: 24px;
-        display: flex;
-        align-items: center;
-        gap: 18px;
-    }
-
-    .page-header-icon {
-        width: 52px;
-        height: 52px;
-        background: #635bff;
-        border-radius: 14px;
-        display: grid;
-        place-items: center;
-        font-size: 22px;
-        color: #fff;
-        flex-shrink: 0;
-        box-shadow: 0 6px 20px rgba(99,91,255,0.45);
-    }
-
-    .page-header-block h2 {
-        font-size: 20px;
-        font-weight: 800;
-        color: #fff;
-        margin: 0 0 4px;
-    }
-
-    .page-header-block p {
-        font-size: 13px;
-        color: rgba(255,255,255,0.5);
-        margin: 0;
-    }
-
-    .form-card {
-        background: #fff;
-        border: 1px solid #e5e9f2;
-        border-radius: 20px;
-        padding: 28px 32px;
-        max-width: 560px;
-        box-shadow: 0 4px 20px rgba(26,34,54,0.06);
-    }
-
-    .field-label {
-        font-size: 11px;
-        font-weight: 700;
-        color: #64748b;
-        text-transform: uppercase;
-        letter-spacing: 0.7px;
-        margin-bottom: 7px;
-        display: block;
-    }
-
-    .form-group {
-        margin-bottom: 18px;
-    }
-
-    .field-wrap {
-        position: relative;
-    }
-
-        .field-wrap .f-icon {
-            position: absolute;
-            left: 13px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #94a3b8;
-            font-size: 13px;
-            pointer-events: none;
-        }
-
-        .field-wrap input {
-            width: 100%;
-            padding: 11px 14px 11px 36px;
-            border-radius: 10px;
-            border: 1.5px solid #e2e8f0;
-            font-size: 13.5px;
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            color: #1e293b;
-            background: #f8fafc;
-            outline: none;
-            transition: 0.18s;
-            box-sizing: border-box;
-        }
-
-            .field-wrap input:focus {
-                border-color: #635bff;
-                background: #fff;
-                box-shadow: 0 0 0 3px rgba(99,91,255,0.1);
-            }
-
-    .divider {
-        border: none;
-        border-top: 1.5px solid #f1f5f9;
-        margin: 22px 0;
-    }
-
-    .btn-submit {
-        width: 100%;
-        background: #635bff;
-        border: none;
-        padding: 13px;
-        border-radius: 12px;
-        color: #fff;
-        font-weight: 700;
-        font-size: 14px;
-        font-family: 'Plus Jakarta Sans', sans-serif;
-        cursor: pointer;
-        transition: 0.2s;
-        box-shadow: 0 4px 14px rgba(99,91,255,0.35);
-        letter-spacing: 0.3px;
-    }
-
-        .btn-submit:hover {
-            background: #4f46e5;
-            box-shadow: 0 6px 20px rgba(99,91,255,0.45);
-            transform: translateY(-1px);
-        }
+    .btn-submit { width: 100%; background: #635bff; border: none; padding: 13px; border-radius: 12px; color: #fff; font-weight: 700; font-size: 14px; font-family: 'Plus Jakarta Sans', sans-serif; cursor: pointer; transition: 0.2s; box-shadow: 0 4px 14px rgba(99,91,255,0.35); }
+    .btn-submit:hover { background: #4f46e5; transform: translateY(-1px); }
 </style>
 
 <div class="admin-wrap">
 
     <div class="dash-sidebar">
         <div class="nav-section-label">Main</div>
-        <a class="sidebar-link" href="/Admin/Dashboard">
-            <span class="s-icon">📊</span><span>Dashboard</span>
-        </a>
+        <a class="sidebar-link" href="/Admin/Dashboard"><span class="s-icon">📊</span><span>Dashboard</span></a>
         <div class="nav-section-label">Users</div>
-        <a class="sidebar-link" href="/AdminUser">
-            <span class="s-icon">👥</span><span>All Users</span>
-        </a>
+        <a class="sidebar-link" href="/AdminUser"><span class="s-icon">👥</span><span>All Users</span></a>
         <div class="nav-section-label">Questions</div>
-        <a class="sidebar-link" href="/Admin/Questions?moduleId=1">
-            <span class="s-icon">📝</span><span>Module 1</span>
-        </a>
-        <a class="sidebar-link" href="/Admin/Questions?moduleId=2">
-            <span class="s-icon">📝</span><span>Module 2</span>
-        </a>
-        <a class="sidebar-link" href="/Admin/Questions?moduleId=3">
-            <span class="s-icon">📝</span><span>Module 3</span>
-        </a>
+        <a class="sidebar-link" href="/Admin/Questions?moduleId=1"><span class="s-icon">📝</span><span>Module 1</span></a>
+        <a class="sidebar-link" href="/Admin/Questions?moduleId=2"><span class="s-icon">📝</span><span>Module 2</span></a>
+        <a class="sidebar-link" href="/Admin/Questions?moduleId=3"><span class="s-icon">📝</span><span>Module 3</span></a>
         <div class="nav-section-label">Sessions</div>
-        <a class="sidebar-link active" href="/AdminSession">
-            <span class="s-icon">🕐</span><span>Exam Sessions</span>
+        <a class="sidebar-link active" href="/AdminSession"><span class="s-icon">🕐</span><span>Exam Sessions</span></a>
+    </div>
+
+    <div class="dash-main">
+
+        <a class="btn-back" href="/AdminSession">
+            <i class="fa-solid fa-arrow-left"></i> Back to Sessions
         </a>
-        
-</div>
 
-<div class="dash-main">
-
-    <a class="btn-back" href="/AdminSession">
-        <i class="fa-solid fa-arrow-left"></i> Back to Sessions
-    </a>
-
-    <div class="page-header-block">
-        <div class="page-header-icon">
-            <i class="fa-solid fa-calendar-plus"></i>
+        <div class="page-header-block">
+            <div class="page-header-icon">
+                <i class="fa-solid fa-calendar-plus"></i>
+            </div>
+            <div>
+                <h2>Create Exam Session</h2>
+                <p>Enter a title for this exam session</p>
+            </div>
         </div>
-        <div>
-            <h2>Create Exam Session</h2>
-            <p>Set the title, start time and end time for this exam session</p>
+
+        <div class="form-card">
+            <form method="post" action="/AdminSession/Create">
+                @Html.AntiForgeryToken()
+                <div class="form-group">
+                    <label class="field-label">Session Title</label>
+                    <div class="field-wrap">
+                        <i class="fa-solid fa-heading f-icon"></i>
+                        <input type="text" name="title" placeholder="e.g. Final Exam 2026" required />
+                    </div>
+                </div>
+                <button type="submit" class="btn-submit">
+                    <i class="fa-solid fa-circle-check" style="margin-right:8px;"></i>
+                    Create Session
+                </button>
+            </form>
         </div>
+
     </div>
-            @if (TempData["Error"] != null)
-            {
-                <div style="background:#fee2e2;color:#991b1b;border:1px solid #fca5a5;border-radius:12px;padding:14px 18px;margin-bottom:20px;font-size:13px;font-weight:600;display:flex;align-items:center;gap:8px;">
-                    <i class="fa-solid fa-circle-exclamation"></i> @TempData["Error"]
-                </div>
-            }
-
-            <div class="form-card">
-    <div class="form-card">
-        <form method="post" action="/AdminSession/Create">
-                        @Html.AntiForgeryToken()
-            <div class="form-group">
-                <label class="field-label">Session Title</label>
-                <div class="field-wrap">
-                    <i class="fa-solid fa-heading f-icon"></i>
-                    <input type="text" name="title"
-                           placeholder="e.g. May 2026 Exam Session" required />
-                </div>
-            </div>
-
-            <hr class="divider" />
-
-            <div class="form-group">
-                <label class="field-label">Start Date &amp; Time</label>
-                <div class="field-wrap">
-                    <i class="fa-solid fa-calendar-day f-icon"></i>
-                    <input type="datetime-local" name="startTime" required />
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label class="field-label">End Date &amp; Time</label>
-                <div class="field-wrap">
-                    <i class="fa-solid fa-calendar-check f-icon"></i>
-                    <input type="datetime-local" name="endTime" required />
-                </div>
-            </div>
-
-            <hr class="divider" />
-
-            <button type="submit" class="btn-submit">
-                <i class="fa-solid fa-circle-check" style="margin-right:8px;"></i>
-                Create Session
-            </button>
-
-        </form>
-    </div>
-
-</div>
 </div>

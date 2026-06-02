@@ -44,9 +44,10 @@ namespace Exam_Test.Controllers
             }
 
             var questions = _context.Questions
-                .Where(q => q.ModuleId == moduleId)
-                .OrderBy(q => Guid.NewGuid())
-                .ToList();
+            .Where(q => q.ModuleId == moduleId)
+            .ToList()
+            .OrderBy(q => Guid.NewGuid())
+            .ToList();
 
             ViewBag.ModuleId = moduleId;
             ViewBag.SessionId = session.Id;

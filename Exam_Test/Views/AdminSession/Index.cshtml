@@ -100,13 +100,10 @@
         <div class="table-card">
             <table>
                 <thead>
-                    <tr>
-                        <th>Title</th>
-                        <th>Start Time</th>
-                        <th>End Time</th>
-                        <th>Status</th>
-                        <th>Actions</th>
-                    </tr>
+                    <th>Title</th>
+                    <th>Created At</th>
+                    <th>Status</th>
+                    <th>Actions</th>
                 </thead>
                 <tbody>
                     @if (Model != null && Model.Count > 0)
@@ -118,13 +115,7 @@
                                 <td>
                                     <span class="date-text">
                                         <i class="fa-regular fa-calendar" style="margin-right:5px;color:#94a3b8;"></i>
-                                        @s.StartTime.ToString("dd MMM yyyy, hh:mm tt")
-                                    </span>
-                                </td>
-                                <td>
-                                    <span class="date-text">
-                                        <i class="fa-regular fa-calendar-check" style="margin-right:5px;color:#94a3b8;"></i>
-                                        @s.EndTime.ToString("dd MMM yyyy, hh:mm tt")
+                                        @s.CreatedAt.ToString("dd MMM yyyy, hh:mm tt")
                                     </span>
                                 </td>
                                 <td>

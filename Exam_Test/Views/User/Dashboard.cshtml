@@ -528,13 +528,7 @@
                     <div class="m-label">Module @mod.Num</div>
                     <h3>Module @mod.Num</h3>
                     <p>@mod.Desc</p>
-                    @if (isDone)
-                    {
-                        <span class="btn-locked" style="background:#dcfce7;color:#166534;border-color:#bbf7d0;">
-                            <i class="fa-solid fa-circle-check"></i> Completed
-                        </span>
-                    }
-                    else if (canStart)
+                    @if (canStart)
                     {
                         <a class="btn-start" href="/Exam/Start?moduleId=@mod.Num">
                             <i class="fa-solid fa-play"></i> Start Module @mod.Num

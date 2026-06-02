@@ -5,363 +5,397 @@
     int moduleId = ViewBag.ModuleId;
     int sessionId = ViewBag.SessionId;
     string sessionTitle = ViewBag.SessionTitle;
+    Layout = null;
 }
 
-<style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: "Segoe UI", Arial, sans-serif; background: #f4f6ff; }
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Module @moduleId Exam</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: Arial, sans-serif; background: #d0d0d0; }
 
-    .exam-header {
-        background: #1e2a3a;
-        color: #fff;
-        padding: 14px 24px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        position: sticky;
-        top: 0;
-        z-index: 100;
-    }
+        .page-wrapper {
+            max-width: 960px;
+            margin: 10px auto;
+            background: #fff;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+        }
 
-    .exam-header .left h3 { font-size: 15px; font-weight: 700; }
-    .exam-header .left p { font-size: 12px; color: rgba(255,255,255,0.6); margin-top: 2px; }
+        .top-bar {
+            background: #fff;
+            border-bottom: 2px solid #ddd;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 16px;
+        }
 
-    .timer {
-        background: #ef4444;
-        color: #fff;
-        padding: 8px 16px;
-        border-radius: 999px;
-        font-size: 14px;
-        font-weight: 700;
-        letter-spacing: 1px;
-    }
+        .top-bar .info {
+            font-size: 13px;
+            color: #c00;
+            font-weight: 700;
+        }
 
-    /* QUESTION NUMBER STRIP */
-    .q-strip-wrap {
-        background: #fff;
-        border-bottom: 1px solid #e5e7eb;
-        padding: 10px 20px;
-        overflow-x: auto;
-        white-space: nowrap;
-    }
+        .top-bar .q-number {
+            font-size: 28px;
+            font-weight: 900;
+            color: #222;
+        }
 
-    .q-strip {
-        display: inline-flex;
-        gap: 6px;
-    }
+        .progress-box {
+            background: #4caf50;
+            color: #fff;
+            font-size: 14px;
+            font-weight: 900;
+            padding: 6px 16px;
+            border-radius: 8px;
+            min-width: 70px;
+            text-align: center;
+        }
 
-    .q-num {
-        width: 32px;
-        height: 32px;
-        border-radius: 8px;
-        border: 2px solid #e5e7eb;
-        background: #fff;
-        color: #374151;
-        font-size: 12px;
-        font-weight: 700;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        transition: 0.2s;
-        flex-shrink: 0;
-    }
+        .middle-section {
+            display: flex;
+            border-bottom: 2px solid #ddd;
+            min-height: 200px;
+        }
+        .img-side {
+            flex: 0 0 45%;
+            border-right: 2px solid #ddd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px;
+            background: #fafafa;
+        }
 
-    .q-num:hover { border-color: #6366f1; color: #6366f1; }
-    .q-num.active { background: #6366f1; border-color: #6366f1; color: #fff; }
-    .q-num.answered { background: #10b981; border-color: #10b981; color: #fff; }
+        .img-side img {
+            max-width: 100%;
+            max-height: 220px;
+            object-fit: contain;
+        }
 
-    /* MAIN CONTENT */
-    .exam-body {
-        display: flex;
-        max-width: 1100px;
-        margin: 20px auto;
-        gap: 20px;
-        padding: 0 20px;
-    }
+        .text-side {
+            flex: 1;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+        }
 
-    /* QUESTION CARD */
-    .q-card {
-        flex: 1;
-        background: #fff;
-        border: 1px solid #e5e7eb;
-        border-radius: 16px;
-        padding: 28px;
-        box-shadow: 0 4px 14px rgba(0,0,0,0.05);
-    }
+        .text-side-full {
+            width: 100%;
+            padding: 20px 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
 
-    .q-badge {
-        display: inline-block;
-        background: #eef2ff;
-        color: #4f46e5;
-        padding: 4px 12px;
-        border-radius: 999px;
-        font-size: 11px;
-        font-weight: 700;
-        margin-bottom: 14px;
-    }
+        .text-side p, .text-side-full p {
+            font-size: 15px;
+            font-weight: 600;
+            color: #222;
+            line-height: 1.6;
+        }
 
-    .q-text {
-        font-size: 16px;
-        font-weight: 600;
-        color: #111827;
-        line-height: 1.6;
-        margin-bottom: 16px;
-    }
+        .options-section {
+            background: #fff;
+        }
 
-    .q-image {
-        width: 100%;
-        max-height: 280px;
-        object-fit: contain;
-        border-radius: 10px;
-        border: 1px solid #e5e7eb;
-        background: #f9fafb;
-        margin-bottom: 20px;
-    }
+        .option-row {
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid #ddd;
+            padding: 14px 16px;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
 
-    .options {
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-        margin-bottom: 24px;
-    }
+        .option-row:hover { background: #f5f5f5; }
+        .option-row.selected { background: #e8f5e9; }
 
-    .option-label {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        padding: 14px 16px;
-        border: 2px solid #e5e7eb;
-        border-radius: 12px;
-        cursor: pointer;
-        transition: 0.2s;
-        font-size: 14px;
-        color: #374151;
-    }
+        .opt-letter {
+            font-size: 16px;
+            font-weight: 900;
+            color: #222;
+            width: 30px;
+            flex-shrink: 0;
+        }
 
-    .option-label:hover { border-color: #6366f1; background: #f5f3ff; }
+        .opt-text {
+            flex: 1;
+            font-size: 14px;
+            color: #333;
+        }
 
-    .option-label input[type="radio"] { display: none; }
+        .opt-check {
+            width: 22px;
+            height: 22px;
+            border: 2px solid #aaa;
+            border-radius: 4px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #fff;
+            font-size: 14px;
+            font-weight: 900;
+            color: #fff;
+        }
 
-    .option-label.selected {
-        border-color: #6366f1;
-        background: #eef2ff;
-        color: #4f46e5;
-        font-weight: 600;
-    }
+        .option-row.selected .opt-check {
+            background: #4caf50;
+            border-color: #4caf50;
+        }
 
-    .opt-letter {
-        width: 30px;
-        height: 30px;
-        border-radius: 50%;
-        background: #f3f4f6;
-        color: #374151;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-weight: 700;
-        font-size: 13px;
-        flex-shrink: 0;
-        transition: 0.2s;
-    }
+        .bottom-strip {
+            background: #e0e0e0;
+            display: flex;
+            align-items: center;
+            padding: 8px 10px;
+            gap: 5px;
+            border-top: 2px solid #bbb;
+        }
 
-    .option-label.selected .opt-letter {
-        background: #6366f1;
-        color: #fff;
-    }
+        .arrow-btn {
+            background: #4caf50;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            width: 36px;
+            height: 36px;
+            font-size: 20px;
+            font-weight: 900;
+            cursor: pointer;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
 
-    .nav-btns {
-        display: flex;
-        gap: 10px;
-        justify-content: space-between;
-        align-items: center;
-    }
+        .arrow-btn:hover { background: #388e3c; }
 
-    .btn {
-        padding: 11px 22px;
-        border-radius: 10px;
-        font-size: 13px;
-        font-weight: 600;
-        border: none;
-        cursor: pointer;
-        transition: 0.2s;
-    }
+        .next-btn {
+            background: #4caf50;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            padding: 0 16px;
+            height: 36px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
 
-    .btn-prev { background: #f3f4f6; color: #374151; }
-    .btn-prev:hover { background: #e5e7eb; }
-    .btn-next { background: #6366f1; color: #fff; }
-    .btn-next:hover { background: #4f46e5; }
-    .btn-submit { background: #10b981; color: #fff; }
-    .btn-submit:hover { background: #059669; }
+        .next-btn:hover { background: #388e3c; }
 
-    /* SIDEBAR */
-    .q-sidebar {
-        width: 220px;
-        flex-shrink: 0;
-    }
+        .q-nums-wrap {
+            display: flex;
+            gap: 4px;
+            overflow-x: auto;
+            align-items: center;
+            flex: 1;
+        }
 
-    .sidebar-card {
-        background: #fff;
-        border: 1px solid #e5e7eb;
-        border-radius: 14px;
-        padding: 18px;
-        margin-bottom: 14px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-    }
+        .q-dot {
+            min-width: 30px;
+            height: 30px;
+            border-radius: 4px;
+            background: #fff;
+            border: 1px solid #bbb;
+            color: #c00;
+            font-size: 12px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            flex-shrink: 0;
+            transition: 0.15s;
+        }
 
-    .sidebar-card h4 {
-        font-size: 12px;
-        font-weight: 700;
-        color: #6b7280;
-        text-transform: uppercase;
-        letter-spacing: 0.8px;
-        margin-bottom: 12px;
-    }
+        .q-dot:hover { background: #f5f5f5; }
+        .q-dot.active { background: #4caf50; color: #fff; border-color: #4caf50; }
+        .q-dot.answered { background: #c8e6c9; color: #2e7d32; border-color: #81c784; }
 
-    .legend-item {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        font-size: 12px;
-        color: #374151;
-        margin-bottom: 6px;
-    }
+        .submit-btn {
+            background: #f44336;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            padding: 0 16px;
+            height: 36px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
 
-    .dot {
-        width: 14px;
-        height: 14px;
-        border-radius: 4px;
-        flex-shrink: 0;
-    }
+        .submit-btn:hover { background: #d32f2f; }
 
-    .dot-answered { background: #10b981; }
-    .dot-active { background: #6366f1; }
-    .dot-unanswered { background: #e5e7eb; border: 1px solid #d1d5db; }
+        /* POPUP */
+        .popup-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 999;
+            align-items: center;
+            justify-content: center;
+        }
 
-    .progress-info {
-        font-size: 13px;
-        color: #374151;
-        margin-bottom: 6px;
-    }
+        .popup-overlay.show { display: flex; }
 
-    .progress-bar-wrap {
-        background: #e5e7eb;
-        border-radius: 999px;
-        height: 8px;
-        overflow: hidden;
-    }
+        .popup-box {
+            background: #fff;
+            border-radius: 14px;
+            padding: 28px 32px;
+            max-width: 380px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
 
-    .progress-bar-fill {
-        height: 8px;
-        border-radius: 999px;
-        background: #10b981;
-        transition: width 0.3s;
-    }
-</style>
+        .popup-box h3 {
+            font-size: 18px;
+            font-weight: 800;
+            color: #1a2236;
+            margin-bottom: 10px;
+        }
+
+        .popup-box p {
+            font-size: 14px;
+            color: #64748b;
+            margin-bottom: 22px;
+            line-height: 1.6;
+        }
+
+        .popup-btns {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .popup-btn-ok {
+            background: #f44336;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 24px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .popup-btn-cancel {
+            background: #f1f5f9;
+            color: #374151;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 24px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .popup-btn-ok:hover { background: #d32f2f; }
+        .popup-btn-cancel:hover { background: #e2e8f0; }
+    </style>
+</head>
+<body>
+
+<!-- POPUP -->
+<div class="popup-overlay" id="popupOverlay">
+    <div class="popup-box">
+        <h3>⚠️ Unanswered Questions</h3>
+        <p id="popupMsg">You have unanswered questions. Do you want to submit anyway?</p>
+        <div class="popup-btns">
+            <button class="popup-btn-cancel" onclick="closePopup()">Continue Exam</button>
+            <button class="popup-btn-ok" onclick="doSubmit()">Submit Anyway</button>
+        </div>
+    </div>
+</div>
 
 <form method="post" action="/Exam/Submit" id="examForm">
     @Html.AntiForgeryToken()
     <input type="hidden" name="moduleId" value="@moduleId" />
     <input type="hidden" name="sessionId" value="@sessionId" />
 
-    <!-- HEADER -->
-    <div class="exam-header">
-        <div class="left">
-            <h3>📋 Module @moduleId Exam</h3>
-            <p>@sessionTitle &nbsp;|&nbsp; Answer all questions before submitting</p>
-        </div>
-        <div class="timer" id="timer">--:--</div>
-    </div>
+    <div class="page-wrapper">
 
-    <!-- QUESTION NUMBER STRIP -->
-    <div class="q-strip-wrap">
-        <div class="q-strip" id="qStrip">
-            @for (int i = 0; i < Model.Count; i++)
-            {
-                <div class="q-num @(i == 0 ? "active" : "")" id="qnum-@i" onclick="goToQuestion(@i)">@(i + 1)</div>
-            }
-        </div>
-    </div>
+        @for (int i = 0; i < Model.Count; i++)
+        {
+            var q = Model[i];
+            <div id="qcard-@i" style="@(i == 0 ? "" : "display:none;")">
 
-    <!-- BODY -->
-    <div class="exam-body">
+                <!-- TOP BAR -->
+                <div class="top-bar">
+                    <div class="info">Module @moduleId</div>
+                    <div class="q-number">@(i + 1)</div>
+                    <div class="progress-box" id="progressBox-@i">@(i+1) / @Model.Count</div>
+                </div>
 
-        <!-- QUESTIONS -->
-        <div style="flex:1;">
-            @for (int i = 0; i < Model.Count; i++)
-            {
-                var q = Model[i];
-                <div class="q-card" id="qcard-@i" style="@(i == 0 ? "" : "display:none;")">
-
-                    <div class="q-badge">Question @(i + 1) of @Model.Count</div>
-
+                <!-- MIDDLE -->
+                <div class="middle-section">
                     @if (!string.IsNullOrEmpty(q.ImagePath))
                     {
-                        <img class="q-image" src="~/images/@q.ImagePath" />
+                        <div class="img-side">
+                            <img src="~/images/@q.ImagePath" />
+                        </div>
+                        <div class="text-side">
+                            <p>@q.QuestionText</p>
+                        </div>
                     }
-
-                    @if (!string.IsNullOrEmpty(q.QuestionText))
+                    else
                     {
-                        <div class="q-text">@q.QuestionText</div>
+                        <div class="text-side-full">
+                            <p>@q.QuestionText</p>
+                        </div>
                     }
+                </div>
 
-                    <div class="options">
-                        <label class="option-label" id="opt-@i-A" onclick="selectOption(@i, 'A', this)">
-                            <input type="radio" name="answers[@q.Id]" value="A" />
-                            <div class="opt-letter">A</div>
-                            @q.OptionA
-                        </label>
-                        <label class="option-label" id="opt-@i-B" onclick="selectOption(@i, 'B', this)">
-                            <input type="radio" name="answers[@q.Id]" value="B" />
-                            <div class="opt-letter">B</div>
-                            @q.OptionB
-                        </label>
-                        <label class="option-label" id="opt-@i-C" onclick="selectOption(@i, 'C', this)">
-                            <input type="radio" name="answers[@q.Id]" value="C" />
-                            <div class="opt-letter">C</div>
-                            @q.OptionC
-                        </label>
+                <!-- OPTIONS -->
+                <div class="options-section">
+                    <div class="option-row" id="opt-@i-A" onclick="selectOption(@i, 'A', this)">
+                        <input type="radio" name="answers[@q.Id]" value="A" style="display:none" />
+                        <div class="opt-letter">A</div>
+                        <div class="opt-text">@q.OptionA</div>
+                        <div class="opt-check" id="chk-@i-A"></div>
                     </div>
-
-                    <div class="nav-btns">
-                        @if (i > 0)
-                        {
-                            <button type="button" class="btn btn-prev" onclick="goToQuestion(@(i - 1))">← Previous</button>
-                        }
-                        else
-                        {
-                            <span></span>
-                        }
-
-                        @if (i < Model.Count - 1)
-                        {
-                            <button type="button" class="btn btn-next" onclick="goToQuestion(@(i + 1))">Next →</button>
-                        }
-                        else
-                        {
-                            <button type="submit" class="btn btn-submit" onclick="return confirmSubmit()">✅ Submit Module @moduleId</button>
-                        }
+                    <div class="option-row" id="opt-@i-B" onclick="selectOption(@i, 'B', this)">
+                        <input type="radio" name="answers[@q.Id]" value="B" style="display:none" />
+                        <div class="opt-letter">B</div>
+                        <div class="opt-text">@q.OptionB</div>
+                        <div class="opt-check" id="chk-@i-B"></div>
+                    </div>
+                    <div class="option-row" id="opt-@i-C" onclick="selectOption(@i, 'C', this)">
+                        <input type="radio" name="answers[@q.Id]" value="C" style="display:none" />
+                        <div class="opt-letter">C</div>
+                        <div class="opt-text">@q.OptionC</div>
+                        <div class="opt-check" id="chk-@i-C"></div>
                     </div>
                 </div>
-            }
-        </div>
 
-        <!-- SIDEBAR -->
-        <div class="q-sidebar">
-            <div class="sidebar-card">
-                <h4>Progress</h4>
-                <div class="progress-info" id="progressText">0 / @Model.Count answered</div>
-                <div class="progress-bar-wrap">
-                    <div class="progress-bar-fill" id="progressBar" style="width:0%"></div>
-                </div>
             </div>
+        }
 
-            <div class="sidebar-card">
-                <h4>Legend</h4>
-                <div class="legend-item"><div class="dot dot-answered"></div> Answered</div>
-                <div class="legend-item"><div class="dot dot-active"></div> Current</div>
-                <div class="legend-item"><div class="dot dot-unanswered"></div> Not Answered</div>
+        <!-- BOTTOM STRIP -->
+        <div class="bottom-strip">
+            <button type="button" class="arrow-btn" onclick="goPrev()">&#8249;</button>
+            <div class="q-nums-wrap" id="qStrip">
+                @for (int i = 0; i < Model.Count; i++)
+                {
+                    <div class="q-dot @(i == 0 ? "active" : "")" id="qnum-@i" onclick="goToQuestion(@i)">@(i + 1)</div>
+                }
             </div>
+            <button type="button" class="next-btn" onclick="goNext()">Next ›</button>
+            <button type="button" class="submit-btn" onclick="confirmSubmit()">Submit</button>
         </div>
 
     </div>
@@ -371,10 +405,14 @@
     let currentQ = 0;
     let totalQ = @Model.Count;
     let answered = new Array(totalQ).fill(false);
+    let selectedOptions = new Array(totalQ).fill(null);
 
     function goToQuestion(index) {
         document.getElementById('qcard-' + currentQ).style.display = 'none';
         document.getElementById('qnum-' + currentQ).classList.remove('active');
+        if (answered[currentQ]) {
+            document.getElementById('qnum-' + currentQ).classList.add('answered');
+        }
 
         currentQ = index;
 
@@ -384,63 +422,76 @@
         numEl.classList.remove('answered');
         numEl.classList.add('active');
 
-        if (answered[currentQ]) {
-            numEl.classList.add('answered');
-        }
+        document.getElementById('progressBox-' + currentQ).innerText = (currentQ + 1) + ' / ' + totalQ;
 
-        updateProgress();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    function selectOption(qIndex, option, labelEl) {
-        // Remove selected from siblings
-        let card = document.getElementById('qcard-' + qIndex);
-        card.querySelectorAll('.option-label').forEach(l => l.classList.remove('selected'));
-        labelEl.classList.add('selected');
-        labelEl.querySelector('input[type="radio"]').checked = true;
+    function goPrev() {
+        if (currentQ > 0) goToQuestion(currentQ - 1);
+    }
 
+    function goNext() {
+        if (currentQ < totalQ - 1) goToQuestion(currentQ + 1);
+    }
+
+    function selectOption(qIndex, option, rowEl) {
+        // If already selected, uncheck it
+        if (selectedOptions[qIndex] === option) {
+            rowEl.classList.remove('selected');
+            rowEl.querySelector('input[type="radio"]').checked = false;
+            rowEl.querySelector('.opt-check').innerText = '';
+            selectedOptions[qIndex] = null;
+            answered[qIndex] = false;
+
+            let numEl = document.getElementById('qnum-' + qIndex);
+            numEl.classList.remove('answered');
+            if (qIndex === currentQ) numEl.classList.add('active');
+            return;
+        }
+
+        // Deselect all options for this question
+        let card = document.getElementById('qcard-' + qIndex);
+        card.querySelectorAll('.option-row').forEach(r => {
+            r.classList.remove('selected');
+            r.querySelector('.opt-check').innerText = '';
+            r.querySelector('input[type="radio"]').checked = false;
+        });
+
+        // Select clicked option
+        rowEl.classList.add('selected');
+        rowEl.querySelector('input[type="radio"]').checked = true;
+        rowEl.querySelector('.opt-check').innerText = '✓';
+        selectedOptions[qIndex] = option;
         answered[qIndex] = true;
 
         let numEl = document.getElementById('qnum-' + qIndex);
-        if (qIndex !== currentQ) {
-            numEl.classList.remove('active');
-        }
         numEl.classList.add('answered');
-
-        updateProgress();
-    }
-
-    function updateProgress() {
-        let count = answered.filter(a => a).length;
-        document.getElementById('progressText').innerText = count + ' / ' + totalQ + ' answered';
-        document.getElementById('progressBar').style.width = (count / totalQ * 100) + '%';
+        if (qIndex === currentQ) numEl.classList.add('active');
     }
 
     function confirmSubmit() {
         let count = answered.filter(a => a).length;
         let unanswered = totalQ - count;
         if (unanswered > 0) {
-            return confirm('You have ' + unanswered + ' unanswered question(s). Are you sure you want to submit?');
+            document.getElementById('popupMsg').innerText =
+                'You have ' + unanswered + ' unanswered question(s). Do you want to submit anyway?';
+            document.getElementById('popupOverlay').classList.add('show');
+        } else {
+            if (confirm('All questions answered. Submit now?')) {
+                document.getElementById('examForm').submit();
+            }
         }
-        return true;
     }
 
-    // Timer - counts up
-    let timeLeft = 1800; // 30 minutes
-const timerEl = document.getElementById('timer');
+    function closePopup() {
+        document.getElementById('popupOverlay').classList.remove('show');
+    }
 
-function updateTimer() {
-    let m = Math.floor(timeLeft / 60).toString().padStart(2, '0');
-    let s = (timeLeft % 60).toString().padStart(2, '0');
-    timerEl.innerText = m + ':' + s;
-    if (timeLeft <= 60) timerEl.style.background = '#b91c1c';
-    if (timeLeft <= 0) {
-        timerEl.innerText = '00:00';
+    function doSubmit() {
         document.getElementById('examForm').submit();
-        return;
     }
-    timeLeft--;
-}
-
-updateTimer();
-setInterval(updateTimer, 1000);
 </script>
+
+</body>
+</html>
