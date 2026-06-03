@@ -192,11 +192,11 @@
                     <div class="options-list">
                         @{
                             var opts = new[]
-                            {
-                                new { Letter = "A", Text = q.OptionA },
-                                new { Letter = "B", Text = q.OptionB },
-                                new { Letter = "C", Text = q.OptionC }
-                            };
+{
+    new { Letter = "A", Text = q.OptionA },
+    new { Letter = "B", Text = q.OptionB },
+    new { Letter = "C", Text = q.OptionC }
+}.Where(o => !string.IsNullOrEmpty(o.Text)).ToArray();
                         }
                         @foreach (var opt in opts)
                         {

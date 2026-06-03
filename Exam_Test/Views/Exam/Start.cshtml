@@ -16,17 +16,21 @@
     <title>Module @moduleId Exam</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: Arial, sans-serif; background: #d0d0d0; }
+        body { font-family: Arial, sans-serif; background: #fff; margin: 0; padding: 0; overflow: hidden; }
 
         .page-wrapper {
-            max-width: 960px;
-            margin: 10px auto;
-            background: #fff;
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
-        }
+    width: 100vw;
+    min-height: 100vh;
+    background: #e0e0e0;
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    overflow-y: auto;
+    padding-bottom: 130px;
+}
 
+        /* TOP BAR */
         .top-bar {
             background: #fff;
             border-bottom: 2px solid #ddd;
@@ -34,22 +38,14 @@
             align-items: center;
             justify-content: space-between;
             padding: 8px 16px;
+            flex-shrink: 0;
         }
 
-        .top-bar .info {
-            font-size: 13px;
-            color: #c00;
-            font-weight: 700;
-        }
-
-        .top-bar .q-number {
-            font-size: 28px;
-            font-weight: 900;
-            color: #222;
-        }
+        .top-bar .info { font-size: 13px; color: #c00; font-weight: 700; }
+        .top-bar .q-number { font-size: 28px; font-weight: 900; color: #222; }
 
         .progress-box {
-            background: #4caf50;
+            background: #5aab3f;
             color: #fff;
             font-size: 14px;
             font-weight: 900;
@@ -59,16 +55,20 @@
             text-align: center;
         }
 
+        /* MIDDLE */
         .middle-section {
-            display: flex;
-            border-bottom: 2px solid #ddd;
-            min-height: 200px;
-        }
+    display: flex;
+    border-bottom: 2px solid #ddd;
+    flex: 1;
+    min-height: 250px;
+    background: #fff;
+}
+
         .img-side {
-            flex: 0 0 45%;
+            flex: 0 0 50%;
             border-right: 2px solid #ddd;
             display: flex;
-            align-items: center;
+            align-items: flex-start;
             justify-content: center;
             padding: 10px;
             background: #fafafa;
@@ -76,66 +76,62 @@
 
         .img-side img {
             max-width: 100%;
-            max-height: 220px;
+            max-height: 240px;
             object-fit: contain;
         }
 
         .text-side {
-            flex: 1;
-            padding: 20px;
-            display: flex;
-            align-items: center;
-        }
+    flex: 0 0 50%;
+    padding: 16px 20px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    background: #fff;
+}
 
         .text-side-full {
-            width: 100%;
-            padding: 20px 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-        }
+    width: 100%;
+    padding: 16px 20px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    background: #fff;
+}
 
         .text-side p, .text-side-full p {
             font-size: 15px;
             font-weight: 600;
             color: #222;
-            line-height: 1.6;
+            line-height: 1.7;
         }
 
+        /* OPTIONS */
         .options-section {
             background: #fff;
+            border-top: 1px solid #111;
+            border-bottom: 1px solid #111;
+            flex-shrink: 0;
         }
 
         .option-row {
             display: flex;
             align-items: center;
-            border-bottom: 1px solid #ddd;
+            border-bottom: 1px solid #111;
             padding: 14px 16px;
             cursor: pointer;
             transition: background 0.15s;
+            background: #e0e0e0;
         }
 
-        .option-row:hover { background: #f5f5f5; }
-        .option-row.selected { background: #e8f5e9; }
+        .option-row:last-child { border-bottom: none; }
+        .option-row:hover { background: #d0d0d0; }
+        .option-row.selected { background: #9e9e9e; }
 
-        .opt-letter {
-            font-size: 16px;
-            font-weight: 900;
-            color: #222;
-            width: 30px;
-            flex-shrink: 0;
-        }
-
-        .opt-text {
-            flex: 1;
-            font-size: 14px;
-            color: #333;
-        }
+        .opt-letter { font-size: 20px; font-weight: 900; color: #111; width: 36px; flex-shrink: 0; }
+        .opt-text { flex: 1; font-size: 14px; color: #333; }
 
         .opt-check {
-            width: 22px;
-            height: 22px;
+            width: 22px; height: 22px;
             border: 2px solid #aaa;
             border-radius: 4px;
             flex-shrink: 0;
@@ -148,69 +144,76 @@
             color: #fff;
         }
 
-        .option-row.selected .opt-check {
-            background: #4caf50;
-            border-color: #4caf50;
-        }
+        .option-row.selected .opt-check { background: #616161; border-color: #616161; }
 
+        /* BOTTOM STRIP */
         .bottom-strip {
-            background: #e0e0e0;
+            background: #d0d0d0;
             display: flex;
             align-items: center;
-            padding: 8px 10px;
-            gap: 5px;
+            padding: 6px 8px;
+            gap: 4px;
             border-top: 2px solid #bbb;
+            flex-shrink: 0;
+            flex-wrap: nowrap;
+            position: fixed;
+            bottom: 50px; left: 0; right: 0;
+            z-index: 100;
+            height: 70px;
+            overflow: hidden;
         }
 
-        .arrow-btn {
-            background: #4caf50;
-            color: #fff;
-            border: none;
-            border-radius: 6px;
-            width: 36px;
-            height: 36px;
-            font-size: 20px;
-            font-weight: 900;
-            cursor: pointer;
-            flex-shrink: 0;
+        /* ARROW BUTTONS */
+        .arrow-btn-wrap {
             display: flex;
             align-items: center;
             justify-content: center;
-        }
-
-        .arrow-btn:hover { background: #388e3c; }
-
-        .next-btn {
-            background: #4caf50;
-            color: #fff;
-            border: none;
-            border-radius: 6px;
-            padding: 0 16px;
-            height: 36px;
-            font-size: 13px;
-            font-weight: 700;
-            cursor: pointer;
             flex-shrink: 0;
+            width: 55px;
+            height: 65px;
         }
 
-        .next-btn:hover { background: #388e3c; }
+        .arrow-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 55px;
+            height: 65px;
+            overflow: visible;
+        }
 
+        .arrow-btn:hover { filter: brightness(1.15); }
+
+        /* QUESTION NUMBER STRIP */
         .q-nums-wrap {
             display: flex;
-            gap: 4px;
-            overflow-x: auto;
+            flex-wrap: nowrap;
+            gap: 2px;
             align-items: center;
             flex: 1;
+            min-width: 0;
+            overflow-x: auto;
+            overflow-y: visible;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            padding-bottom: 14px;
         }
 
+        .q-nums-wrap::-webkit-scrollbar { display: none; }
+
         .q-dot {
-            min-width: 30px;
-            height: 30px;
-            border-radius: 4px;
-            background: #fff;
+            min-width: 0;
+            flex: 1 1 0;
+            height: 26px;
+            border-radius: 3px;
+            background: #ebebeb;
             border: 1px solid #bbb;
             color: #c00;
-            font-size: 12px;
+            font-size: 10px;
             font-weight: 700;
             display: flex;
             align-items: center;
@@ -218,14 +221,40 @@
             cursor: pointer;
             flex-shrink: 0;
             transition: 0.15s;
+            position: relative;
         }
 
-        .q-dot:hover { background: #f5f5f5; }
-        .q-dot.active { background: #4caf50; color: #fff; border-color: #4caf50; }
-        .q-dot.answered { background: #c8e6c9; color: #2e7d32; border-color: #81c784; }
+        .q-dot:hover { background: #ebebeb; }
 
+        .q-dot.active {
+            background: #ebebeb;
+            color: #c00;
+            border-color: #bbb;
+            position: relative;
+        }
+
+        .q-dot.active::after {
+            content: '';
+            position: absolute;
+            bottom: -13px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+            border-bottom: 13px solid #5aab3f;
+        }
+
+        .q-dot.answered {
+            background: #ebebeb;
+            color: #000;
+            border-color: #bbb;
+        }
+
+        /* SUBMIT */
         .submit-btn {
-            background: #f44336;
+            background: #5aab3f;
             color: #fff;
             border: none;
             border-radius: 6px;
@@ -235,9 +264,11 @@
             font-weight: 700;
             cursor: pointer;
             flex-shrink: 0;
+            display: none;
         }
 
-        .submit-btn:hover { background: #d32f2f; }
+        .submit-btn:hover { background: #4a9a32; }
+        .submit-btn.visible { display: block; }
 
         /* POPUP */
         .popup-overlay {
@@ -262,62 +293,48 @@
             box-shadow: 0 10px 40px rgba(0,0,0,0.2);
         }
 
-        .popup-box h3 {
-            font-size: 18px;
-            font-weight: 800;
-            color: #1a2236;
-            margin-bottom: 10px;
-        }
-
-        .popup-box p {
-            font-size: 14px;
-            color: #64748b;
-            margin-bottom: 22px;
-            line-height: 1.6;
-        }
-
-        .popup-btns {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-        }
+        .popup-box h3 { font-size: 18px; font-weight: 800; color: #1a2236; margin-bottom: 10px; }
+        .popup-box p { font-size: 14px; color: #64748b; margin-bottom: 22px; line-height: 1.6; }
+        .popup-btns { display: flex; gap: 10px; justify-content: center; }
 
         .popup-btn-ok {
-            background: #f44336;
-            color: #fff;
-            border: none;
-            border-radius: 8px;
-            padding: 10px 24px;
-            font-size: 14px;
-            font-weight: 700;
-            cursor: pointer;
+            background: #5aab3f; color: #fff; border: none;
+            border-radius: 8px; padding: 10px 24px;
+            font-size: 14px; font-weight: 700; cursor: pointer;
         }
 
         .popup-btn-cancel {
-            background: #f1f5f9;
-            color: #374151;
-            border: none;
-            border-radius: 8px;
-            padding: 10px 24px;
-            font-size: 14px;
-            font-weight: 700;
-            cursor: pointer;
+            background: #f1f5f9; color: #374151; border: none;
+            border-radius: 8px; padding: 10px 24px;
+            font-size: 14px; font-weight: 700; cursor: pointer;
         }
 
-        .popup-btn-ok:hover { background: #d32f2f; }
+        .popup-btn-ok:hover { background: #4a9a32; }
         .popup-btn-cancel:hover { background: #e2e8f0; }
+
+        @@media (max-width: 600px) {
+            .middle-section { flex-direction: column; }
+            .img-side { flex: none; width: 100%; border-right: none; border-bottom: 2px solid #ddd; max-height: 180px; overflow: hidden; }
+            .text-side, .text-side-full { padding: 12px 14px; }
+            .text-side p, .text-side-full p { font-size: 14px; }
+            .q-dot { width: 24px; height: 24px; font-size: 10px; }
+            .bottom-strip { padding: 6px 8px; gap: 4px; }
+        }
+
+        @@media (max-width: 380px) {
+            .q-dot { width: 22px; height: 22px; font-size: 9px; }
+        }
     </style>
 </head>
 <body>
 
-<!-- POPUP -->
 <div class="popup-overlay" id="popupOverlay">
     <div class="popup-box">
-        <h3>⚠️ Unanswered Questions</h3>
-        <p id="popupMsg">You have unanswered questions. Do you want to submit anyway?</p>
+        <h3>Submit Exam</h3>
+        <p id="popupMsg">Are you sure you want to submit?</p>
         <div class="popup-btns">
             <button class="popup-btn-cancel" onclick="closePopup()">Continue Exam</button>
-            <button class="popup-btn-ok" onclick="doSubmit()">Submit Anyway</button>
+            <button class="popup-btn-ok" onclick="doSubmit()">Submit</button>
         </div>
     </div>
 </div>
@@ -332,16 +349,14 @@
         @for (int i = 0; i < Model.Count; i++)
         {
             var q = Model[i];
-            <div id="qcard-@i" style="@(i == 0 ? "" : "display:none;")">
+            <div id="qcard-@i" style="@(i == 0 ? "display:flex;" : "display:none;") flex-direction:column; width:100%;">
 
-                <!-- TOP BAR -->
                 <div class="top-bar">
                     <div class="info">Module @moduleId</div>
                     <div class="q-number">@(i + 1)</div>
                     <div class="progress-box" id="progressBox-@i">@(i+1) / @Model.Count</div>
                 </div>
 
-                <!-- MIDDLE -->
                 <div class="middle-section">
                     @if (!string.IsNullOrEmpty(q.ImagePath))
                     {
@@ -360,42 +375,66 @@
                     }
                 </div>
 
-                <!-- OPTIONS -->
                 <div class="options-section">
-                    <div class="option-row" id="opt-@i-A" onclick="selectOption(@i, 'A', this)">
-                        <input type="radio" name="answers[@q.Id]" value="A" style="display:none" />
-                        <div class="opt-letter">A</div>
-                        <div class="opt-text">@q.OptionA</div>
-                        <div class="opt-check" id="chk-@i-A"></div>
-                    </div>
-                    <div class="option-row" id="opt-@i-B" onclick="selectOption(@i, 'B', this)">
-                        <input type="radio" name="answers[@q.Id]" value="B" style="display:none" />
-                        <div class="opt-letter">B</div>
-                        <div class="opt-text">@q.OptionB</div>
-                        <div class="opt-check" id="chk-@i-B"></div>
-                    </div>
-                    <div class="option-row" id="opt-@i-C" onclick="selectOption(@i, 'C', this)">
-                        <input type="radio" name="answers[@q.Id]" value="C" style="display:none" />
-                        <div class="opt-letter">C</div>
-                        <div class="opt-text">@q.OptionC</div>
-                        <div class="opt-check" id="chk-@i-C"></div>
-                    </div>
+                    @if (!string.IsNullOrWhiteSpace(q.OptionA))
+                    {
+                        <div class="option-row" id="opt-@i-A" onclick="selectOption(@i, 'A', this)">
+                            <input type="radio" name="answers[@q.Id]" value="A" style="display:none" />
+                            <div class="opt-letter">A</div>
+                            <div class="opt-text">@q.OptionA</div>
+                            <div class="opt-check" id="chk-@i-A"></div>
+                        </div>
+                    }
+                    @if (!string.IsNullOrWhiteSpace(q.OptionB))
+                    {
+                        <div class="option-row" id="opt-@i-B" onclick="selectOption(@i, 'B', this)">
+                            <input type="radio" name="answers[@q.Id]" value="B" style="display:none" />
+                            <div class="opt-letter">B</div>
+                            <div class="opt-text">@q.OptionB</div>
+                            <div class="opt-check" id="chk-@i-B"></div>
+                        </div>
+                    }
+                    @if (!string.IsNullOrWhiteSpace(q.OptionC))
+                    {
+                        <div class="option-row" id="opt-@i-C" onclick="selectOption(@i, 'C', this)">
+                            <input type="radio" name="answers[@q.Id]" value="C" style="display:none" />
+                            <div class="opt-letter">C</div>
+                            <div class="opt-text">@q.OptionC</div>
+                            <div class="opt-check" id="chk-@i-C"></div>
+                        </div>
+                    }
                 </div>
 
             </div>
         }
 
-        <!-- BOTTOM STRIP -->
         <div class="bottom-strip">
-            <button type="button" class="arrow-btn" onclick="goPrev()">&#8249;</button>
+
+           <div class="arrow-btn-wrap prev" onclick="goPrev()">
+    <button type="button" class="arrow-btn">
+        <svg width="55" height="60" viewBox="0 0 55 60" style="overflow:visible;display:block;">
+            <path d="M48,8 C52,8 54,12 52,16 L32,50 C30,54 25,54 23,50 L3,16 C1,12 3,8 7,8 Z" fill="#5aab3f" transform="rotate(90,27.5,30)"/>
+            <text x="27.5" y="30" text-anchor="middle" dominant-baseline="central" font-size="15" font-weight="900" fill="#fff" font-family="Arial" id="prevNum">-</text>
+        </svg>
+    </button>
+</div>
+
             <div class="q-nums-wrap" id="qStrip">
                 @for (int i = 0; i < Model.Count; i++)
                 {
                     <div class="q-dot @(i == 0 ? "active" : "")" id="qnum-@i" onclick="goToQuestion(@i)">@(i + 1)</div>
                 }
             </div>
-            <button type="button" class="next-btn" onclick="goNext()">Next ›</button>
-            <button type="button" class="submit-btn" onclick="confirmSubmit()">Submit</button>
+<div class="arrow-btn-wrap next" onclick="goNext()">
+    <button type="button" class="arrow-btn">
+        <svg width="55" height="60" viewBox="0 0 55 60" style="overflow:visible;display:block;">
+            <path d="M48,8 C52,8 54,12 52,16 L32,50 C30,54 25,54 23,50 L3,16 C1,12 3,8 7,8 Z" fill="#5aab3f" transform="rotate(-90,27.5,30)"/>
+            <text x="27.5" y="30" text-anchor="middle" dominant-baseline="central" font-size="15" font-weight="900" fill="#fff" font-family="Arial" id="nextNum">-</text>
+        </svg>
+    </button>
+</div>
+
+            <button type="button" class="submit-btn" id="submitBtn" onclick="confirmSubmit()">Submit</button>
         </div>
 
     </div>
@@ -407,50 +446,54 @@
     let answered = new Array(totalQ).fill(false);
     let selectedOptions = new Array(totalQ).fill(null);
 
+    function updateArrowNums() {
+        document.getElementById('prevNum').textContent = currentQ > 0 ? currentQ : '-';
+        document.getElementById('nextNum').textContent = currentQ < totalQ - 1 ? (currentQ + 2) : '-';
+    }
+
+    function checkAllAnswered() {
+        let allDone = answered.every(a => a === true);
+        let btn = document.getElementById('submitBtn');
+        if (allDone) btn.classList.add('visible');
+        else btn.classList.remove('visible');
+    }
+
     function goToQuestion(index) {
-        document.getElementById('qcard-' + currentQ).style.display = 'none';
+        let prevCard = document.getElementById('qcard-' + currentQ);
+        if (prevCard) prevCard.style.display = 'none';
         document.getElementById('qnum-' + currentQ).classList.remove('active');
-        if (answered[currentQ]) {
-            document.getElementById('qnum-' + currentQ).classList.add('answered');
-        }
+        if (answered[currentQ]) document.getElementById('qnum-' + currentQ).classList.add('answered');
 
         currentQ = index;
 
-        document.getElementById('qcard-' + currentQ).style.display = 'block';
+        let nextCard = document.getElementById('qcard-' + currentQ);
+        if (nextCard) nextCard.style.display = 'flex';
 
         let numEl = document.getElementById('qnum-' + currentQ);
         numEl.classList.remove('answered');
         numEl.classList.add('active');
 
-        document.getElementById('progressBox-' + currentQ).innerText = (currentQ + 1) + ' / ' + totalQ;
-
+        updateArrowNums();
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    function goPrev() {
-        if (currentQ > 0) goToQuestion(currentQ - 1);
-    }
-
-    function goNext() {
-        if (currentQ < totalQ - 1) goToQuestion(currentQ + 1);
-    }
+    function goPrev() { if (currentQ > 0) goToQuestion(currentQ - 1); }
+    function goNext() { if (currentQ < totalQ - 1) goToQuestion(currentQ + 1); }
 
     function selectOption(qIndex, option, rowEl) {
-        // If already selected, uncheck it
         if (selectedOptions[qIndex] === option) {
             rowEl.classList.remove('selected');
             rowEl.querySelector('input[type="radio"]').checked = false;
             rowEl.querySelector('.opt-check').innerText = '';
             selectedOptions[qIndex] = null;
             answered[qIndex] = false;
-
             let numEl = document.getElementById('qnum-' + qIndex);
             numEl.classList.remove('answered');
             if (qIndex === currentQ) numEl.classList.add('active');
+            checkAllAnswered();
             return;
         }
 
-        // Deselect all options for this question
         let card = document.getElementById('qcard-' + qIndex);
         card.querySelectorAll('.option-row').forEach(r => {
             r.classList.remove('selected');
@@ -458,39 +501,27 @@
             r.querySelector('input[type="radio"]').checked = false;
         });
 
-        // Select clicked option
         rowEl.classList.add('selected');
         rowEl.querySelector('input[type="radio"]').checked = true;
-        rowEl.querySelector('.opt-check').innerText = '✓';
+        rowEl.querySelector('.opt-check').innerText = '✗';
         selectedOptions[qIndex] = option;
         answered[qIndex] = true;
 
         let numEl = document.getElementById('qnum-' + qIndex);
         numEl.classList.add('answered');
         if (qIndex === currentQ) numEl.classList.add('active');
+        checkAllAnswered();
     }
 
     function confirmSubmit() {
-        let count = answered.filter(a => a).length;
-        let unanswered = totalQ - count;
-        if (unanswered > 0) {
-            document.getElementById('popupMsg').innerText =
-                'You have ' + unanswered + ' unanswered question(s). Do you want to submit anyway?';
-            document.getElementById('popupOverlay').classList.add('show');
-        } else {
-            if (confirm('All questions answered. Submit now?')) {
-                document.getElementById('examForm').submit();
-            }
-        }
+        document.getElementById('popupMsg').innerText = 'All questions answered. Are you sure you want to submit?';
+        document.getElementById('popupOverlay').classList.add('show');
     }
 
-    function closePopup() {
-        document.getElementById('popupOverlay').classList.remove('show');
-    }
+    function closePopup() { document.getElementById('popupOverlay').classList.remove('show'); }
+    function doSubmit() { document.getElementById('examForm').submit(); }
 
-    function doSubmit() {
-        document.getElementById('examForm').submit();
-    }
+    updateArrowNums();
 </script>
 
 </body>

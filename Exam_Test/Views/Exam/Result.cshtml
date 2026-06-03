@@ -95,11 +95,11 @@
         if (q == null) continue;
 
         var options = new[]
-        {
-            new { Letter = "A", Text = q.OptionA },
-            new { Letter = "B", Text = q.OptionB },
-            new { Letter = "C", Text = q.OptionC }
-        };
+{
+    new { Letter = "A", Text = q.OptionA },
+    new { Letter = "B", Text = q.OptionB },
+    new { Letter = "C", Text = q.OptionC }
+}.Where(o => !string.IsNullOrEmpty(o.Text)).ToArray();
 
         <div class="q-row @(ans.IsCorrect ? "correct-row" : "wrong-row")">
             <div class="q-status @(ans.IsCorrect ? "c" : "w")">
