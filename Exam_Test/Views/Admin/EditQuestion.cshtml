@@ -231,7 +231,7 @@
     </div>
 
     <div class="form-card">
-        <form method="post" action="/Admin/EditQuestion" enctype="multipart/form-data">
+        <form method="post" action="/Admin/EditQuestion/@Model.Id">
             @Html.AntiForgeryToken()
 
             <input type="hidden" name="Id" value="@Model.Id" />
@@ -249,12 +249,23 @@
                            placeholder="Enter question text..." />
                 </div>
                 <div class="field-wrap">
-                    <input type="file" name="imageFile" accept="image/*" />
+                    <input type="text" name="ImagePath" value="@Model.ImagePath" placeholder="Paste image URL (e.g. https://i.imgur.com/abc123.jpg)" />
                     <div class="hint-text">
-                        <i class="fa-solid fa-arrow-up-from-bracket" style="margin-right:4px;"></i>
-                        Upload a new image to replace the existing one
+                        <i class="fa-solid fa-image" style="margin-right:4px;"></i>
+                        Paste a new image URL to replace, or clear to remove image
                     </div>
                 </div>
+
+                @if (!string.IsNullOrEmpty(Model.ImagePath))
+                {
+                    <div class="field-wrap" style="display:flex; align-items:center; gap:8px; margin-top:6px;">
+                        <input type="checkbox" name="removeImage" id="removeImage" value="true" />
+                        <label for="removeImage" style="font-size:13px; color:#ef4444; font-weight:600; cursor:pointer;">
+                            <i class="fa-solid fa-trash" style="margin-right:4px;"></i>
+                            Remove existing image
+                        </label>
+                    </div>
+                }
             </div>
 
             <div class="field-section-label">

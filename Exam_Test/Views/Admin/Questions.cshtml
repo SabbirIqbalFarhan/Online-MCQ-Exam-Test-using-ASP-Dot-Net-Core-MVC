@@ -414,12 +414,12 @@
                                 <span class="ans-pill">Ans: @q.CorrectAnswer</span>
                             </div>
 
-                            @if (!string.IsNullOrEmpty(q.ImagePath))
-                            {
-                                <div class="q-img">
-                                    <img src="~/images/@q.ImagePath" />
-                                </div>
-                            }
+                           @if (!string.IsNullOrEmpty(q.ImagePath))
+{
+    <div class="q-img">
+        <img src="@q.ImagePath" />
+    </div>
+}
 
                             @if (!string.IsNullOrEmpty(q.QuestionText))
                             {

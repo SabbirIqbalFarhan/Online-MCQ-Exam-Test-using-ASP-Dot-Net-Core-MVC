@@ -15,5 +15,6 @@
 
         public int ModuleId { get; set; }
         public Module? Module { get; set; }
+        public string? ImageData { get; set; } // stores base64 image
     }
 }

@@ -56,25 +56,12 @@ namespace Exam_Test.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> AddQuestion(int ModuleId, string? QuestionText, string? OptionA, string? OptionB, string? OptionC, string? CorrectAnswer, IFormFile? imageFile)
+        public async Task<IActionResult> AddQuestion(int ModuleId, string? QuestionText, string? OptionA, string? OptionB, string? OptionC, string? CorrectAnswer, string? ImagePath)
         {
             var existingCount = _context.Questions.Count(q => q.ModuleId == ModuleId);
 
             if (existingCount >= 30)
                 return RedirectToAction("Questions", new { moduleId = ModuleId });
-
-            if (imageFile != null)
-            {
-                var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".webp" };
-                var ext = Path.GetExtension(imageFile.FileName).ToLowerInvariant();
-
-                if (!allowedExtensions.Contains(ext))
-                {
-                    ViewBag.ModuleId = ModuleId;
-                    ViewBag.Error = "Only .jpg, .jpeg, .png, and .webp image files are allowed.";
-                    return View();
-                }
-            }
 
             var model = new Question
             {
@@ -83,29 +70,16 @@ namespace Exam_Test.Controllers
                 OptionA = OptionA,
                 OptionB = OptionB,
                 OptionC = OptionC,
-                CorrectAnswer = CorrectAnswer
+                CorrectAnswer = CorrectAnswer,
+                ImagePath = ImagePath,
+                ImageData = null
             };
-
-            if (imageFile != null)
-            {
-                string folder = Path.Combine(_env.WebRootPath, "images");
-                string fileName = Guid.NewGuid().ToString() + Path.GetExtension(imageFile.FileName);
-                string filePath = Path.Combine(folder, fileName);
-
-                using (var stream = new FileStream(filePath, FileMode.Create))
-                {
-                    await imageFile.CopyToAsync(stream);
-                }
-
-                model.ImagePath = fileName;
-            }
 
             _context.Questions.Add(model);
             await _context.SaveChangesAsync();
 
             return RedirectToAction("Questions", new { moduleId = ModuleId });
         }
-
         [HttpGet]
         public IActionResult EditQuestion(int id)
         {
@@ -116,23 +90,10 @@ namespace Exam_Test.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditQuestion(Question model, IFormFile? imageFile)
+        public async Task<IActionResult> EditQuestion(Question model, string? ImagePath)
         {
             var question = _context.Questions.Find(model.Id);
-
             if (question == null) return NotFound();
-
-            if (imageFile != null)
-            {
-                var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".webp" };
-                var ext = Path.GetExtension(imageFile.FileName).ToLowerInvariant();
-
-                if (!allowedExtensions.Contains(ext))
-                {
-                    ViewBag.Error = "Only .jpg, .jpeg, .png, and .webp image files are allowed.";
-                    return View(model);
-                }
-            }
 
             question.QuestionText = model.QuestionText;
             question.OptionA = model.OptionA;
@@ -140,30 +101,19 @@ namespace Exam_Test.Controllers
             question.OptionC = model.OptionC;
             question.CorrectAnswer = model.CorrectAnswer;
             question.ModuleId = model.ModuleId;
+            question.ImageData = null;
 
-            if (imageFile != null)
+            bool removeImage = Request.Form["removeImage"] == "true";
+            if (removeImage)
             {
-                if (!string.IsNullOrEmpty(question.ImagePath))
-                {
-                    string oldPath = Path.Combine(_env.WebRootPath, "images", question.ImagePath);
-                    if (System.IO.File.Exists(oldPath))
-                        System.IO.File.Delete(oldPath);
-                }
-
-                string folder = Path.Combine(_env.WebRootPath, "images");
-                string fileName = Guid.NewGuid().ToString() + Path.GetExtension(imageFile.FileName);
-                string filePath = Path.Combine(folder, fileName);
-
-                using (var stream = new FileStream(filePath, FileMode.Create))
-                {
-                    await imageFile.CopyToAsync(stream);
-                }
-
-                question.ImagePath = fileName;
+                question.ImagePath = null;
+            }
+            else if (!string.IsNullOrEmpty(ImagePath))
+            {
+                question.ImagePath = ImagePath;
             }
 
             await _context.SaveChangesAsync();
-
             return RedirectToAction("Questions", new { moduleId = model.ModuleId });
         }
 

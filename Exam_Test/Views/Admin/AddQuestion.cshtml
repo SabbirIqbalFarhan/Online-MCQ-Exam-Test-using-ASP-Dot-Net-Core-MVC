@@ -92,8 +92,7 @@
         margin-bottom: 12px;
     }
 
-        .field-wrap input[type="text"],
-        .field-wrap input[type="file"] {
+        .field-wrap input[type="text"] {
             width: 100%;
             padding: 11px 14px;
             border-radius: 10px;
@@ -232,7 +231,7 @@
     </div>
 
     <div class="form-card">
-        <form method="post" action="/Admin/AddQuestion" enctype="multipart/form-data">
+        <form method="post" action="/Admin/AddQuestion">
             @Html.AntiForgeryToken()
 
             <input type="hidden" name="ModuleId" value="@ViewBag.ModuleId" />
@@ -248,10 +247,10 @@
                            placeholder="Enter question text... (optional if image is used)" />
                 </div>
                 <div class="field-wrap">
-                    <input type="file" name="imageFile" accept="image/*" />
+                    <input type="text" name="ImagePath" placeholder="Paste image URL (e.g. https://i.imgur.com/abc123.jpg)" />
                     <div class="hint-text">
                         <i class="fa-solid fa-image" style="margin-right:4px;"></i>
-                        Optional: upload an image as the question
+                        Optional: paste an image URL from Imgur or any image host
                     </div>
                 </div>
             </div>
