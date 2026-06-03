@@ -355,11 +355,21 @@
             <a class="btn-action btn-dark" href="/AdminUser/ResetPassword/@Model.Id">
                 <i class="fa-solid fa-key"></i> Reset Password
             </a>
-            <a class="btn-action btn-red"
-               href="/AdminUser/DeleteUser/@Model.Id"
-               onclick="return confirm('Are you sure? This will permanently delete the user and all their data.')">
-                <i class="fa-solid fa-trash"></i> Delete User
-            </a>
+                        @{
+                var roles = ViewBag.Roles as IList<string> ?? new List<string>();
+            }
+
+            @if (!roles.Contains("Admin"))
+            {
+                <form method="post" action="/AdminUser/DeleteUser/@Model.Id" style="display:inline;"
+                      onsubmit="return confirm('Are you sure? This will permanently delete the user and all their data.')">
+                    @Html.AntiForgeryToken()
+                    <button type="submit" class="btn-action btn-red">
+                        <i class="fa-solid fa-trash"></i> Delete User
+                    </button>
+                </form>
+            }
+            
         </div>
 
     </div>

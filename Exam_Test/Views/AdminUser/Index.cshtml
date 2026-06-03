@@ -230,10 +230,9 @@
                                         </a>
                                         @if (!isAdmin)
                                         {
-                                            <form method="post" action="/AdminUser/DeleteUser" style="display:inline;"
+                                            <form method="post" action="/AdminUser/DeleteUser/@user.Id" style="display:inline;"
                                                   onsubmit="return confirm('Delete this user and all their data?')">
                                                 @Html.AntiForgeryToken()
-                                                <input type="hidden" name="id" value="@user.Id" />
                                                 <button type="submit" class="btn-action btn-delete">
                                                     <i class="fa-solid fa-trash"></i> Delete
                                                 </button>
