@@ -18,5 +18,7 @@ namespace Exam_Test.Models
         public bool IsCorrect { get; set; }
 
         public int ModuleId { get; set; }
+
+        public int SessionId { get; set; }
     }
 }

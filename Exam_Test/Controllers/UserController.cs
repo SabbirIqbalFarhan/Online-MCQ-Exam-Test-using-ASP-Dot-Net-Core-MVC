@@ -124,9 +124,7 @@ namespace Exam_Test.Controllers
                 .ToList();
 
             var userAnswers = _context.UserAnswers
-                .Where(a => a.UserId == user.Id && a.ModuleId == moduleId && moduleQuestionIds.Contains(a.QuestionId))
-                .OrderByDescending(a => a.Id)
-                .Take(totalQuestions)
+                .Where(a => a.UserId == user.Id && a.ModuleId == moduleId && a.SessionId == sessionId)
                 .ToList();
 
             var questionIds = userAnswers.Select(a => a.QuestionId).Distinct().ToList();

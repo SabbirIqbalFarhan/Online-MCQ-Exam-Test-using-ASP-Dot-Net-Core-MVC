@@ -39,15 +39,15 @@ namespace Exam_Test.Controllers
 
             if (session == null)
             {
-                TempData["Error"] = "No active exam session at the moment. Please wait for the admin to start a session.";
+                TempData["Error"] = "No active exam session. Please wait for the admin to start a session.";
                 return RedirectToAction("Dashboard", "User");
             }
 
             var questions = _context.Questions
-            .Where(q => q.ModuleId == moduleId)
-            .ToList()
-            .OrderBy(q => Guid.NewGuid())
-            .ToList();
+                .Where(q => q.ModuleId == moduleId)
+                .ToList()
+                .OrderBy(q => Guid.NewGuid())
+                .ToList();
 
             ViewBag.ModuleId = moduleId;
             ViewBag.SessionId = session.Id;
@@ -88,7 +88,8 @@ namespace Exam_Test.Controllers
                     Question = q,
                     SelectedAnswer = selected,
                     IsCorrect = isCorrect,
-                    ModuleId = moduleId
+                    ModuleId = moduleId,
+                    SessionId = sessionId
                 });
             }
 
@@ -119,17 +120,8 @@ namespace Exam_Test.Controllers
             if (result == null)
                 return RedirectToAction("Dashboard", "User");
 
-            var moduleQuestionIds = _context.Questions
-                .Where(q => q.ModuleId == moduleId)
-                .Select(q => q.Id)
-                .ToList();
-
-            int totalQ = result.Correct + result.Wrong;
-
             var userAnswers = _context.UserAnswers
-                .Where(a => a.UserId == user.Id && a.ModuleId == moduleId && moduleQuestionIds.Contains(a.QuestionId))
-                .OrderByDescending(a => a.Id)
-                .Take(totalQ)
+                .Where(a => a.UserId == user.Id && a.ModuleId == moduleId && a.SessionId == sessionId)
                 .ToList();
 
             var questionIds = userAnswers.Select(a => a.QuestionId).Distinct().ToList();
