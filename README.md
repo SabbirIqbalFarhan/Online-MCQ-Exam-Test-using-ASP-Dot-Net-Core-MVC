@@ -25,35 +25,35 @@ A web-based multiple choice exam platform built with ASP.NET Core MVC. Administr
 ## Screenshots
 
 ### Login & Register
-![Login](screenshots/localhost_7123_Identity_Account_Login(Nest Hub Max).png)
-![Register](screenshots/localhost_7123_Identity_Account_Register(Nest Hub Max).png)
+<img src="screenshots/localhost_7123_Identity_Account_Login(Nest Hub Max).png" alt="Login" width="100%"/>
+<img src="screenshots/localhost_7123_Identity_Account_Register(Nest Hub Max).png" alt="Register" width="100%"/>
 
 ### User Dashboard
-![User Dashboard](screenshots/localhost_7123_User_Dashboard(Nest Hub Max).png)
+<img src="screenshots/localhost_7123_User_Dashboard(Nest Hub Max).png" alt="User Dashboard" width="100%"/>
 
 ### Exam Page
-![Exam](screenshots/localhost_7123_Exam_Start_moduleId=1(Nest Hub Max).png)
+<img src="screenshots/localhost_7123_Exam_Start_moduleId=1(Nest Hub Max).png" alt="Exam Page" width="100%"/>
 
 ### User Results
-![User Results](screenshots/localhost_7123_User_Results(Nest Hub Max).png)
+<img src="screenshots/localhost_7123_User_Results(Nest Hub Max).png" alt="User Results" width="100%"/>
 
 ### Admin Dashboard
-![Admin Dashboard](screenshots/localhost_7123_Admin_Dashboard(Nest Hub Max).png)
+<img src="screenshots/localhost_7123_Admin_Dashboard(Nest Hub Max).png" alt="Admin Dashboard" width="100%"/>
 
 ### Admin Questions
-![Admin Questions](screenshots/localhost_7123_Admin_Questions_moduleId=1(Nest Hub Max).png)
-![Add Question](screenshots/localhost_7123_Admin_AddQuestion_moduleId=1(Nest Hub Max).png)
-![Edit Question](screenshots/localhost_7123_Admin_EditQuestion_2(Nest Hub Max).png)
+<img src="screenshots/localhost_7123_Admin_Questions_moduleId=1(Nest Hub Max).png" alt="Admin Questions" width="100%"/>
+<img src="screenshots/localhost_7123_Admin_AddQuestion_moduleId=1(Nest Hub Max).png" alt="Add Question" width="100%"/>
+<img src="screenshots/localhost_7123_Admin_EditQuestion_2(Nest Hub Max).png" alt="Edit Question" width="100%"/>
 
 ### Admin Sessions
-![Admin Sessions](screenshots/localhost_7123_AdminSession(Nest Hub Max).png)
-![Session Results](screenshots/localhost_7123_AdminSession_Results_id=11(Nest Hub Max).png)
+<img src="screenshots/localhost_7123_AdminSession(Nest Hub Max).png" alt="Admin Sessions" width="100%"/>
+<img src="screenshots/localhost_7123_AdminSession_Results_id=11(Nest Hub Max).png" alt="Session Results" width="100%"/>
 
 ### Admin Users
-![All Users](screenshots/localhost_7123_AdminUser(Nest Hub Max).png)
-![User Details](screenshots/localhost_7123_AdminUser_Details_e7f97f29-2a45-4548-bc3f-5bac8f9d5a35(Nest Hub Max).png)
-![Assign Student ID](screenshots/localhost_7123_AdminUser_AssignStudentId_e7f97f29-2a45-4548-bc3f-5bac8f9d5a35(Nest Hub Max).png)
-![Reset Password](screenshots/localhost_7123_AdminUser_ResetPassword_e7f97f29-2a45-4548-bc3f-5bac8f9d5a35(Nest Hub Max).png)
+<img src="screenshots/localhost_7123_AdminUser(Nest Hub Max).png" alt="All Users" width="100%"/>
+<img src="screenshots/localhost_7123_AdminUser_Details_e7f97f29-2a45-4548-bc3f-5bac8f9d5a35(Nest Hub Max).png" alt="User Details" width="100%"/>
+<img src="screenshots/localhost_7123_AdminUser_AssignStudentId_e7f97f29-2a45-4548-bc3f-5bac8f9d5a35(Nest Hub Max).png" alt="Assign Student ID" width="100%"/>
+<img src="screenshots/localhost_7123_AdminUser_ResetPassword_e7f97f29-2a45-4548-bc3f-5bac8f9d5a35(Nest Hub Max).png" alt="Reset Password" width="100%"/>
 
 ---
 
