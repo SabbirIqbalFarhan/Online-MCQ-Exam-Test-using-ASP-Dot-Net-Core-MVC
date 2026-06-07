@@ -288,7 +288,7 @@
 
                     @if (!string.IsNullOrEmpty(q.ImagePath))
                     {
-                        <img src="~/images/@System.IO.Path.GetFileName(q.ImagePath)" class="q-img" alt="Question image" />
+                        <img src="@q.ImagePath" class="q-img" alt="Question image" />
                     }
 
                     <div class="options-list">

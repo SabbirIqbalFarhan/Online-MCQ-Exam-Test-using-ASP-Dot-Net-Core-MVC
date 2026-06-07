@@ -122,7 +122,7 @@
 
             @if (!string.IsNullOrEmpty(q.ImagePath))
             {
-                <img class="q-image" src="~/images/@q.ImagePath" />
+                <img class="q-image" src="@q.ImagePath" />
             }
 
             @if (!string.IsNullOrEmpty(q.QuestionText))
