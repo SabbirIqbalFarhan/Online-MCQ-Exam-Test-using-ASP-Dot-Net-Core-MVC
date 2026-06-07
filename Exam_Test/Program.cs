@@ -20,7 +20,7 @@ builder.Services.AddDefaultIdentity<IdentityUser>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
 
 builder.Services.AddControllersWithViews();
-
+builder.Services.AddHttpClient();
 var app = builder.Build();
 
 // Middleware pipeline

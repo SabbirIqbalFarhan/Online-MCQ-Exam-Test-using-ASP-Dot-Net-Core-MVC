@@ -231,7 +231,7 @@
     </div>
 
     <div class="form-card">
-        <form method="post" action="/Admin/EditQuestion/@Model.Id">
+        <form method="post" action="/Admin/EditQuestion/@Model.Id" enctype="multipart/form-data">
             @Html.AntiForgeryToken()
 
             <input type="hidden" name="Id" value="@Model.Id" />
@@ -249,10 +249,14 @@
                            placeholder="Enter question text..." />
                 </div>
                 <div class="field-wrap">
-                    <input type="text" name="ImagePath" value="@Model.ImagePath" placeholder="Paste image URL (e.g. https://i.imgur.com/abc123.jpg)" />
+                    @if (!string.IsNullOrEmpty(Model.ImagePath))
+                    {
+                        <img src="@Model.ImagePath" style="width:100%; max-height:200px; object-fit:contain; border-radius:10px; margin-bottom:10px;" />
+                    }
+                    <input type="file" name="imageFile" accept="image/*" />
                     <div class="hint-text">
                         <i class="fa-solid fa-image" style="margin-right:4px;"></i>
-                        Paste a new image URL to replace, or clear to remove image
+                        Choose a new image to replace existing one
                     </div>
                 </div>
 
