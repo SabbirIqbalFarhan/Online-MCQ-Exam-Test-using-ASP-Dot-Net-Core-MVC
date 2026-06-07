@@ -33,8 +33,9 @@
     .divider { border: none; border-top: 1px solid #f3f4f6; margin: 0 0 20px 0; }
     .actions { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
     .btn { display: inline-flex; align-items: center; gap: 6px; padding: 10px 18px; border-radius: 10px; font-size: 13px; font-weight: 600; text-decoration: none; transition: 0.2s; }
-    .btn-outline { background: #fff; border: 1px solid #e5e7eb; color: #374151; }
-    .btn-outline:hover { background: #f3f4f6; }
+    .btn-next { background: #635BFF; border: 1px solid #635BFF; color: #fff; }
+    .btn-next:hover { background: #635BFF; }
+
     .section-title { font-size: 16px; font-weight: 700; color: #1a2236; margin-bottom: 16px; }
     .q-row { background: #fff; border: 1px solid #e5e7eb; border-radius: 14px; padding: 20px 22px; margin-bottom: 14px; }
     .q-row.correct-row { border-left: 4px solid #10b981; }
@@ -97,8 +98,12 @@
         <hr class="divider" />
 
         <div class="actions">
-            <a class="btn btn-outline" href="/User/Dashboard">← Back to Dashboard</a>
-        </div>
+    <a class="btn btn-outline" href="/User/Dashboard">← Back to Dashboard</a>
+    @if (ViewBag.NextModuleId != null)
+    {
+        <a class="btn btn-next" href="/Exam/Start?moduleId=@ViewBag.NextModuleId">Next Module →</a>
+    }
+</div>
     </div>
 
     <div class="section-title">📋 Question Breakdown</div>

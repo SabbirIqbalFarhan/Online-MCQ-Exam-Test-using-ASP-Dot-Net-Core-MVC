@@ -136,6 +136,10 @@ namespace Exam_Test.Controllers
             ViewBag.Wrong = result.Wrong;
             ViewBag.UserAnswers = userAnswers;
 
+            int nextModuleId = moduleId + 1;
+            bool nextModuleExists = _context.Questions.Any(q => q.ModuleId == nextModuleId);
+            ViewBag.NextModuleId = nextModuleExists ? nextModuleId : (int?)null;
+
             return View();
         }
 
