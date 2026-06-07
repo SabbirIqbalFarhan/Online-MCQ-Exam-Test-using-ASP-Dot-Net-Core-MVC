@@ -55,6 +55,10 @@
 #*.DOC   diff=astextplain
 #*.docx  diff=astextplain
 #*.DOCX  diff=astextplain
+
+*.cshtml linguist-language=C#
+*.css linguist-vendored=true
+*.js linguist-vendored=true
 #*.dot   diff=astextplain
 #*.DOT   diff=astextplain
 #*.pdf   diff=astextplain
