@@ -24,9 +24,38 @@ A web-based multiple choice exam platform built with ASP.NET Core MVC. Administr
 
 ## Screenshots
 
-> Add your screenshots here after uploading them (see setup guide below)
+### Login & Register
+![Login](screenshots/localhost_7123_Identity_Account_Login(Nest Hub Max).png)
+![Register](screenshots/localhost_7123_Identity_Account_Register(Nest Hub Max).png)
 
----
+### User Dashboard
+![User Dashboard](screenshots/localhost_7123_User_Dashboard(Nest Hub Max).png)
+
+### Exam Page
+![Exam](screenshots/localhost_7123_Exam_Start_moduleId=1(Nest Hub Max).png)
+
+### User Results
+![User Results](screenshots/localhost_7123_User_Results(Nest Hub Max).png)
+![User View Result](screenshots/localhost_7123_User_ViewResult_sessionId=11&moduleId=1(Nest Hub Max).png)
+
+### Admin Dashboard
+![Admin Dashboard](screenshots/localhost_7123_Admin_Dashboard(Nest Hub Max).png)
+
+### Admin Questions
+![Admin Questions](screenshots/localhost_7123_Admin_Questions_moduleId=1(Nest Hub Max).png)
+![Add Question](screenshots/localhost_7123_Admin_AddQuestion_moduleId=1(Nest Hub Max).png)
+![Edit Question](screenshots/localhost_7123_Admin_EditQuestion_2(Nest Hub Max).png)
+
+### Admin Sessions
+![Admin Sessions](screenshots/localhost_7123_AdminSession(Nest Hub Max).png)
+![Session Results](screenshots/localhost_7123_AdminSession_Results_id=11(Nest Hub Max).png)
+![User Result Detail](screenshots/localhost_7123_AdminSession_ViewResult_userId=f1d4f2e9-39e1-44ae-b66e-4e2ad33fe023&sessionId=11&moduleId=1(Nest Hu.png)
+
+### Admin Users
+![All Users](screenshots/localhost_7123_AdminUser(Nest Hub Max).png)
+![User Details](screenshots/localhost_7123_AdminUser_Details_e7f97f29-2a45-4548-bc3f-5bac8f9d5a35(Nest Hub Max).png)
+![Assign Student ID](screenshots/localhost_7123_AdminUser_AssignStudentId_e7f97f29-2a45-4548-bc3f-5bac8f9d5a35(Nest Hub Max).png)
+![Reset Password](screenshots/localhost_7123_AdminUser_ResetPassword_e7f97f29-2a45-4548-bc3f-5bac8f9d5a35(Nest Hub Max).png)
 
 ## Tech Stack
 
