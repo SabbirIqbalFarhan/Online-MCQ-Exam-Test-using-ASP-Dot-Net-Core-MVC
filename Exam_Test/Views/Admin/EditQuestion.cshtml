@@ -17,37 +17,38 @@
     .page-header-block {
         background: #1a2236;
         border-radius: 20px;
-        padding: 28px 32px;
+        padding: 24px 24px;
         margin-bottom: 24px;
         display: flex;
         align-items: center;
-        gap: 18px;
+        gap: 16px;
     }
 
     .page-header-icon {
-        width: 52px;
-        height: 52px;
+        width: 48px;
+        height: 48px;
+        min-width: 48px;
         background: #06b6d4;
         border-radius: 14px;
         display: grid;
         place-items: center;
-        font-size: 22px;
+        font-size: 20px;
         color: #fff;
         flex-shrink: 0;
         box-shadow: 0 6px 20px rgba(6,182,212,0.4);
     }
 
     .page-header-block h2 {
-        font-size: 20px;
+        font-size: 18px;
         font-weight: 800;
         color: #fff;
         margin: 0 0 4px;
     }
 
     .page-header-block p {
-        font-size: 13px;
+        font-size: 12px;
         color: rgba(255,255,255,0.5);
-        margin: 0 0 10px;
+        margin: 0 0 8px;
     }
 
     .module-pill {
@@ -59,7 +60,7 @@
         color: #a5f3fc;
         padding: 4px 12px;
         border-radius: 999px;
-        font-size: 11.5px;
+        font-size: 11px;
         font-weight: 700;
     }
 
@@ -67,7 +68,7 @@
         background: #fff;
         border: 1px solid #e5e9f2;
         border-radius: 20px;
-        padding: 28px 32px;
+        padding: 24px 24px;
         box-shadow: 0 4px 20px rgba(26,34,54,0.06);
     }
 
@@ -108,10 +109,15 @@
             box-sizing: border-box;
         }
 
-            .field-wrap input[type="text"]:focus {
-                border-color: #635bff;
-                box-shadow: 0 0 0 3px rgba(99,91,255,0.1);
-            }
+        .field-wrap input[type="file"] {
+            padding: 9px 14px;
+            cursor: pointer;
+        }
+
+        .field-wrap input[type="text"]:focus {
+            border-color: #635bff;
+            box-shadow: 0 0 0 3px rgba(99,91,255,0.1);
+        }
 
     .hint-text {
         font-size: 12px;
@@ -212,6 +218,80 @@
         border-top: 1.5px solid #f1f5f9;
         margin: 20px 0;
     }
+
+    .remove-image-wrap {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: 6px;
+    }
+
+        .remove-image-wrap label {
+            font-size: 13px;
+            color: #ef4444;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+    /* ── Responsive ── */
+    @@media (max-width: 600px) {
+        .page-wrap {
+            padding: 20px 12px 60px;
+        }
+
+        .page-header-block {
+            padding: 16px 16px;
+            gap: 12px;
+            border-radius: 16px;
+        }
+
+        .page-header-icon {
+            width: 42px;
+            height: 42px;
+            min-width: 42px;
+            font-size: 17px;
+            border-radius: 12px;
+        }
+
+        .page-header-block h2 {
+            font-size: 15px;
+        }
+
+        .page-header-block p {
+            font-size: 11px;
+            margin-bottom: 6px;
+        }
+
+        .form-card {
+            padding: 16px 14px;
+            border-radius: 16px;
+        }
+
+        .options-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .field-wrap input[type="text"],
+        .field-wrap input[type="file"],
+        .opt-wrap input[type="text"],
+        .correct-wrap input[type="text"] {
+            font-size: 13px;
+            padding: 10px 12px;
+        }
+
+        .opt-wrap input[type="text"] {
+            padding-left: 28px;
+        }
+
+        .btn-update {
+            font-size: 13px;
+            padding: 12px;
+        }
+
+        .remove-image-wrap label {
+            font-size: 12px;
+        }
+    }
 </style>
 
 <div class="page-wrap">
@@ -262,9 +342,9 @@
 
                 @if (!string.IsNullOrEmpty(Model.ImagePath))
                 {
-                    <div class="field-wrap" style="display:flex; align-items:center; gap:8px; margin-top:6px;">
+                    <div class="remove-image-wrap">
                         <input type="checkbox" name="removeImage" id="removeImage" value="true" />
-                        <label for="removeImage" style="font-size:13px; color:#ef4444; font-weight:600; cursor:pointer;">
+                        <label for="removeImage">
                             <i class="fa-solid fa-trash" style="margin-right:4px;"></i>
                             Remove existing image
                         </label>

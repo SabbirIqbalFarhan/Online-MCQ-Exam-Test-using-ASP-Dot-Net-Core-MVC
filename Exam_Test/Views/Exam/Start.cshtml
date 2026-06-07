@@ -1,530 +1,169 @@
-﻿@model List<Exam_Test.Models.Question>
-
-@{
-    ViewData["Title"] = "Exam";
-    int moduleId = ViewBag.ModuleId;
-    int sessionId = ViewBag.SessionId;
-    string sessionTitle = ViewBag.SessionTitle;
-    Layout = null;
+﻿@{
+    ViewData["Title"] = "Exam Result";
+    int moduleId = ViewBag.ModuleId ?? 0;
+    int correct  = ViewBag.Correct  ?? 0;
+    int wrong    = ViewBag.Wrong    ?? 0;
+    int total    = correct + wrong;
+    int pct      = total > 0 ? (correct * 100 / total) : 0;
+    double dashOffset = 283 - (283.0 * pct / 100);
+    var userAnswers = ViewBag.UserAnswers as List<Exam_Test.Models.UserAnswer> ?? new List<Exam_Test.Models.UserAnswer>();
 }
 
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Module @moduleId Exam</title>
-    <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: Arial, sans-serif; background: #fff; margin: 0; padding: 0; overflow: hidden; }
+<style>
+    body { margin: 0; font-family: "Segoe UI", Roboto, Arial, sans-serif; background: #f4f6ff; color: #111827; }
+    .page { max-width: 800px; margin: auto; padding: 40px 16px; }
+    .card { background: #fff; border: 1px solid #e5e7eb; border-radius: 18px; padding: 32px 28px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); margin-bottom: 24px; text-align: center; }
+    .title { font-size: 22px; font-weight: 700; margin-bottom: 6px; }
+    .subtitle { font-size: 13px; color: #6b7280; margin-bottom: 24px; }
+    .score-ring-wrap { display: flex; justify-content: center; margin-bottom: 24px; }
+    .score-ring { position: relative; width: 120px; height: 120px; }
+    .score-ring svg { transform: rotate(-90deg); }
+    .ring-bg   { fill: none; stroke: #e5e7eb; stroke-width: 10; }
+    .ring-fill { fill: none; stroke: #10b981; stroke-width: 10; stroke-linecap: round; stroke-dasharray: 283; }
+    .ring-text { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+    .ring-pct  { font-size: 22px; font-weight: 800; color: #111827; line-height: 1; }
+    .ring-label{ font-size: 10px; color: #6b7280; font-weight: 600; margin-top: 2px; }
+    .stats { display: flex; justify-content: center; gap: 16px; margin: 0 0 28px 0; flex-wrap: wrap; }
+    .box { flex: 1; min-width: 100px; padding: 16px; border-radius: 14px; border: 1px solid #e5e7eb; background: #f9fafb; }
+    .box h3 { margin: 0; font-size: 12px; color: #6b7280; font-weight: 500; }
+    .box span { display: block; margin-top: 6px; font-size: 24px; font-weight: 800; }
+    .correct-val { color: #16a34a; }
+    .wrong-val   { color: #dc2626; }
+    .total-val   { color: #4f46e5; }
+    .divider { border: none; border-top: 1px solid #f3f4f6; margin: 0 0 20px 0; }
+    .actions { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+    .btn { display: inline-flex; align-items: center; gap: 6px; padding: 10px 18px; border-radius: 10px; font-size: 13px; font-weight: 600; text-decoration: none; transition: 0.2s; }
+    .btn-outline { background: #fff; border: 1px solid #e5e7eb; color: #374151; }
+    .btn-outline:hover { background: #f3f4f6; }
+    .section-title { font-size: 16px; font-weight: 700; color: #1a2236; margin-bottom: 16px; }
+    .q-row { background: #fff; border: 1px solid #e5e7eb; border-radius: 14px; padding: 20px 22px; margin-bottom: 14px; }
+    .q-row.correct-row { border-left: 4px solid #10b981; }
+    .q-row.wrong-row   { border-left: 4px solid #ef4444; }
+    .q-status { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.7px; margin-bottom: 10px; }
+    .q-status.c { color: #10b981; }
+    .q-status.w { color: #ef4444; }
+    .q-image { max-width: 100%; max-height: 200px; border-radius: 8px; border: 1px solid #e5e7eb; margin-bottom: 12px; display: block; }
+    .q-text { font-size: 14px; font-weight: 600; color: #1a2236; margin-bottom: 14px; line-height: 1.6; }
+    .option-row { display: flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 10px; border: 1.5px solid #e5e7eb; margin-bottom: 8px; font-size: 13px; color: #374151; flex-wrap: wrap; }
+    .option-row.opt-correct { background: #dcfce7; border-color: #86efac; color: #166534; font-weight: 700; }
+    .option-row.opt-wrong   { background: #fee2e2; border-color: #fca5a5; color: #991b1b; font-weight: 700; }
+    .opt-letter { width: 28px; height: 28px; border-radius: 50%; background: #f3f4f6; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 12px; flex-shrink: 0; }
+    .opt-letter.correct-letter { background: #10b981; color: #fff; }
+    .opt-letter.wrong-letter   { background: #ef4444; color: #fff; }
+    .opt-tag { margin-left: auto; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 999px; }
+    .tag-your-correct { background: #dcfce7; color: #166534; }
+    .tag-your-wrong   { background: #fee2e2; color: #991b1b; }
+    .tag-correct-ans  { background: #dbeafe; color: #1d4ed8; }
 
-       .page-wrapper {
-    width: 100vw;
-    height: 100vh;
-    background: #e0e0e0;
-    display: flex;
-    flex-direction: column;
-    position: fixed;
-    top: 0; left: 0; right: 0; bottom: 0;
-    overflow: hidden;
-    padding-bottom: 0;
-}
+    @@media (max-width: 600px) {
+        .page { padding: 20px 12px; }
+        .card { padding: 20px 14px; }
+        .title { font-size: 18px; }
+        .stats { flex-direction: column; gap: 10px; }
+        .box { min-width: unset; }
+        .actions { flex-direction: column; align-items: stretch; }
+        .btn { justify-content: center; }
+        .q-row { padding: 14px 12px; }
+        .opt-tag { margin-left: 0; }
+        .section-title { font-size: 14px; }
+        .q-text { font-size: 13px; }
+    }
+</style>
 
-        /* TOP BAR */
-        .top-bar {
-            background: #fff;
-            border-bottom: 2px solid #ddd;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 2px 14px;
-            flex-shrink: 0;
-        }
+<div class="page">
+    <div class="card">
+        <div class="title">🎯 Module @moduleId — Exam Result</div>
+        <div class="subtitle">Here's how you performed</div>
 
-        .top-bar .info { font-size: 13px; color: #c00; font-weight: 700; }
-        .top-bar .q-number { font-size: 28px; font-weight: 900; color: #222; }
+        <div class="score-ring-wrap">
+            <div class="score-ring">
+                <svg width="120" height="120" viewBox="0 0 100 100">
+                    <circle class="ring-bg" cx="50" cy="50" r="45" />
+                    <circle class="ring-fill" cx="50" cy="50" r="45" style="stroke-dashoffset:@dashOffset.ToString("F1")" />
+                </svg>
+                <div class="ring-text">
+                    <span class="ring-pct">@pct%</span>
+                    <span class="ring-label">Score</span>
+                </div>
+            </div>
+        </div>
 
-        .progress-box {
-            background: #5aab3f;
-            color: #fff;
-            font-size: 14px;
-            font-weight: 900;
-            padding: 6px 16px;
-            border-radius: 8px;
-            min-width: 70px;
-            text-align: center;
-        }
+        <div class="stats">
+            <div class="box"><h3>✅ Correct</h3><span class="correct-val">@correct</span></div>
+            <div class="box"><h3>❌ Wrong</h3><span class="wrong-val">@wrong</span></div>
+            <div class="box"><h3>📋 Total</h3><span class="total-val">@total</span></div>
+        </div>
 
-        /* MIDDLE */
-        .middle-section {
-    display: flex;
-    border-bottom: 2px solid #ddd;
-    height: 230px;
-    max-height: 230px;
-    background: #fff;
-    overflow: hidden;
-    flex-shrink: 0;
-}
+        <hr class="divider" />
 
-        .img-side {
-    flex: 0 0 47%;
-    border-right: 2px solid #ddd;
-    overflow: hidden;
-    padding: 0;
-    background: #fafafa;
-}
-
-        .img-side img {
-    width: 100%;
-    height: 100%;
-    object-fit: fill;
-    display: block;
-    background: #fff;
-}
-        .text-side {
-    flex: 0 0 53%;
-    padding: 16px 20px;
-    display: flex;
-    align-items: flex-start;
-    justify-content: flex-start;
-    background: #fff;
-}
-
-        .text-side-full {
-    width: 100%;
-    padding: 16px 20px;
-    display: flex;
-    align-items: flex-start;
-    justify-content: flex-start;
-    background: #fff;
-}
-
-        .text-side p, .text-side-full p {
-            font-size: 15px;
-            font-weight: 600;
-            color: #222;
-            line-height: 1.7;
-        }
-
-        /* OPTIONS */
-        .options-section {
-    background: #fff;
-    border-top: 1px solid #111;
-    border-bottom: 1px solid #111;
-    flex-shrink: 0;
-    overflow-y: auto;
-}
-
-        .option-row {
-            display: flex;
-            align-items: center;
-            border-bottom: 1px solid #111;
-            padding: 6px 16px;
-            cursor: pointer;
-            transition: background 0.15s;
-            background: #e0e0e0;
-        }
-
-        .option-row:last-child { border-bottom: none; }
-        .option-row:hover { background: #d0d0d0; }
-        .option-row.selected { background: #9e9e9e; }
-
-        .opt-letter { font-size: 20px; font-weight: 900; color: #111; width: 36px; flex-shrink: 0; }
-        .opt-text { flex: 1; font-size: 14px; color: #333; }
-
-        .opt-check {
-            width: 22px; height: 22px;
-            border: 2px solid #aaa;
-            border-radius: 4px;
-            flex-shrink: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: #fff;
-            font-size: 14px;
-            font-weight: 900;
-            color: #fff;
-        }
-
-        .option-row.selected .opt-check { background: #616161; border-color: #616161; }
-
-        /* BOTTOM STRIP */
-        .bottom-strip {
-            background: #d0d0d0;
-            display: flex;
-            align-items: center;
-            padding: 6px 8px;
-            gap: 4px;
-            border-top: 2px solid #bbb;
-            flex-shrink: 0;
-            flex-wrap: nowrap;
-            position: fixed;
-            bottom: 50px; left: 0; right: 0;
-            z-index: 100;
-            height: 70px;
-            overflow: hidden;
-        }
-
-        /* ARROW BUTTONS */
-        .arrow-btn-wrap {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-            width: 55px;
-            height: 65px;
-        }
-
-        .arrow-btn {
-            background: none;
-            border: none;
-            cursor: pointer;
-            padding: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 55px;
-            height: 65px;
-            overflow: visible;
-        }
-
-        .arrow-btn:hover { filter: brightness(1.15); }
-
-        /* QUESTION NUMBER STRIP */
-        .q-nums-wrap {
-            display: flex;
-            flex-wrap: nowrap;
-            gap: 2px;
-            align-items: center;
-            flex: 1;
-            min-width: 0;
-            overflow-x: auto;
-            overflow-y: visible;
-            scrollbar-width: none;
-            -ms-overflow-style: none;
-            padding-bottom: 14px;
-        }
-
-        .q-nums-wrap::-webkit-scrollbar { display: none; }
-
-        .q-dot {
-            min-width: 0;
-            flex: 1 1 0;
-            height: 26px;
-            border-radius: 3px;
-            background: #ebebeb;
-            border: 1px solid #bbb;
-            color: #c00;
-            font-size: 10px;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            flex-shrink: 0;
-            transition: 0.15s;
-            position: relative;
-        }
-
-        .q-dot:hover { background: #ebebeb; }
-
-        .q-dot.active {
-            background: #ebebeb;
-            color: #c00;
-            border-color: #bbb;
-            position: relative;
-        }
-
-        .q-dot.active::after {
-            content: '';
-            position: absolute;
-            bottom: -13px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 0;
-            height: 0;
-            border-left: 10px solid transparent;
-            border-right: 10px solid transparent;
-            border-bottom: 13px solid #5aab3f;
-        }
-
-        .q-dot.answered {
-            background: #ebebeb;
-            color: #000;
-            border-color: #bbb;
-        }
-
-        /* SUBMIT */
-        .submit-btn {
-            background: #5aab3f;
-            color: #fff;
-            border: none;
-            border-radius: 6px;
-            padding: 0 16px;
-            height: 36px;
-            font-size: 13px;
-            font-weight: 700;
-            cursor: pointer;
-            flex-shrink: 0;
-            display: none;
-        }
-
-        .submit-btn:hover { background: #4a9a32; }
-        .submit-btn.visible { display: block; }
-
-        /* POPUP */
-        .popup-overlay {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.5);
-            z-index: 999;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .popup-overlay.show { display: flex; }
-
-        .popup-box {
-            background: #fff;
-            border-radius: 14px;
-            padding: 28px 32px;
-            max-width: 380px;
-            width: 90%;
-            text-align: center;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
-        }
-
-        .popup-box h3 { font-size: 18px; font-weight: 800; color: #1a2236; margin-bottom: 10px; }
-        .popup-box p { font-size: 14px; color: #64748b; margin-bottom: 22px; line-height: 1.6; }
-        .popup-btns { display: flex; gap: 10px; justify-content: center; }
-
-        .popup-btn-ok {
-            background: #5aab3f; color: #fff; border: none;
-            border-radius: 8px; padding: 10px 24px;
-            font-size: 14px; font-weight: 700; cursor: pointer;
-        }
-
-        .popup-btn-cancel {
-            background: #f1f5f9; color: #374151; border: none;
-            border-radius: 8px; padding: 10px 24px;
-            font-size: 14px; font-weight: 700; cursor: pointer;
-        }
-
-        .popup-btn-ok:hover { background: #4a9a32; }
-        .popup-btn-cancel:hover { background: #e2e8f0; }
-
-        @@media (max-width: 600px) {
-            .middle-section { flex-direction: column; }
-            .img-side { flex: none; width: 100%; border-right: none; border-bottom: 2px solid #ddd; max-height: 180px; overflow: hidden; }
-            .text-side, .text-side-full { padding: 12px 14px; }
-            .text-side p, .text-side-full p { font-size: 14px; }
-            .q-dot { width: 24px; height: 24px; font-size: 10px; }
-            .bottom-strip { padding: 6px 8px; gap: 4px; }
-        }
-
-        @@media (max-width: 380px) {
-            .q-dot { width: 22px; height: 22px; font-size: 9px; }
-        }
-    </style>
-</head>
-<body>
-
-<div class="popup-overlay" id="popupOverlay">
-    <div class="popup-box">
-        <h3>Submit Exam</h3>
-        <p id="popupMsg">Are you sure you want to submit?</p>
-        <div class="popup-btns">
-            <button class="popup-btn-cancel" onclick="closePopup()">Continue Exam</button>
-            <button class="popup-btn-ok" onclick="doSubmit()">Submit</button>
+        <div class="actions">
+            <a class="btn btn-outline" href="/User/Dashboard">← Back to Dashboard</a>
         </div>
     </div>
-</div>
 
-<form method="post" action="/Exam/Submit" id="examForm">
-    @Html.AntiForgeryToken()
-    <input type="hidden" name="moduleId" value="@moduleId" />
-    <input type="hidden" name="sessionId" value="@sessionId" />
+    <div class="section-title">📋 Question Breakdown</div>
 
-    <div class="page-wrapper">
+    @foreach (var ans in userAnswers)
+    {
+        var q = ans.Question;
+        if (q == null) continue;
 
-        @for (int i = 0; i < Model.Count; i++)
+        var options = new[]
         {
-            var q = Model[i];
-            <div id="qcard-@i" style="@(i == 0 ? "display:flex;" : "display:none;") flex-direction:column; width:100%;">
+            new { Letter = "A", Text = q.OptionA },
+            new { Letter = "B", Text = q.OptionB },
+            new { Letter = "C", Text = q.OptionC }
+        }.Where(o => !string.IsNullOrEmpty(o.Text)).ToArray();
 
-                <div class="top-bar">
-                    <div class="info">Module @moduleId</div>
-                    <div class="q-number">@(i + 1)</div>
-                    <div class="progress-box" id="progressBox-@i">@(i+1) / @Model.Count</div>
-                </div>
-
-                <div class="middle-section">
-                   @if (!string.IsNullOrEmpty(q.ImagePath))
-                    {
-                        <div class="img-side">
-                            <img src="@q.ImagePath" />
-                        </div>
-                        <div class="text-side">
-                            <p>@q.QuestionText</p>
-                        </div>
-                    }
-                    else
-                    {
-                        <div class="text-side-full">
-                            <p>@q.QuestionText</p>
-                        </div>
-                    }
-                </div>
-
-                <div class="options-section">
-                    @if (!string.IsNullOrWhiteSpace(q.OptionA))
-                    {
-                        <div class="option-row" id="opt-@i-A" onclick="selectOption(@i, 'A', this)">
-                            <input type="radio" name="answers[@q.Id]" value="A" style="display:none" />
-                            <div class="opt-letter">A</div>
-                            <div class="opt-text">@q.OptionA</div>
-                            <div class="opt-check" id="chk-@i-A"></div>
-                        </div>
-                    }
-                    @if (!string.IsNullOrWhiteSpace(q.OptionB))
-                    {
-                        <div class="option-row" id="opt-@i-B" onclick="selectOption(@i, 'B', this)">
-                            <input type="radio" name="answers[@q.Id]" value="B" style="display:none" />
-                            <div class="opt-letter">B</div>
-                            <div class="opt-text">@q.OptionB</div>
-                            <div class="opt-check" id="chk-@i-B"></div>
-                        </div>
-                    }
-                    @if (!string.IsNullOrWhiteSpace(q.OptionC))
-                    {
-                        <div class="option-row" id="opt-@i-C" onclick="selectOption(@i, 'C', this)">
-                            <input type="radio" name="answers[@q.Id]" value="C" style="display:none" />
-                            <div class="opt-letter">C</div>
-                            <div class="opt-text">@q.OptionC</div>
-                            <div class="opt-check" id="chk-@i-C"></div>
-                        </div>
-                    }
-                </div>
-
+        <div class="q-row @(ans.IsCorrect ? "correct-row" : "wrong-row")">
+            <div class="q-status @(ans.IsCorrect ? "c" : "w")">
+                @(ans.IsCorrect ? "✅ Correct" : "❌ Wrong")
             </div>
-        }
 
-        <div class="bottom-strip">
+            @if (!string.IsNullOrEmpty(q.ImagePath))
+            {
+                <img class="q-image" src="~/images/@q.ImagePath" />
+            }
 
-           <div class="arrow-btn-wrap prev" onclick="goPrev()">
-    <button type="button" class="arrow-btn">
-        <svg width="55" height="60" viewBox="0 0 55 60" style="overflow:visible;display:block;">
-            <path d="M48,8 C52,8 54,12 52,16 L32,50 C30,54 25,54 23,50 L3,16 C1,12 3,8 7,8 Z" fill="#5aab3f" transform="rotate(90,27.5,30)"/>
-            <text x="27.5" y="30" text-anchor="middle" dominant-baseline="central" font-size="15" font-weight="900" fill="#fff" font-family="Arial" id="prevNum">-</text>
-        </svg>
-    </button>
-</div>
+            @if (!string.IsNullOrEmpty(q.QuestionText))
+            {
+                <div class="q-text">@q.QuestionText</div>
+            }
 
-            <div class="q-nums-wrap" id="qStrip">
-                @for (int i = 0; i < Model.Count; i++)
+            @foreach (var opt in options)
+            {
+                bool isCorrectOpt = q.CorrectAnswer == opt.Letter;
+                bool isSelectedOpt = ans.SelectedAnswer == opt.Letter;
+
+                string rowClass = "";
+                string letterClass = "";
+                string tag = "";
+
+                if (isSelectedOpt && ans.IsCorrect)
                 {
-                    <div class="q-dot @(i == 0 ? "active" : "")" id="qnum-@i" onclick="goToQuestion(@i)">@(i + 1)</div>
+                    rowClass = "opt-correct";
+                    letterClass = "correct-letter";
+                    tag = "<span class='opt-tag tag-your-correct'>✓ Your Answer</span>";
                 }
-            </div>
-<div class="arrow-btn-wrap next" onclick="goNext()">
-    <button type="button" class="arrow-btn">
-        <svg width="55" height="60" viewBox="0 0 55 60" style="overflow:visible;display:block;">
-            <path d="M48,8 C52,8 54,12 52,16 L32,50 C30,54 25,54 23,50 L3,16 C1,12 3,8 7,8 Z" fill="#5aab3f" transform="rotate(-90,27.5,30)"/>
-            <text x="27.5" y="30" text-anchor="middle" dominant-baseline="central" font-size="15" font-weight="900" fill="#fff" font-family="Arial" id="nextNum">-</text>
-        </svg>
-    </button>
-</div>
+                else if (isSelectedOpt && !ans.IsCorrect)
+                {
+                    rowClass = "opt-wrong";
+                    letterClass = "wrong-letter";
+                    tag = "<span class='opt-tag tag-your-wrong'>✗ Your Answer</span>";
+                }
+                else if (isCorrectOpt && !ans.IsCorrect)
+                {
+                    rowClass = "opt-correct";
+                    letterClass = "correct-letter";
+                    tag = "<span class='opt-tag tag-correct-ans'>✓ Correct Answer</span>";
+                }
 
-            <button type="button" class="submit-btn" id="submitBtn" onclick="confirmSubmit()">Submit</button>
+                <div class="option-row @rowClass">
+                    <div class="opt-letter @letterClass">@opt.Letter</div>
+                    <span>@opt.Text</span>
+                    @Html.Raw(tag)
+                </div>
+            }
         </div>
-
-    </div>
-</form>
-
-<script>
-    let currentQ = 0;
-    let totalQ = @Model.Count;
-    let answered = new Array(totalQ).fill(false);
-    let selectedOptions = new Array(totalQ).fill(null);
-
-    function updateArrowNums() {
-        document.getElementById('prevNum').textContent = currentQ > 0 ? currentQ : '-';
-        document.getElementById('nextNum').textContent = currentQ < totalQ - 1 ? (currentQ + 2) : '-';
     }
-
-    function checkAllAnswered() {
-        let allDone = answered.every(a => a === true);
-        let btn = document.getElementById('submitBtn');
-        if (allDone) btn.classList.add('visible');
-        else btn.classList.remove('visible');
-    }
-
-    function goToQuestion(index) {
-        let prevCard = document.getElementById('qcard-' + currentQ);
-        if (prevCard) prevCard.style.display = 'none';
-        document.getElementById('qnum-' + currentQ).classList.remove('active');
-        if (answered[currentQ]) document.getElementById('qnum-' + currentQ).classList.add('answered');
-
-        currentQ = index;
-
-        let nextCard = document.getElementById('qcard-' + currentQ);
-        if (nextCard) nextCard.style.display = 'flex';
-
-        let numEl = document.getElementById('qnum-' + currentQ);
-        numEl.classList.remove('answered');
-        numEl.classList.add('active');
-
-        updateArrowNums();
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-
-    function goPrev() { if (currentQ > 0) goToQuestion(currentQ - 1); }
-    function goNext() { if (currentQ < totalQ - 1) goToQuestion(currentQ + 1); }
-
-    function selectOption(qIndex, option, rowEl) {
-        if (selectedOptions[qIndex] === option) {
-            rowEl.classList.remove('selected');
-            rowEl.querySelector('input[type="radio"]').checked = false;
-            rowEl.querySelector('.opt-check').innerText = '';
-            selectedOptions[qIndex] = null;
-            answered[qIndex] = false;
-            let numEl = document.getElementById('qnum-' + qIndex);
-            numEl.classList.remove('answered');
-            if (qIndex === currentQ) numEl.classList.add('active');
-            checkAllAnswered();
-            return;
-        }
-
-        let card = document.getElementById('qcard-' + qIndex);
-        card.querySelectorAll('.option-row').forEach(r => {
-            r.classList.remove('selected');
-            r.querySelector('.opt-check').innerText = '';
-            r.querySelector('input[type="radio"]').checked = false;
-        });
-
-        rowEl.classList.add('selected');
-        rowEl.querySelector('input[type="radio"]').checked = true;
-        rowEl.querySelector('.opt-check').innerText = '✗';
-        selectedOptions[qIndex] = option;
-        answered[qIndex] = true;
-
-        let numEl = document.getElementById('qnum-' + qIndex);
-        numEl.classList.add('answered');
-        if (qIndex === currentQ) numEl.classList.add('active');
-        checkAllAnswered();
-    }
-
-    function confirmSubmit() {
-        document.getElementById('popupMsg').innerText = 'All questions answered. Are you sure you want to submit?';
-        document.getElementById('popupOverlay').classList.add('show');
-    }
-
-    function closePopup() { document.getElementById('popupOverlay').classList.remove('show'); }
-    function doSubmit() { document.getElementById('examForm').submit(); }
-
-    updateArrowNums();
-</script>
-
-</body>
-</html>
+</div>

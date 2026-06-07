@@ -13,66 +13,223 @@
 }
 
 <style>
-    .admin-wrap { display: flex; flex-wrap: wrap; min-height: calc(100vh - 60px); background: #f1f4fb; margin: -28px; }
-    .dash-sidebar { width: 230px; background: #1a2236; flex-shrink: 0; padding: 60px 0 24px; display: flex; flex-direction: column; min-height: 100vh; }
+    .admin-wrap {
+        display: flex;
+        min-height: calc(100vh - 60px);
+        background: #f1f4fb;
+        margin: -28px;
+    }
+
+    /* ── Sidebar ── */
+    .dash-sidebar {
+        width: 230px;
+        background: #1a2236;
+        flex-shrink: 0;
+        padding: 60px 0 24px;
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+        transition: transform 0.3s ease;
+        z-index: 100;
+    }
+
     .nav-section-label { font-size: 9.5px; font-weight: 700; color: rgba(240,244,255,0.35); text-transform: uppercase; letter-spacing: 1.4px; padding: 14px 20px 6px; }
     .sidebar-link { display: flex; align-items: center; gap: 11px; padding: 9px 20px; color: rgba(240,244,255,0.62); text-decoration: none; font-size: 13px; font-weight: 500; border-left: 3px solid transparent; transition: all 0.18s; }
     .sidebar-link:hover { color: #fff; background: rgba(99,91,255,0.1); border-left-color: rgba(99,91,255,0.5); }
     .sidebar-link.active { color: #fff; background: rgba(99,91,255,0.15); border-left-color: #635bff; }
     .sidebar-link .s-icon { width: 30px; height: 30px; border-radius: 8px; display: grid; place-items: center; font-size: 14px; flex-shrink: 0; background: rgba(255,255,255,0.06); transition: 0.18s; }
     .sidebar-link:hover .s-icon, .sidebar-link.active .s-icon { background: rgba(99,91,255,0.25); }
-    .dash-main { flex: 1 1 300px; padding: 28px; overflow-y: auto; min-width: 0; }
+
+    /* ── Mobile toggle ── */
+    .sidebar-toggle {
+        display: none;
+        position: fixed;
+        top: 14px;
+        left: 14px;
+        z-index: 200;
+        background: #635bff;
+        border: none;
+        color: #fff;
+        width: 38px;
+        height: 38px;
+        border-radius: 10px;
+        font-size: 16px;
+        cursor: pointer;
+        box-shadow: 0 4px 12px rgba(99,91,255,0.4);
+        align-items: center;
+        justify-content: center;
+    }
+
+    .sidebar-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.4);
+        z-index: 99;
+    }
+
+    /* ── Main ── */
+    .dash-main { flex: 1; padding: 28px; overflow-y: auto; min-width: 0; }
+
     .page-header { margin-bottom: 24px; }
     .page-header h2 { font-size: 22px; font-weight: 800; color: #1a2236; margin: 0 0 4px; }
     .page-header p { font-size: 13px; color: #64748b; margin: 0; }
+
+    /* ── Search ── */
     .search-bar { display: flex; gap: 10px; margin-bottom: 18px; flex-wrap: wrap; }
-    .search-bar input { padding: 9px 14px; border-radius: 9px; border: 1.5px solid #e2e8f0; font-size: 13px; font-weight: 500; color: #1a2236; outline: none; flex: 1 1 160px; min-width: 0; transition: 0.18s; font-family: 'Plus Jakarta Sans', sans-serif; }
+    .search-bar input { padding: 9px 14px; border-radius: 9px; border: 1.5px solid #e2e8f0; font-size: 13px; font-weight: 500; color: #1a2236; outline: none; flex: 1 1 140px; min-width: 0; transition: 0.18s; font-family: inherit; }
     .search-bar input:focus { border-color: #635bff; box-shadow: 0 0 0 3px rgba(99,91,255,0.1); }
-    .search-bar button { padding: 9px 18px; border-radius: 9px; border: none; background: #635bff; color: #fff; font-size: 13px; font-weight: 700; cursor: pointer; transition: 0.18s; font-family: 'Plus Jakarta Sans', sans-serif; white-space: nowrap; }
+    .search-bar button { padding: 9px 18px; border-radius: 9px; border: none; background: #635bff; color: #fff; font-size: 13px; font-weight: 700; cursor: pointer; transition: 0.18s; font-family: inherit; white-space: nowrap; }
     .search-bar button:hover { background: #4f46e5; }
-    .search-bar a.clear-btn { padding: 9px 14px; border-radius: 9px; border: 1.5px solid #e2e8f0; background: #fff; color: #64748b; font-size: 13px; font-weight: 600; text-decoration: none; transition: 0.18s; white-space: nowrap; }
+    .search-bar a.clear-btn { padding: 9px 14px; border-radius: 9px; border: 1.5px solid #e2e8f0; background: #fff; color: #64748b; font-size: 13px; font-weight: 600; text-decoration: none; transition: 0.18s; white-space: nowrap; display: inline-flex; align-items: center; gap: 5px; }
     .search-bar a.clear-btn:hover { border-color: #ef4444; color: #ef4444; }
 
-    /* Table wrapper makes table scroll horizontally on small screens */
-    .table-card { background: #fff; border: 1px solid #e5e9f2; border-radius: 16px; overflow: hidden; box-shadow: 0 2px 8px rgba(26,34,54,0.04); }
-    .table-wrap { overflow-x: auto; width: 100%; -webkit-overflow-scrolling: touch; }
-    .table-card table { width: 100%; border-collapse: collapse; min-width: 700px; }
-    .table-card thead { background: #1a2236; }
-    .table-card th { padding: 13px 16px; font-size: 11px; font-weight: 700; color: rgba(240,244,255,0.6); text-transform: uppercase; letter-spacing: 0.8px; text-align: left; white-space: nowrap; }
-    .table-card td { padding: 14px 16px; font-size: 13px; color: #374151; text-align: left; }
-    .table-card tbody tr { border-bottom: 1px solid #f1f5f9; transition: 0.18s; }
-    .table-card tbody tr:last-child { border-bottom: none; }
-    .table-card tbody tr:hover { background: #f8f9ff; }
-    .user-cell { display: flex; align-items: center; gap: 10px; }
-    .user-avatar { width: 32px; height: 32px; border-radius: 50%; background: rgba(99,91,255,0.12); display: grid; place-items: center; font-size: 12px; font-weight: 800; color: #635bff; flex-shrink: 0; }
-    .user-avatar.admin-avatar { background: rgba(239,68,68,0.12); color: #ef4444; }
-    .user-email { font-size: 13px; font-weight: 600; color: #1a2236; word-break: break-all; }
-    .badge-green { background: #dcfce7; color: #166534; padding: 4px 12px; border-radius: 999px; font-size: 11.5px; font-weight: 700; white-space: nowrap; }
-    .badge-red { background: #fee2e2; color: #991b1b; padding: 4px 12px; border-radius: 999px; font-size: 11.5px; font-weight: 700; white-space: nowrap; }
-    .badge-yellow { background: #fef9c3; color: #854d0e; padding: 4px 12px; border-radius: 999px; font-size: 11.5px; font-weight: 700; white-space: nowrap; }
-    .badge-gray { background: #f1f5f9; color: #64748b; padding: 4px 12px; border-radius: 999px; font-size: 11.5px; font-weight: 700; white-space: nowrap; }
-    .badge-admin { background: rgba(239,68,68,0.1); color: #ef4444; padding: 4px 12px; border-radius: 999px; font-size: 11.5px; font-weight: 700; white-space: nowrap; }
+    /* ── Badges ── */
+    .badge-green  { background: #dcfce7; color: #166634; padding: 4px 12px; border-radius: 999px; font-size: 11.5px; font-weight: 700; white-space: nowrap; display: inline-block; }
+    .badge-red    { background: #fee2e2; color: #991b1b; padding: 4px 12px; border-radius: 999px; font-size: 11.5px; font-weight: 700; white-space: nowrap; display: inline-block; }
+    .badge-yellow { background: #fef9c3; color: #854d0e; padding: 4px 12px; border-radius: 999px; font-size: 11.5px; font-weight: 700; white-space: nowrap; display: inline-block; }
+    .badge-gray   { background: #f1f5f9; color: #64748b;  padding: 4px 12px; border-radius: 999px; font-size: 11.5px; font-weight: 700; white-space: nowrap; display: inline-block; }
+    .badge-admin  { background: rgba(239,68,68,0.1); color: #ef4444; padding: 4px 12px; border-radius: 999px; font-size: 11.5px; font-weight: 700; white-space: nowrap; display: inline-block; }
+
+    /* ── Action buttons ── */
     .actions-cell { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
-    .btn-action { display: inline-flex; align-items: center; gap: 5px; padding: 6px 12px; border-radius: 8px; font-size: 12px; font-weight: 700; text-decoration: none; color: #fff; transition: 0.18s; font-family: 'Plus Jakarta Sans', sans-serif; white-space: nowrap; }
-    .btn-grant { background: #10b981; }
-    .btn-grant:hover { background: #059669; color: #fff; }
-    .btn-revoke { background: #f59e0b; }
-    .btn-revoke:hover { background: #d97706; color: #fff; }
-    .btn-view { background: #635bff; }
-    .btn-view:hover { background: #4f46e5; color: #fff; }
-    .btn-delete { background: #ef4444; }
-    .btn-delete:hover { background: #dc2626; color: #fff; }
+    .btn-action { display: inline-flex; align-items: center; gap: 5px; padding: 6px 12px; border-radius: 8px; font-size: 12px; font-weight: 700; text-decoration: none; color: #fff; transition: 0.18s; font-family: inherit; white-space: nowrap; border: none; cursor: pointer; }
+    .btn-grant  { background: #10b981; } .btn-grant:hover  { background: #059669; color: #fff; }
+    .btn-revoke { background: #f59e0b; } .btn-revoke:hover { background: #d97706; color: #fff; }
+    .btn-view   { background: #635bff; } .btn-view:hover   { background: #4f46e5; color: #fff; }
+    .btn-delete { background: #ef4444; } .btn-delete:hover { background: #dc2626; color: #fff; }
+
     .no-results { text-align: center; padding: 40px; color: #94a3b8; font-size: 14px; }
+
+    /* ── Pagination ── */
     .pagination { display: flex; align-items: center; gap: 6px; margin-top: 20px; justify-content: center; flex-wrap: wrap; }
     .page-btn { padding: 8px 14px; border-radius: 8px; border: 1.5px solid #e2e8f0; background: #fff; color: #374151; font-size: 13px; font-weight: 600; text-decoration: none; transition: 0.18s; }
     .page-btn:hover { background: #f8f9ff; border-color: #635bff; color: #635bff; }
     .page-btn.active { background: #635bff; color: #fff; border-color: #635bff; }
-    .page-btn.disabled { opacity: 0.4; pointer-events: none; cursor: default; }
+    .page-btn.disabled { opacity: 0.4; pointer-events: none; }
+
     .error-toast { background: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; border-radius: 10px; padding: 12px 18px; margin-bottom: 16px; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+
+    /* ══════════════════════════════════════
+       DESKTOP TABLE  (> 1024px)
+       Only shown on large screens where there's enough room
+    ══════════════════════════════════════ */
+    .table-card { background: #fff; border: 1px solid #e5e9f2; border-radius: 16px; overflow: hidden; box-shadow: 0 2px 8px rgba(26,34,54,0.04); }
+    .table-wrap { overflow-x: auto; width: 100%; -webkit-overflow-scrolling: touch; }
+    .table-card table { width: 100%; border-collapse: collapse; }
+    .table-card thead { background: #1a2236; }
+    .table-card th { padding: 13px 16px; font-size: 11px; font-weight: 700; color: rgba(240,244,255,0.6); text-transform: uppercase; letter-spacing: 0.8px; text-align: left; white-space: nowrap; }
+    .table-card td { padding: 12px 14px; font-size: 13px; color: #374151; text-align: left; vertical-align: middle; }
+    .table-card tbody tr { border-bottom: 1px solid #f1f5f9; transition: 0.18s; }
+    .table-card tbody tr:last-child { border-bottom: none; }
+    .table-card tbody tr:hover { background: #f8f9ff; }
+
+    .user-cell { display: flex; align-items: center; gap: 10px; min-width: 0; }
+    .user-avatar { width: 32px; height: 32px; border-radius: 50%; background: rgba(99,91,255,0.12); display: grid; place-items: center; font-size: 12px; font-weight: 800; color: #635bff; flex-shrink: 0; }
+    .user-avatar.admin-avatar { background: rgba(239,68,68,0.12); color: #ef4444; }
+    /* KEY FIX: email truncates instead of wrapping */
+    .user-email {
+        font-size: 13px;
+        font-weight: 600;
+        color: #1a2236;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        max-width: 180px;
+    }
+
+    /* Mobile cards — hidden on desktop */
+    .mobile-cards { display: none; }
+
+    /* ══════════════════════════════════════
+       CARD LAYOUT  (≤ 1024px)
+       Covers Surface Pro, tablets, phones
+    ══════════════════════════════════════ */
+    @@media (max-width: 1024px) {
+
+        .sidebar-toggle { display: flex; }
+
+        .dash-sidebar {
+            position: fixed;
+            left: 0; top: 0;
+            height: 100vh;
+            transform: translateX(-100%);
+        }
+
+        .dash-sidebar.open { transform: translateX(0); }
+        .sidebar-overlay.open { display: block; }
+
+        .admin-wrap { margin: -16px; }
+        .dash-main  { padding: 16px; padding-top: 60px; }
+        .page-header h2 { font-size: 18px; }
+
+        /* Hide desktop table */
+        .table-card { display: none; }
+
+        /* Show mobile cards */
+        .mobile-cards {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .user-row-card {
+            background: #fff;
+            border: 1px solid #e5e9f2;
+            border-radius: 14px;
+            padding: 16px;
+            box-shadow: 0 2px 6px rgba(26,34,54,0.04);
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .urc-top {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .urc-avatar {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: rgba(99,91,255,0.12);
+            display: grid;
+            place-items: center;
+            font-size: 16px;
+            font-weight: 800;
+            color: #635bff;
+            flex-shrink: 0;
+        }
+
+        .urc-avatar.admin-avatar { background: rgba(239,68,68,0.12); color: #ef4444; }
+
+        .urc-identity { flex: 1; min-width: 0; }
+        .urc-name  { font-size: 14px; font-weight: 700; color: #1a2236; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .urc-email { font-size: 12px; color: #64748b; word-break: break-all; line-height: 1.4; margin-top: 2px; }
+        .urc-sid   { font-size: 11px; font-weight: 700; color: #635bff; margin-top: 3px; }
+
+        .urc-badges  { display: flex; gap: 8px; flex-wrap: wrap; }
+        .urc-actions { display: flex; gap: 6px; flex-wrap: wrap; }
+    }
+
+    @@media (max-width: 480px) {
+        .search-bar input  { font-size: 12px; }
+        .search-bar button { font-size: 12px; padding: 9px 12px; }
+        .btn-action { font-size: 11px; padding: 5px 9px; }
+        .urc-avatar { width: 36px; height: 36px; font-size: 14px; }
+    }
 </style>
 
+<button class="sidebar-toggle" onclick="toggleSidebar()">
+    <i class="fa-solid fa-bars"></i>
+</button>
+
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
 <div class="admin-wrap">
-    <div class="dash-sidebar">
+    <div class="dash-sidebar" id="dashSidebar">
         <div class="nav-section-label">Main</div>
         <a class="sidebar-link" href="/Admin/Dashboard"><span class="s-icon">📊</span><span>Dashboard</span></a>
         <div class="nav-section-label">Users</div>
@@ -110,6 +267,7 @@
             </div>
         </form>
 
+        <!-- ══ DESKTOP TABLE (> 1024px) ══ -->
         <div class="table-card">
             <div class="table-wrap">
                 <table>
@@ -136,69 +294,31 @@
                         @foreach (var user in Model)
                         {
                             bool isAdmin = adminUserIds.Contains(user.Id);
-                            var perm = permissions?.FirstOrDefault(p => p.UserId == user.Id);
-                            var req = requests?.FirstOrDefault(r => r.UserId == user.Id);
+                            var perm    = permissions?.FirstOrDefault(p => p.UserId == user.Id);
+                            var req     = requests?.FirstOrDefault(r => r.UserId == user.Id);
                             var profile = profiles?.FirstOrDefault(p => p.UserId == user.Id);
-
                             <tr>
-                                <td style="font-weight:700;color:#635bff;">
-                                    @(profile?.StudentId ?? "—")
-                                </td>
-                                <td style="font-weight:600;color:#1a2236;">
-                                    @(profile?.FullName ?? "—")
-                                </td>
+                                <td style="font-weight:700;color:#635bff;white-space:nowrap;">@(profile?.StudentId ?? "—")</td>
+                                <td style="font-weight:600;color:#1a2236;white-space:nowrap;">@(profile?.FullName ?? "—")</td>
                                 <td>
                                     <div class="user-cell">
-                                        @if (isAdmin)
-                                        {
-                                            <div class="user-avatar admin-avatar">
-                                                @user.Email?.Substring(0, 1).ToUpper()
-                                            </div>
-                                        }
-                                        else
-                                        {
-                                            <div class="user-avatar">
-                                                @user.Email?.Substring(0, 1).ToUpper()
-                                            </div>
-                                        }
-                                        <span class="user-email">@user.Email</span>
+                                        <div class="user-avatar @(isAdmin ? "admin-avatar" : "")">
+                                            @user.Email?.Substring(0, 1).ToUpper()
+                                        </div>
+                                        <span class="user-email" title="@user.Email">@user.Email</span>
                                     </div>
                                 </td>
                                 <td>
-                                    @if (isAdmin)
-                                    {
-                                        <span class="badge-admin">— Admin</span>
-                                    }
-                                    else if (req == null)
-                                    {
-                                        <span class="badge-gray">No Request</span>
-                                    }
-                                    else if (req.Status == "Pending")
-                                    {
-                                        <span class="badge-yellow">⏳ Pending</span>
-                                    }
-                                    else if (req.Status == "Approved")
-                                    {
-                                        <span class="badge-green">✅ Approved</span>
-                                    }
-                                    else
-                                    {
-                                        <span class="badge-red">❌ Rejected</span>
-                                    }
+                                    @if (isAdmin)                          { <span class="badge-admin">— Admin</span> }
+                                    else if (req == null)                  { <span class="badge-gray">No Request</span> }
+                                    else if (req.Status == "Pending")      { <span class="badge-yellow">⏳ Pending</span> }
+                                    else if (req.Status == "Approved")     { <span class="badge-green">✅ Approved</span> }
+                                    else                                   { <span class="badge-red">❌ Rejected</span> }
                                 </td>
                                 <td>
-                                    @if (isAdmin)
-                                    {
-                                        <span class="badge-admin">— Admin</span>
-                                    }
-                                    else if (perm != null && perm.IsPermitted)
-                                    {
-                                        <span class="badge-green">✅ Permitted</span>
-                                    }
-                                    else
-                                    {
-                                        <span class="badge-red">🚫 Not Permitted</span>
-                                    }
+                                    @if (isAdmin)                              { <span class="badge-admin">— Admin</span> }
+                                    else if (perm != null && perm.IsPermitted) { <span class="badge-green">✅ Permitted</span> }
+                                    else                                       { <span class="badge-red">🚫 Not Permitted</span> }
                                 </td>
                                 <td>
                                     <div class="actions-cell">
@@ -206,12 +326,10 @@
                                         {
                                             @if (perm == null || !perm.IsPermitted)
                                             {
-                                               <form method="post" action="/AdminUser/GrantPermission" style="display:inline;">
+                                                <form method="post" action="/AdminUser/GrantPermission" style="display:inline;">
                                                     @Html.AntiForgeryToken()
                                                     <input type="hidden" name="id" value="@user.Id" />
-                                                    <button type="submit" class="btn-action btn-grant">
-                                                        <i class="fa-solid fa-check"></i> Grant
-                                                    </button>
+                                                    <button type="submit" class="btn-action btn-grant"><i class="fa-solid fa-check"></i> Grant</button>
                                                 </form>
                                             }
                                             else
@@ -219,23 +337,17 @@
                                                 <form method="post" action="/AdminUser/RevokePermission" style="display:inline;">
                                                     @Html.AntiForgeryToken()
                                                     <input type="hidden" name="id" value="@user.Id" />
-                                                    <button type="submit" class="btn-action btn-revoke">
-                                                        <i class="fa-solid fa-ban"></i> Revoke
-                                                    </button>
+                                                    <button type="submit" class="btn-action btn-revoke"><i class="fa-solid fa-ban"></i> Revoke</button>
                                                 </form>
                                             }
                                         }
-                                        <a class="btn-action btn-view" href="/AdminUser/Details/@user.Id">
-                                            <i class="fa-solid fa-eye"></i> View
-                                        </a>
+                                        <a class="btn-action btn-view" href="/AdminUser/Details/@user.Id"><i class="fa-solid fa-eye"></i> View</a>
                                         @if (!isAdmin)
                                         {
                                             <form method="post" action="/AdminUser/DeleteUser/@user.Id" style="display:inline;"
                                                   onsubmit="return confirm('Delete this user and all their data?')">
                                                 @Html.AntiForgeryToken()
-                                                <button type="submit" class="btn-action btn-delete">
-                                                    <i class="fa-solid fa-trash"></i> Delete
-                                                </button>
+                                                <button type="submit" class="btn-action btn-delete"><i class="fa-solid fa-trash"></i> Delete</button>
                                             </form>
                                         }
                                     </div>
@@ -245,6 +357,90 @@
                     </tbody>
                 </table>
             </div>
+        </div>
+
+        <!-- ══ MOBILE / TABLET CARDS (≤ 1024px) ══ -->
+        <div class="mobile-cards">
+            @if (!Model.Any())
+            {
+                <div style="text-align:center;padding:32px;color:#94a3b8;background:#fff;border-radius:14px;border:1px solid #e5e9f2;">
+                    <i class="fa-solid fa-users-slash" style="font-size:24px;display:block;margin-bottom:8px;"></i>
+                    No users found matching your search.
+                </div>
+            }
+            @foreach (var user in Model)
+            {
+                bool isAdmin = adminUserIds.Contains(user.Id);
+                var perm    = permissions?.FirstOrDefault(p => p.UserId == user.Id);
+                var req     = requests?.FirstOrDefault(r => r.UserId == user.Id);
+                var profile = profiles?.FirstOrDefault(p => p.UserId == user.Id);
+
+                <div class="user-row-card">
+
+                    <div class="urc-top">
+                        <div class="urc-avatar @(isAdmin ? "admin-avatar" : "")">
+                            @user.Email?.Substring(0, 1).ToUpper()
+                        </div>
+                        <div class="urc-identity">
+                            <div class="urc-name">@(profile?.FullName ?? "—")</div>
+                            <div class="urc-email">@user.Email</div>
+                            @if (profile?.StudentId != null)
+                            {
+                                <div class="urc-sid"><i class="fa-solid fa-id-card" style="margin-right:4px;"></i>@profile.StudentId</div>
+                            }
+                        </div>
+                    </div>
+
+                    <div class="urc-badges">
+                        @if (isAdmin)
+                        {
+                            <span class="badge-admin">👑 Admin</span>
+                        }
+                        else
+                        {
+                            @if (req == null)                  { <span class="badge-gray">No Request</span> }
+                            else if (req.Status == "Pending")  { <span class="badge-yellow">⏳ Pending</span> }
+                            else if (req.Status == "Approved") { <span class="badge-green">✅ Approved</span> }
+                            else                               { <span class="badge-red">❌ Rejected</span> }
+
+                            @if (perm != null && perm.IsPermitted) { <span class="badge-green">✅ Permitted</span> }
+                            else                                   { <span class="badge-red">🚫 No Permission</span> }
+                        }
+                    </div>
+
+                    <div class="urc-actions">
+                        @if (!isAdmin)
+                        {
+                            @if (perm == null || !perm.IsPermitted)
+                            {
+                                <form method="post" action="/AdminUser/GrantPermission">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="id" value="@user.Id" />
+                                    <button type="submit" class="btn-action btn-grant"><i class="fa-solid fa-check"></i> Grant</button>
+                                </form>
+                            }
+                            else
+                            {
+                                <form method="post" action="/AdminUser/RevokePermission">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="id" value="@user.Id" />
+                                    <button type="submit" class="btn-action btn-revoke"><i class="fa-solid fa-ban"></i> Revoke</button>
+                                </form>
+                            }
+                        }
+                        <a class="btn-action btn-view" href="/AdminUser/Details/@user.Id"><i class="fa-solid fa-eye"></i> View</a>
+                        @if (!isAdmin)
+                        {
+                            <form method="post" action="/AdminUser/DeleteUser/@user.Id"
+                                  onsubmit="return confirm('Delete this user and all their data?')">
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="btn-action btn-delete"><i class="fa-solid fa-trash"></i> Delete</button>
+                            </form>
+                        }
+                    </div>
+
+                </div>
+            }
         </div>
 
         @if (totalPages > 1)
@@ -260,19 +456,11 @@
                         <i class="fa-solid fa-chevron-left"></i>
                     </a>
                 }
-
                 @for (int i = 1; i <= totalPages; i++)
                 {
-                    if (i == currentPage)
-                    {
-                        <span class="page-btn active">@i</span>
-                    }
-                    else
-                    {
-                        <a href="?page=@i&searchStudentId=@searchStudentId&searchName=@searchName" class="page-btn">@i</a>
-                    }
+                    if (i == currentPage) { <span class="page-btn active">@i</span> }
+                    else { <a href="?page=@i&searchStudentId=@searchStudentId&searchName=@searchName" class="page-btn">@i</a> }
                 }
-
                 @if (currentPage == totalPages)
                 {
                     <span class="page-btn disabled"><i class="fa-solid fa-chevron-right"></i></span>
@@ -288,3 +476,10 @@
 
     </div>
 </div>
+
+<script>
+    function toggleSidebar() {
+        document.getElementById('dashSidebar').classList.toggle('open');
+        document.getElementById('sidebarOverlay').classList.toggle('open');
+    }
+</script>

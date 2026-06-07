@@ -19,6 +19,8 @@
         background: #f1f4fb;
         margin: -16px;
     }
+
+    /* ── SIDEBAR ── */
     .dash-sidebar {
         width: 230px;
         background: #1a2236;
@@ -27,52 +29,112 @@
         display: flex;
         flex-direction: column;
         min-height: calc(100vh - 60px);
+        transition: transform 0.25s ease;
     }
-    .dash-main {
-        flex: 1;
-        padding: 28px;
-        overflow-y: auto;
-    }
+
     .nav-section-label { font-size: 9.5px; font-weight: 700; color: rgba(240,244,255,0.35); text-transform: uppercase; letter-spacing: 1.4px; padding: 14px 20px 6px; }
     .sidebar-link { display: flex; align-items: center; gap: 11px; padding: 9px 20px; color: rgba(240,244,255,0.62); text-decoration: none; font-size: 13px; font-weight: 500; border-left: 3px solid transparent; transition: all 0.18s; }
     .sidebar-link:hover { color: #fff; background: rgba(99,91,255,0.1); border-left-color: rgba(99,91,255,0.5); }
     .sidebar-link.active { color: #fff; background: rgba(99,91,255,0.15); border-left-color: #635bff; }
     .sidebar-link .s-icon { width: 30px; height: 30px; border-radius: 8px; display: grid; place-items: center; font-size: 14px; flex-shrink: 0; background: rgba(255,255,255,0.06); }
     .sidebar-link:hover .s-icon, .sidebar-link.active .s-icon { background: rgba(99,91,255,0.25); }
+
+    /* ── MOBILE SIDEBAR TOGGLE ── */
+    .sidebar-toggle {
+        display: none;
+        position: fixed;
+        top: 14px;
+        left: 14px;
+        z-index: 999;
+        background: #1a2236;
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        width: 38px;
+        height: 38px;
+        font-size: 18px;
+        cursor: pointer;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .sidebar-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.45);
+        z-index: 199;
+    }
+
+    /* ── MAIN ── */
+    .dash-main { flex: 1; padding: 28px; overflow-y: auto; min-width: 0; }
+
     .btn-back { display: inline-flex; align-items: center; gap: 7px; padding: 9px 18px; border-radius: 10px; background: #1a2236; color: #fff; font-size: 13px; font-weight: 700; text-decoration: none; margin-bottom: 24px; transition: 0.2s; }
     .btn-back:hover { background: #243050; color: #fff; }
-    .student-card { background: #fff; border: 1px solid #e5e9f2; border-radius: 16px; padding: 24px 28px; margin-bottom: 24px; display: flex; align-items: center; gap: 20px; box-shadow: 0 2px 8px rgba(26,34,54,0.04); }
+
+    /* ── STUDENT CARD ── */
+    .student-card {
+        background: #fff;
+        border: 1px solid #e5e9f2;
+        border-radius: 16px;
+        padding: 24px 28px;
+        margin-bottom: 24px;
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        box-shadow: 0 2px 8px rgba(26,34,54,0.04);
+        flex-wrap: wrap;
+    }
+
     .student-avatar { width: 60px; height: 60px; border-radius: 50%; background: rgba(99,91,255,0.12); display: grid; place-items: center; font-size: 24px; font-weight: 800; color: #635bff; flex-shrink: 0; }
-    .student-info h3 { font-size: 18px; font-weight: 800; color: #1a2236; margin: 0 0 4px; }
-    .student-info p { font-size: 13px; color: #64748b; margin: 0; }
-    .student-id-badge { margin-left: auto; background: rgba(99,91,255,0.08); border: 1px solid rgba(99,91,255,0.2); color: #635bff; padding: 6px 16px; border-radius: 999px; font-size: 13px; font-weight: 700; }
-    .module-badge { display: inline-flex; align-items: center; gap: 6px; background: rgba(99,91,255,0.1); color: #635bff; padding: 3px 12px; border-radius: 999px; font-size: 12px; font-weight: 700; margin-left: 10px; vertical-align: middle; }
-    .summary-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
+    .student-info { flex: 1; min-width: 0; }
+    .student-info h3 { font-size: 18px; font-weight: 800; color: #1a2236; margin: 0 0 4px; flex-wrap: wrap; display: flex; align-items: center; gap: 6px; }
+    .student-info p { font-size: 13px; color: #64748b; margin: 0; line-height: 1.7; flex-wrap: wrap; }
+    .student-id-badge { background: rgba(99,91,255,0.08); border: 1px solid rgba(99,91,255,0.2); color: #635bff; padding: 6px 16px; border-radius: 999px; font-size: 13px; font-weight: 700; white-space: nowrap; }
+
+    .module-badge { display: inline-flex; align-items: center; gap: 6px; background: rgba(99,91,255,0.1); color: #635bff; padding: 3px 12px; border-radius: 999px; font-size: 12px; font-weight: 700; }
+
+    /* ── SUMMARY GRID ── */
+    .summary-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 16px;
+        margin-bottom: 24px;
+    }
+
     .summary-card { background: #fff; border: 1px solid #e5e9f2; border-radius: 14px; padding: 20px; text-align: center; box-shadow: 0 2px 8px rgba(26,34,54,0.04); }
     .summary-card .s-num { font-size: 32px; font-weight: 900; margin-bottom: 4px; }
     .summary-card .s-label { font-size: 12px; font-weight: 600; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px; }
-    .num-total { color: #1a2236; }
+    .num-total   { color: #1a2236; }
     .num-correct { color: #10b981; }
-    .num-wrong { color: #ef4444; }
-    .num-pct { color: #635bff; }
+    .num-wrong   { color: #ef4444; }
+    .num-pct     { color: #635bff; }
+
+    /* ── PROGRESS ── */
     .progress-wrap { background: #fff; border: 1px solid #e5e9f2; border-radius: 14px; padding: 20px 24px; margin-bottom: 24px; box-shadow: 0 2px 8px rgba(26,34,54,0.04); }
     .progress-wrap h4 { font-size: 13px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin: 0 0 12px; }
     .progress-bar-bg { background: #f1f5f9; border-radius: 999px; height: 14px; overflow: hidden; }
     .progress-bar-fill { height: 100%; border-radius: 999px; background: linear-gradient(90deg, #635bff, #10b981); transition: width 0.6s ease; }
-    .review-header { display: flex; align-items: center; gap: 8px; font-size: 15px; font-weight: 800; color: #1a2236; margin-bottom: 16px; }
+
+    /* ── QUESTION CARDS ── */
+    .review-header { display: flex; align-items: center; gap: 8px; font-size: 15px; font-weight: 800; color: #1a2236; margin-bottom: 16px; flex-wrap: wrap; }
+
     .q-card { border-radius: 14px; padding: 20px 22px; margin-bottom: 12px; border: 1.5px solid transparent; }
     .q-card.correct { background: #f0fdf4; border-color: #86efac; }
-    .q-card.wrong { background: #fff5f5; border-color: #fca5a5; }
-    .q-header { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 14px; }
+    .q-card.wrong   { background: #fff5f5; border-color: #fca5a5; }
+
+    .q-header { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 14px; flex-wrap: wrap; }
     .q-num { width: 28px; height: 28px; border-radius: 8px; display: grid; place-items: center; font-size: 12px; font-weight: 800; flex-shrink: 0; }
     .correct .q-num { background: #dcfce7; color: #166534; }
-    .wrong .q-num { background: #fee2e2; color: #991b1b; }
-    .q-text { font-size: 14px; font-weight: 600; color: #1a2236; line-height: 1.5; flex: 1; }
+    .wrong .q-num   { background: #fee2e2; color: #991b1b; }
+    .q-text { font-size: 14px; font-weight: 600; color: #1a2236; line-height: 1.5; flex: 1; min-width: 0; }
     .q-status-badge { flex-shrink: 0; font-size: 11px; font-weight: 700; padding: 4px 12px; border-radius: 999px; }
     .correct .q-status-badge { background: #dcfce7; color: #166534; }
-    .wrong .q-status-badge { background: #fee2e2; color: #991b1b; }
+    .wrong .q-status-badge   { background: #fee2e2; color: #991b1b; }
+
     .options-list { display: flex; flex-direction: column; gap: 8px; }
-    .opt { display: flex; align-items: center; gap: 10px; padding: 9px 14px; border-radius: 9px; font-size: 13px; border: 1.5px solid #e5e9f2; background: #fff; }
+
+    .opt { display: flex; align-items: center; gap: 10px; padding: 9px 14px; border-radius: 9px; font-size: 13px; border: 1.5px solid #e5e9f2; background: #fff; flex-wrap: wrap; }
     .opt-letter { width: 24px; height: 24px; border-radius: 6px; display: grid; place-items: center; font-size: 11px; font-weight: 800; flex-shrink: 0; background: #f1f5f9; color: #64748b; }
     .opt.is-correct { border-color: #86efac; background: #dcfce7; }
     .opt.is-correct .opt-letter { background: #22c55e; color: #fff; }
@@ -81,18 +143,68 @@
     .opt-tag { margin-left: auto; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 999px; }
     .opt.is-correct .opt-tag { background: #22c55e; color: #fff; }
     .opt.is-selected-wrong .opt-tag { background: #ef4444; color: #fff; }
-    .q-img { max-width: 260px; border-radius: 10px; margin-bottom: 12px; border: 1px solid #e5e9f2; display: block; }
+
+    .q-img { max-width: 100%; border-radius: 10px; margin-bottom: 12px; border: 1px solid #e5e9f2; display: block; }
+
     .empty-state { text-align: center; padding: 50px; color: #94a3b8; font-size: 14px; background: #fff; border-radius: 16px; border: 1px solid #e5e9f2; }
+
+    /* ── RESPONSIVE ── */
+    @@media (max-width: 900px) {
+        .summary-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @@media (max-width: 768px) {
+        .admin-wrap { flex-direction: column; margin: -12px; }
+
+        .dash-sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            z-index: 200;
+            transform: translateX(-100%);
+            min-height: 100vh;
+        }
+
+        .dash-sidebar.open { transform: translateX(0); }
+        .sidebar-overlay.open { display: block; }
+        .sidebar-toggle { display: flex; }
+
+        .dash-main { padding: 16px; padding-top: 60px; }
+
+        .student-card { padding: 16px; gap: 12px; }
+        .student-info h3 { font-size: 15px; }
+        .student-id-badge { width: 100%; text-align: center; }
+
+        .q-card { padding: 14px; }
+        .q-header { gap: 8px; }
+        .q-text { font-size: 13px; }
+
+        .opt { font-size: 12px; padding: 8px 10px; }
+    }
+
+    @@media (max-width: 480px) {
+        .summary-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+        .summary-card .s-num { font-size: 26px; }
+        .summary-card { padding: 14px 10px; }
+
+        .btn-back { font-size: 12px; padding: 7px 14px; }
+        .student-avatar { width: 44px; height: 44px; font-size: 18px; }
+    }
 </style>
+
+<!-- Mobile sidebar toggle -->
+<button class="sidebar-toggle" id="sidebarToggle" aria-label="Open menu">☰</button>
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
 
 <div class="admin-wrap">
 
-   <div class="dash-sidebar">
-    <div class="nav-section-label">Menu</div>
-    <a class="sidebar-link" href="/User/Dashboard"><span class="s-icon">📊</span><span>Dashboard</span></a>
-    <a class="sidebar-link" href="/User/RequestExamAccess"><span class="s-icon">📩</span><span>Request Access</span></a>
-    <a class="sidebar-link active" href="/User/Results"><span class="s-icon">📈</span><span>My Results</span></a>
-</div>
+    <div class="dash-sidebar" id="dashSidebar">
+        <div class="nav-section-label">Menu</div>
+        <a class="sidebar-link" href="/User/Dashboard"><span class="s-icon">📊</span><span>Dashboard</span></a>
+        <a class="sidebar-link" href="/User/RequestExamAccess"><span class="s-icon">📩</span><span>Request Access</span></a>
+        <a class="sidebar-link active" href="/User/Results"><span class="s-icon">📈</span><span>My Results</span></a>
+    </div>
 
     <div class="dash-main">
 
@@ -192,11 +304,11 @@
                     <div class="options-list">
                         @{
                             var opts = new[]
-{
-    new { Letter = "A", Text = q.OptionA },
-    new { Letter = "B", Text = q.OptionB },
-    new { Letter = "C", Text = q.OptionC }
-}.Where(o => !string.IsNullOrEmpty(o.Text)).ToArray();
+                            {
+                                new { Letter = "A", Text = q.OptionA },
+                                new { Letter = "B", Text = q.OptionB },
+                                new { Letter = "C", Text = q.OptionC }
+                            }.Where(o => !string.IsNullOrEmpty(o.Text)).ToArray();
                         }
                         @foreach (var opt in opts)
                         {
@@ -206,7 +318,7 @@
                             string optTag = isCorrectOpt ? "Correct" : (isSelectedWrong ? "Your Answer" : "");
                             <div class="opt @optClass">
                                 <div class="opt-letter">@opt.Letter</div>
-                                <span style="flex:1;color:#374151;">@opt.Text</span>
+                                <span style="flex:1;color:#374151;min-width:0;word-break:break-word;">@opt.Text</span>
                                 @if (!string.IsNullOrEmpty(optTag))
                                 {
                                     <span class="opt-tag">@optTag</span>
@@ -225,3 +337,19 @@
 
     </div>
 </div>
+
+<script>
+    const toggle = document.getElementById('sidebarToggle');
+    const sidebar = document.getElementById('dashSidebar');
+    const overlay = document.getElementById('sidebarOverlay');
+
+    toggle.addEventListener('click', () => {
+        sidebar.classList.toggle('open');
+        overlay.classList.toggle('open');
+    });
+
+    overlay.addEventListener('click', () => {
+        sidebar.classList.remove('open');
+        overlay.classList.remove('open');
+    });
+</script>

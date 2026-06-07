@@ -7,348 +7,205 @@
         display: flex;
         min-height: calc(100vh - 60px);
         background: #f1f4fb;
-        margin: -28px; /* cancel page-wrapper padding */
+        margin: -28px;
     }
 
-    .dash-main {
-        flex: 1;
-        padding: 28px;
-        overflow-y: auto;
-    }
-
+    /* ── Sidebar ── */
     .dash-sidebar {
         width: 230px;
         background: #1a2236;
         flex-shrink: 0;
-        padding: 60px 0 24px; /* was 24px 0 */
+        padding: 60px 0 24px;
         display: flex;
         flex-direction: column;
         min-height: 100vh;
+        transition: transform 0.3s ease;
+        z-index: 100;
     }
 
-    .nav-section-label {
-        font-size: 9.5px;
-        font-weight: 700;
-        color: rgba(240,244,255,0.35);
-        text-transform: uppercase;
-        letter-spacing: 1.4px;
-        padding: 14px 20px 6px;
-    }
+    .nav-section-label { font-size: 9.5px; font-weight: 700; color: rgba(240,244,255,0.35); text-transform: uppercase; letter-spacing: 1.4px; padding: 14px 20px 6px; }
+    .sidebar-link { display: flex; align-items: center; gap: 11px; padding: 9px 20px; color: rgba(240,244,255,0.62); text-decoration: none; font-size: 13px; font-weight: 500; border-left: 3px solid transparent; transition: all 0.18s; }
+    .sidebar-link:hover { color: #fff; background: rgba(99,91,255,0.1); border-left-color: rgba(99,91,255,0.5); }
+    .sidebar-link.active { color: #fff; background: rgba(99,91,255,0.15); border-left-color: #635bff; }
+    .sidebar-link .s-icon { width: 30px; height: 30px; border-radius: 8px; display: grid; place-items: center; font-size: 14px; flex-shrink: 0; background: rgba(255,255,255,0.06); transition: 0.18s; }
+    .sidebar-link:hover .s-icon, .sidebar-link.active .s-icon { background: rgba(99,91,255,0.25); }
 
-    .sidebar-link {
-        display: flex;
-        align-items: center;
-        gap: 11px;
-        padding: 9px 20px;
-        color: rgba(240,244,255,0.62);
-        text-decoration: none;
-        font-size: 13px;
-        font-weight: 500;
-        border-left: 3px solid transparent;
-        transition: all 0.18s;
-    }
-
-        .sidebar-link:hover {
-            color: #fff;
-            background: rgba(99,91,255,0.1);
-            border-left-color: rgba(99,91,255,0.5);
-        }
-
-        .sidebar-link.active {
-            color: #fff;
-            background: rgba(99,91,255,0.15);
-            border-left-color: #635bff;
-        }
-
-        .sidebar-link .s-icon {
-            width: 30px;
-            height: 30px;
-            border-radius: 8px;
-            display: grid;
-            place-items: center;
-            font-size: 14px;
-            flex-shrink: 0;
-            background: rgba(255,255,255,0.06);
-            transition: 0.18s;
-        }
-
-        .sidebar-link:hover .s-icon,
-        .sidebar-link.active .s-icon {
-            background: rgba(99,91,255,0.25);
-        }
-
-    .btn-back {
-        display: inline-flex;
-        align-items: center;
-        gap: 7px;
-        padding: 8px 16px;
+    /* ── Mobile toggle ── */
+    .sidebar-toggle {
+        display: none;
+        position: fixed;
+        top: 14px;
+        left: 14px;
+        z-index: 200;
+        background: #635bff;
+        border: none;
+        color: #fff;
+        width: 38px;
+        height: 38px;
         border-radius: 10px;
-        background: #1a2236;
-        color: rgba(255,255,255,0.8) !important;
-        text-decoration: none;
-        font-size: 13px;
-        font-weight: 600;
-        margin-bottom: 22px;
-        transition: 0.18s;
-        font-family: 'Plus Jakarta Sans', sans-serif;
-    }
-
-        .btn-back:hover {
-            background: #243050;
-            color: #fff !important;
-        }
-
-    .page-header-block {
-        background: #1a2236;
-        border-radius: 20px;
-        padding: 28px 32px;
-        margin-bottom: 24px;
-        display: flex;
-        align-items: center;
-        gap: 18px;
-    }
-
-    .page-header-icon {
-        width: 52px;
-        height: 52px;
-        background: #635bff;
-        border-radius: 14px;
-        display: grid;
-        place-items: center;
-        font-size: 22px;
-        color: #fff;
-        flex-shrink: 0;
-        box-shadow: 0 6px 20px rgba(99,91,255,0.45);
-    }
-
-    .page-header-block h2 {
-        font-size: 20px;
-        font-weight: 800;
-        color: #fff;
-        margin: 0 0 4px;
-    }
-
-    .page-header-block p {
-        font-size: 13px;
-        color: rgba(255,255,255,0.5);
-        margin: 0;
-    }
-
-    .info-banner {
-        background: #fff;
-        border: 1px solid #e5e9f2;
-        border-radius: 14px;
-        padding: 14px 18px;
-        margin-bottom: 20px;
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        max-width: 540px;
-        box-shadow: 0 2px 8px rgba(26,34,54,0.04);
-        font-size: 13px;
-        color: #374151;
-    }
-
-        .info-banner .i-icon {
-            width: 36px;
-            height: 36px;
-            background: rgba(99,91,255,0.1);
-            border-radius: 9px;
-            display: grid;
-            place-items: center;
-            font-size: 16px;
-            flex-shrink: 0;
-        }
-
-        .info-banner strong {
-            color: #1a2236;
-        }
-
-    .current-id-pill {
-        background: rgba(99,91,255,0.1);
-        color: #635bff;
-        padding: 3px 10px;
-        border-radius: 999px;
-        font-size: 11.5px;
-        font-weight: 700;
-        margin-left: 6px;
-    }
-
-    .form-card {
-        background: #fff;
-        border: 1px solid #e5e9f2;
-        border-radius: 20px;
-        padding: 28px 32px;
-        max-width: 540px;
-        box-shadow: 0 4px 20px rgba(26,34,54,0.06);
-    }
-
-    .field-label {
-        font-size: 11px;
-        font-weight: 700;
-        color: #64748b;
-        text-transform: uppercase;
-        letter-spacing: 0.7px;
-        margin-bottom: 7px;
-        display: block;
-    }
-
-    .form-group {
-        margin-bottom: 18px;
-    }
-
-    .field-wrap {
-        position: relative;
-    }
-
-        .field-wrap .f-icon {
-            position: absolute;
-            left: 13px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #94a3b8;
-            font-size: 13px;
-            pointer-events: none;
-        }
-
-        .field-wrap input {
-            width: 100%;
-            padding: 11px 14px 11px 36px;
-            border-radius: 10px;
-            border: 1.5px solid #e2e8f0;
-            font-size: 13.5px;
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            color: #1e293b;
-            background: #f8fafc;
-            outline: none;
-            transition: 0.18s;
-            box-sizing: border-box;
-        }
-
-            .field-wrap input:focus {
-                border-color: #635bff;
-                background: #fff;
-                box-shadow: 0 0 0 3px rgba(99,91,255,0.1);
-            }
-
-    .divider {
-        border: none;
-        border-top: 1.5px solid #f1f5f9;
-        margin: 22px 0;
-    }
-
-    .btn-submit {
-        width: 100%;
-        background: #635bff;
-        border: none;
-        padding: 13px;
-        border-radius: 12px;
-        color: #fff;
-        font-weight: 700;
-        font-size: 14px;
-        font-family: 'Plus Jakarta Sans', sans-serif;
+        font-size: 16px;
         cursor: pointer;
-        transition: 0.2s;
-        box-shadow: 0 4px 14px rgba(99,91,255,0.35);
-        letter-spacing: 0.3px;
+        box-shadow: 0 4px 12px rgba(99,91,255,0.4);
     }
 
-        .btn-submit:hover {
-            background: #4f46e5;
-            box-shadow: 0 6px 20px rgba(99,91,255,0.45);
-            transform: translateY(-1px);
+    .sidebar-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.4);
+        z-index: 99;
+    }
+
+    /* ── Main ── */
+    .dash-main {
+        flex: 1;
+        padding: 28px;
+        overflow-y: auto;
+        min-width: 0;
+    }
+
+    .btn-back { display: inline-flex; align-items: center; gap: 7px; padding: 8px 16px; border-radius: 10px; background: #1a2236; color: rgba(255,255,255,0.8) !important; text-decoration: none; font-size: 13px; font-weight: 600; margin-bottom: 22px; transition: 0.18s; font-family: 'Plus Jakarta Sans', sans-serif; }
+    .btn-back:hover { background: #243050; color: #fff !important; }
+
+    .page-header-block { background: #1a2236; border-radius: 20px; padding: 28px 32px; margin-bottom: 24px; display: flex; align-items: center; gap: 18px; }
+    .page-header-icon { width: 52px; height: 52px; background: #635bff; border-radius: 14px; display: grid; place-items: center; font-size: 22px; color: #fff; flex-shrink: 0; box-shadow: 0 6px 20px rgba(99,91,255,0.45); }
+    .page-header-block h2 { font-size: 20px; font-weight: 800; color: #fff; margin: 0 0 4px; }
+    .page-header-block p { font-size: 13px; color: rgba(255,255,255,0.5); margin: 0; }
+
+    .info-banner { background: #fff; border: 1px solid #e5e9f2; border-radius: 14px; padding: 14px 18px; margin-bottom: 20px; display: flex; align-items: center; gap: 12px; max-width: 540px; box-shadow: 0 2px 8px rgba(26,34,54,0.04); font-size: 13px; color: #374151; }
+    .info-banner .i-icon { width: 36px; height: 36px; background: rgba(99,91,255,0.1); border-radius: 9px; display: grid; place-items: center; font-size: 16px; flex-shrink: 0; }
+    .info-banner strong { color: #1a2236; }
+
+    .current-id-pill { background: rgba(99,91,255,0.1); color: #635bff; padding: 3px 10px; border-radius: 999px; font-size: 11.5px; font-weight: 700; margin-left: 6px; }
+
+    .form-card { background: #fff; border: 1px solid #e5e9f2; border-radius: 20px; padding: 28px 32px; max-width: 540px; box-shadow: 0 4px 20px rgba(26,34,54,0.06); }
+    .field-label { font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.7px; margin-bottom: 7px; display: block; }
+    .form-group { margin-bottom: 18px; }
+    .field-wrap { position: relative; }
+    .field-wrap .f-icon { position: absolute; left: 13px; top: 50%; transform: translateY(-50%); color: #94a3b8; font-size: 13px; pointer-events: none; }
+    .field-wrap input { width: 100%; padding: 11px 14px 11px 36px; border-radius: 10px; border: 1.5px solid #e2e8f0; font-size: 13.5px; font-family: 'Plus Jakarta Sans', sans-serif; color: #1e293b; background: #f8fafc; outline: none; transition: 0.18s; box-sizing: border-box; }
+    .field-wrap input:focus { border-color: #635bff; background: #fff; box-shadow: 0 0 0 3px rgba(99,91,255,0.1); }
+
+    .divider { border: none; border-top: 1.5px solid #f1f5f9; margin: 22px 0; }
+
+    .btn-submit { width: 100%; background: #635bff; border: none; padding: 13px; border-radius: 12px; color: #fff; font-weight: 700; font-size: 14px; font-family: 'Plus Jakarta Sans', sans-serif; cursor: pointer; transition: 0.2s; box-shadow: 0 4px 14px rgba(99,91,255,0.35); letter-spacing: 0.3px; }
+    .btn-submit:hover { background: #4f46e5; box-shadow: 0 6px 20px rgba(99,91,255,0.45); transform: translateY(-1px); }
+
+    /* ── Responsive ── */
+    @@media (max-width: 768px) {
+        .sidebar-toggle { display: grid; place-items: center; }
+
+        .dash-sidebar {
+            position: fixed;
+            left: 0; top: 0;
+            height: 100vh;
+            transform: translateX(-100%);
         }
+
+        .dash-sidebar.open { transform: translateX(0); }
+        .sidebar-overlay.open { display: block; }
+
+        .admin-wrap { margin: -16px; }
+        .dash-main { padding: 16px; padding-top: 56px; }
+
+        .page-header-block { padding: 18px 16px; gap: 12px; border-radius: 16px; }
+        .page-header-icon { width: 42px; height: 42px; font-size: 17px; border-radius: 12px; }
+        .page-header-block h2 { font-size: 16px; }
+        .page-header-block p { font-size: 12px; }
+
+        .form-card { padding: 20px 16px; border-radius: 16px; max-width: 100%; }
+        .info-banner { max-width: 100%; }
+        .btn-back { font-size: 12px; padding: 7px 13px; margin-bottom: 16px; }
+    }
+
+    @@media (max-width: 480px) {
+        .field-wrap input { font-size: 13px; }
+        .btn-submit { font-size: 13px; padding: 12px; }
+    }
 </style>
+
+<!-- Mobile sidebar toggle -->
+<button class="sidebar-toggle" onclick="toggleSidebar()">
+    <i class="fa-solid fa-bars"></i>
+</button>
+
+<!-- Overlay -->
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
 
 <div class="admin-wrap">
 
-    <div class="dash-sidebar">
+    <div class="dash-sidebar" id="dashSidebar">
         <div class="nav-section-label">Main</div>
-        <a class="sidebar-link" href="/Admin/Dashboard">
-            <span class="s-icon">📊</span><span>Dashboard</span>
-        </a>
+        <a class="sidebar-link" href="/Admin/Dashboard"><span class="s-icon">📊</span><span>Dashboard</span></a>
         <div class="nav-section-label">Users</div>
-        <a class="sidebar-link active" href="/AdminUser">
-            <span class="s-icon">👥</span><span>All Users</span>
-        </a>
+        <a class="sidebar-link active" href="/AdminUser"><span class="s-icon">👥</span><span>All Users</span></a>
         <div class="nav-section-label">Questions</div>
-        <a class="sidebar-link" href="/Admin/Questions?moduleId=1">
-            <span class="s-icon">📝</span><span>Module 1</span>
-        </a>
-        <a class="sidebar-link" href="/Admin/Questions?moduleId=2">
-            <span class="s-icon">📝</span><span>Module 2</span>
-        </a>
-        <a class="sidebar-link" href="/Admin/Questions?moduleId=3">
-            <span class="s-icon">📝</span><span>Module 3</span>
-        </a>
+        <a class="sidebar-link" href="/Admin/Questions?moduleId=1"><span class="s-icon">📝</span><span>Module 1</span></a>
+        <a class="sidebar-link" href="/Admin/Questions?moduleId=2"><span class="s-icon">📝</span><span>Module 2</span></a>
+        <a class="sidebar-link" href="/Admin/Questions?moduleId=3"><span class="s-icon">📝</span><span>Module 3</span></a>
         <div class="nav-section-label">Sessions</div>
-        <a class="sidebar-link" href="/AdminSession">
-            <span class="s-icon">🕐</span><span>Exam Sessions</span>
+        <a class="sidebar-link" href="/AdminSession"><span class="s-icon">🕐</span><span>Exam Sessions</span></a>
+    </div>
+
+    <div class="dash-main">
+
+        <a class="btn-back" href="/AdminUser/Details/@ViewBag.UserId">
+            <i class="fa-solid fa-arrow-left"></i> Back to User
         </a>
-        <span class="s-icon">📈</span><span>Exam Results</span>
-    </a>
-</div>
 
-<div class="dash-main">
-
-    <a class="btn-back" href="/AdminUser/Details/@ViewBag.UserId">
-        <i class="fa-solid fa-arrow-left"></i> Back to User
-    </a>
-
-    <div class="page-header-block">
-        <div class="page-header-icon">
-            <i class="fa-solid fa-id-card"></i>
-        </div>
-        <div>
-            <h2>Assign Student ID</h2>
-            <p>Assign a student ID and full name to identify this user in exam results</p>
-        </div>
-    </div>
-
-    <div class="info-banner">
-        <div class="i-icon">👤</div>
-        <div>
-            <strong>@ViewBag.UserEmail</strong>
-            @if (ViewBag.CurrentStudentId != null)
-            {
-                <span>— Current ID:</span>
-                <span class="current-id-pill">@ViewBag.CurrentStudentId</span>
-            }
-        </div>
-    </div>
-
-    <div class="form-card">
-        <form method="post" action="/AdminUser/AssignStudentId/@ViewBag.UserId">
-            @Html.AntiForgeryToken()
-            <div class="form-group">
-                <label class="field-label">Student ID</label>
-                <div class="field-wrap">
-                    <i class="fa-solid fa-fingerprint f-icon"></i>
-                    <input type="text" name="studentId"
-                           value="@ViewBag.CurrentStudentId"
-                           placeholder="e.g. TVD73741905" required />
-                </div>
+        <div class="page-header-block">
+            <div class="page-header-icon">
+                <i class="fa-solid fa-id-card"></i>
             </div>
-
-            <div class="form-group">
-                <label class="field-label">Full Name</label>
-                <div class="field-wrap">
-                    <i class="fa-solid fa-user f-icon"></i>
-                    <input type="text" name="fullName"
-                           value="@ViewBag.CurrentFullName"
-                           placeholder="e.g. John Smith" required />
-                </div>
+            <div>
+                <h2>Assign Student ID</h2>
+                <p>Assign a student ID and full name to identify this user in exam results</p>
             </div>
+        </div>
 
-            <hr class="divider" />
+        <div class="info-banner">
+            <div class="i-icon">👤</div>
+            <div>
+                <strong>@ViewBag.UserEmail</strong>
+                @if (ViewBag.CurrentStudentId != null)
+                {
+                    <span>— Current ID:</span>
+                    <span class="current-id-pill">@ViewBag.CurrentStudentId</span>
+                }
+            </div>
+        </div>
 
-            <button type="submit" class="btn-submit">
-                <i class="fa-solid fa-floppy-disk" style="margin-right:8px;"></i>
-                Save Changes
-            </button>
+        <div class="form-card">
+            <form method="post" action="/AdminUser/AssignStudentId/@ViewBag.UserId">
+                @Html.AntiForgeryToken()
+                <div class="form-group">
+                    <label class="field-label">Student ID</label>
+                    <div class="field-wrap">
+                        <i class="fa-solid fa-fingerprint f-icon"></i>
+                        <input type="text" name="studentId" value="@ViewBag.CurrentStudentId" placeholder="e.g. TVD73741905" required />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="field-label">Full Name</label>
+                    <div class="field-wrap">
+                        <i class="fa-solid fa-user f-icon"></i>
+                        <input type="text" name="fullName" value="@ViewBag.CurrentFullName" placeholder="e.g. John Smith" required />
+                    </div>
+                </div>
+                <hr class="divider" />
+                <button type="submit" class="btn-submit">
+                    <i class="fa-solid fa-floppy-disk" style="margin-right:8px;"></i>
+                    Save Changes
+                </button>
+            </form>
+        </div>
 
-        </form>
     </div>
+</div>
 
-</div>
-</div>
+<script>
+    function toggleSidebar() {
+        document.getElementById('dashSidebar').classList.toggle('open');
+        document.getElementById('sidebarOverlay').classList.toggle('open');
+    }
+</script>

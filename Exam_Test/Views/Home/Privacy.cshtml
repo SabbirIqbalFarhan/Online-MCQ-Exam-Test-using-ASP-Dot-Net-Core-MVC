@@ -18,113 +18,59 @@
     }
 
     .privacy-header-icon {
-        width: 52px;
-        height: 52px;
-        background: #635bff;
-        border-radius: 14px;
-        display: grid;
-        place-items: center;
-        font-size: 22px;
-        color: #fff;
+        width: 52px; height: 52px;
+        background: #635bff; border-radius: 14px;
+        display: grid; place-items: center;
+        font-size: 22px; color: #fff;
         margin: 0 auto 16px;
         box-shadow: 0 6px 20px rgba(99,91,255,0.45);
     }
 
-    .privacy-header h1 {
-        font-size: 22px;
-        font-weight: 800;
-        color: #fff;
-        margin: 0 0 6px;
-    }
+    .privacy-header h1 { font-size: 22px; font-weight: 800; color: #fff; margin: 0 0 6px; }
+    .privacy-header p  { font-size: 13px; color: rgba(255,255,255,0.5); margin: 0 0 16px; }
 
-    .privacy-header p {
-        font-size: 13px;
-        color: rgba(255,255,255,0.5);
-        margin: 0 0 16px;
-    }
-
-    .privacy-pills {
-        display: flex;
-        justify-content: center;
-        gap: 8px;
-        flex-wrap: wrap;
-    }
+    .privacy-pills { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; }
 
     .privacy-pill {
-        font-size: 11px;
-        padding: 4px 12px;
-        border-radius: 999px;
+        font-size: 11px; padding: 4px 12px; border-radius: 999px;
         border: 1px solid rgba(255,255,255,0.2);
         background: rgba(255,255,255,0.08);
-        color: rgba(255,255,255,0.7);
-        font-weight: 600;
+        color: rgba(255,255,255,0.7); font-weight: 600;
     }
 
     .section-label {
-        font-size: 11px;
-        font-weight: 700;
-        color: #635bff;
-        text-transform: uppercase;
-        letter-spacing: 1.2px;
-        margin-bottom: 14px;
+        font-size: 11px; font-weight: 700; color: #635bff;
+        text-transform: uppercase; letter-spacing: 1.2px; margin-bottom: 14px;
     }
 
     .pp-card {
-        background: #fff;
-        border: 1px solid #e5e9f2;
-        border-radius: 14px;
-        padding: 18px 20px;
-        display: flex;
-        gap: 14px;
-        align-items: flex-start;
-        margin-bottom: 12px;
-        transition: 0.18s;
-        box-shadow: 0 2px 8px rgba(26,34,54,0.04);
+        background: #fff; border: 1px solid #e5e9f2; border-radius: 14px;
+        padding: 18px 20px; display: flex; gap: 14px;
+        align-items: flex-start; margin-bottom: 12px;
+        transition: 0.18s; box-shadow: 0 2px 8px rgba(26,34,54,0.04);
     }
 
-        .pp-card:hover {
-            border-color: #d4d0ff;
-            box-shadow: 0 8px 24px rgba(99,91,255,0.08);
-            transform: translateY(-2px);
-        }
+    .pp-card:hover {
+        border-color: #d4d0ff; box-shadow: 0 8px 24px rgba(99,91,255,0.08); transform: translateY(-2px);
+    }
 
     .pp-icon {
-        width: 42px;
-        height: 42px;
-        background: rgba(99,91,255,0.1);
-        border-radius: 10px;
-        display: grid;
-        place-items: center;
-        font-size: 18px;
-        flex-shrink: 0;
+        width: 42px; height: 42px; background: rgba(99,91,255,0.1);
+        border-radius: 10px; display: grid; place-items: center;
+        font-size: 18px; flex-shrink: 0;
     }
 
-    .pp-content h3 {
-        font-size: 14.5px;
-        font-weight: 700;
-        color: #1a2236;
-        margin: 0 0 5px;
-    }
+    .pp-content h3 { font-size: 14.5px; font-weight: 700; color: #1a2236; margin: 0 0 5px; }
+    .pp-content p  { font-size: 13px; color: #64748b; line-height: 1.6; margin: 0; }
+    .pp-note { margin-top: 6px; font-size: 12px; color: #635bff; font-weight: 600; }
 
-    .pp-content p {
-        font-size: 13px;
-        color: #64748b;
-        line-height: 1.6;
-        margin: 0;
-    }
+    .pp-footer { text-align: center; margin-top: 24px; font-size: 12px; color: #94a3b8; }
 
-    .pp-note {
-        margin-top: 6px;
-        font-size: 12px;
-        color: #635bff;
-        font-weight: 600;
-    }
-
-    .pp-footer {
-        text-align: center;
-        margin-top: 24px;
-        font-size: 12px;
-        color: #94a3b8;
+    @@media (max-width: 480px) {
+        .privacy-header { padding: 24px 16px; }
+        .privacy-header h1 { font-size: 18px; }
+        .pp-card { flex-direction: column; gap: 10px; }
+        .pp-icon { width: 36px; height: 36px; font-size: 16px; }
     }
 </style>
 

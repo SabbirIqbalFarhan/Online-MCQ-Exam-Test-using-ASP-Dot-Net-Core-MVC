@@ -6,56 +6,89 @@
 
 <style>
     .admin-wrap {
-    display: flex;
-    min-height: calc(100vh - 60px);
-    background: #f1f4fb;
-    margin: -28px; /* cancel page-wrapper padding */
-}
-.dash-main {
-    flex: 1;
-    padding: 28px;
-    overflow-y: auto;
-}
-.dash-sidebar {
-    width: 230px;
-    background: #1a2236;
-    flex-shrink: 0;
-    padding: 60px 0 24px; /* was 24px 0 */
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-}
-.stats-grid { grid-template-columns: repeat(2, 1fr); }
-.actions-grid { grid-template-columns: 1fr; }
-.modules-grid { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
-.summary-grid { grid-template-columns: repeat(2, 1fr); }
-    
+        display: flex;
+        min-height: calc(100vh - 60px);
+        background: #f1f4fb;
+        margin: -28px;
+    }
+
+    /* ── Sidebar ── */
+    .dash-sidebar {
+        width: 230px;
+        background: #1a2236;
+        flex-shrink: 0;
+        padding: 60px 0 24px;
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+        transition: transform 0.3s ease;
+        z-index: 100;
+    }
+
     .nav-section-label { font-size: 9.5px; font-weight: 700; color: rgba(240,244,255,0.35); text-transform: uppercase; letter-spacing: 1.4px; padding: 14px 20px 6px; }
     .sidebar-link { display: flex; align-items: center; gap: 11px; padding: 9px 20px; color: rgba(240,244,255,0.62); text-decoration: none; font-size: 13px; font-weight: 500; border-left: 3px solid transparent; transition: all 0.18s; }
     .sidebar-link:hover { color: #fff; background: rgba(99,91,255,0.1); border-left-color: rgba(99,91,255,0.5); }
     .sidebar-link.active { color: #fff; background: rgba(99,91,255,0.15); border-left-color: #635bff; }
     .sidebar-link .s-icon { width: 30px; height: 30px; border-radius: 8px; display: grid; place-items: center; font-size: 14px; flex-shrink: 0; background: rgba(255,255,255,0.06); transition: 0.18s; }
     .sidebar-link:hover .s-icon, .sidebar-link.active .s-icon { background: rgba(99,91,255,0.25); }
-    
+
+    /* ── Mobile toggle ── */
+    .sidebar-toggle {
+        display: none;
+        position: fixed;
+        top: 14px;
+        left: 14px;
+        z-index: 200;
+        background: #635bff;
+        border: none;
+        color: #fff;
+        width: 38px;
+        height: 38px;
+        border-radius: 10px;
+        font-size: 16px;
+        cursor: pointer;
+        box-shadow: 0 4px 12px rgba(99,91,255,0.4);
+    }
+
+    .sidebar-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.4);
+        z-index: 99;
+    }
+
+    /* ── Main ── */
+    .dash-main {
+        flex: 1;
+        padding: 28px;
+        overflow-y: auto;
+        min-width: 0;
+    }
+
     .top-row { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px; gap: 16px; flex-wrap: wrap; }
     .top-row h2 { font-size: 22px; font-weight: 800; color: #1a2236; margin: 0 0 4px; }
     .top-row p { font-size: 13px; color: #64748b; margin: 0; }
+
     .btn-new { display: inline-flex; align-items: center; gap: 7px; padding: 10px 20px; border-radius: 10px; background: #635bff; color: #fff !important; text-decoration: none; font-size: 13px; font-weight: 700; transition: 0.2s; box-shadow: 0 4px 12px rgba(99,91,255,0.3); white-space: nowrap; }
     .btn-new:hover { background: #4f46e5; transform: translateY(-1px); }
+
     .table-card { background: #fff; border: 1px solid #e5e9f2; border-radius: 16px; overflow: hidden; box-shadow: 0 2px 8px rgba(26,34,54,0.04); }
     .table-card table { width: 100%; border-collapse: collapse; }
     .table-card thead { background: #1a2236; }
     .table-card th { padding: 13px 16px; font-size: 11px; font-weight: 700; color: rgba(240,244,255,0.6); text-transform: uppercase; letter-spacing: 0.8px; text-align: left; }
-    .table-card td { padding: 14px 16px; font-size: 13px; color: #374151; text-align: left; }
+    .table-card td { padding: 14px 16px; font-size: 13px; color: #374151; text-align: left; vertical-align: middle; }
     .table-card tbody tr { border-bottom: 1px solid #f1f5f9; transition: 0.18s; }
     .table-card tbody tr:last-child { border-bottom: none; }
     .table-card tbody tr:hover { background: #f8f9ff; }
+
     .session-title { font-weight: 700; color: #1a2236; font-size: 13.5px; }
     .date-text { font-size: 12.5px; color: #64748b; }
-    .badge-active { background: #dcfce7; color: #166534; padding: 5px 12px; border-radius: 999px; font-size: 11.5px; font-weight: 700; }
-    .badge-inactive { background: #f1f5f9; color: #64748b; padding: 5px 12px; border-radius: 999px; font-size: 11.5px; font-weight: 700; }
+    .badge-active { background: #dcfce7; color: #166534; padding: 5px 12px; border-radius: 999px; font-size: 11.5px; font-weight: 700; white-space: nowrap; }
+    .badge-inactive { background: #f1f5f9; color: #64748b; padding: 5px 12px; border-radius: 999px; font-size: 11.5px; font-weight: 700; white-space: nowrap; }
+
     .actions-cell { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
-    .btn-action { display: inline-flex; align-items: center; gap: 5px; padding: 6px 12px; border-radius: 8px; font-size: 12px; font-weight: 700; text-decoration: none; color: #fff; transition: 0.18s; white-space: nowrap; }
+    .btn-action { display: inline-flex; align-items: center; gap: 5px; padding: 6px 12px; border-radius: 8px; font-size: 12px; font-weight: 700; text-decoration: none; color: #fff; transition: 0.18s; white-space: nowrap; border: none; cursor: pointer; font-family: 'Plus Jakarta Sans', sans-serif; }
     .btn-activate { background: #10b981; }
     .btn-activate:hover { background: #059669; color: #fff; }
     .btn-deactivate { background: #f59e0b; }
@@ -64,15 +97,64 @@
     .btn-results:hover { background: #4f46e5; color: #fff; }
     .btn-delete { background: #ef4444; }
     .btn-delete:hover { background: #dc2626; color: #fff; }
+
     .empty-state { text-align: center; padding: 50px 20px; color: #94a3b8; font-size: 13px; }
+
     .page-btn { padding: 8px 14px; border-radius: 8px; border: 1.5px solid #e2e8f0; background: #fff; color: #374151; font-size: 13px; font-weight: 600; text-decoration: none; transition: 0.18s; }
     .page-btn:hover { border-color: #635bff; color: #635bff; }
     .page-btn.active { background: #635bff; color: #fff; border-color: #635bff; }
     .page-btn.disabled { opacity: 0.4; pointer-events: none; }
+
+    /* ── Responsive ── */
+    @@media (max-width: 768px) {
+        .sidebar-toggle { display: grid; place-items: center; }
+
+        .dash-sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            height: 100vh;
+            transform: translateX(-100%);
+        }
+
+        .dash-sidebar.open { transform: translateX(0); }
+        .sidebar-overlay.open { display: block; }
+
+        .admin-wrap { margin: -16px; }
+        .dash-main { padding: 16px; padding-top: 56px; }
+
+        .top-row h2 { font-size: 18px; }
+        .btn-new { padding: 9px 14px; font-size: 12px; }
+
+        /* Stack table as cards on mobile */
+        .table-card { border-radius: 12px; }
+        .table-card table, .table-card thead, .table-card tbody, .table-card th, .table-card td, .table-card tr { display: block; }
+        .table-card thead { display: none; }
+        .table-card tbody tr { border-bottom: 1px solid #e5e9f2; padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; }
+        .table-card tbody tr:hover { background: #f8f9ff; }
+        .table-card td { padding: 0; border: none; font-size: 13px; }
+        .table-card td::before { content: attr(data-label); display: block; font-size: 10px; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.7px; margin-bottom: 4px; }
+
+        .actions-cell { gap: 6px; }
+        .btn-action { padding: 7px 12px; font-size: 12px; }
+    }
+
+    @@media (max-width: 480px) {
+        .btn-action { font-size: 11px; padding: 6px 10px; }
+        .session-title { font-size: 13px; }
+    }
 </style>
 
+<!-- Mobile sidebar toggle -->
+<button class="sidebar-toggle" onclick="toggleSidebar()">
+    <i class="fa-solid fa-bars"></i>
+</button>
+
+<!-- Overlay -->
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
 <div class="admin-wrap">
-    <div class="dash-sidebar">
+    <div class="dash-sidebar" id="dashSidebar">
         <div class="nav-section-label">Main</div>
         <a class="sidebar-link" href="/Admin/Dashboard"><span class="s-icon">📊</span><span>Dashboard</span></a>
         <div class="nav-section-label">Users</div>
@@ -100,10 +182,12 @@
         <div class="table-card">
             <table>
                 <thead>
-                    <th>Title</th>
-                    <th>Created At</th>
-                    <th>Status</th>
-                    <th>Actions</th>
+                    <tr>
+                        <th>Title</th>
+                        <th>Created At</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
                 </thead>
                 <tbody>
                     @if (Model != null && Model.Count > 0)
@@ -111,14 +195,14 @@
                         foreach (var s in Model)
                         {
                             <tr>
-                                <td><span class="session-title">@s.Title</span></td>
-                                <td>
+                                <td data-label="Title"><span class="session-title">@s.Title</span></td>
+                                <td data-label="Created At">
                                     <span class="date-text">
                                         <i class="fa-regular fa-calendar" style="margin-right:5px;color:#94a3b8;"></i>
                                         @s.CreatedAt.ToString("dd MMM yyyy, hh:mm tt")
                                     </span>
                                 </td>
-                                <td>
+                                <td data-label="Status">
                                     @if (s.IsActive)
                                     {
                                         <span class="badge-active">&#11044; Active</span>
@@ -128,19 +212,17 @@
                                         <span class="badge-inactive">&#9679; Inactive</span>
                                     }
                                 </td>
-                                <td>
+                                <td data-label="Actions">
                                     <div class="actions-cell">
                                         @if (!s.IsActive)
                                         {
                                             <form method="post" action="/AdminSession/Activate" style="display:inline;">
                                                 @Html.AntiForgeryToken()
                                                 <input type="hidden" name="id" value="@s.Id" />
-
                                                 <button type="submit" class="btn-action btn-activate">
-                                                    Activate
+                                                    <i class="fa-solid fa-circle-play"></i> Activate
                                                 </button>
                                             </form>
-
                                         }
                                         else
                                         {
@@ -148,7 +230,8 @@
                                                 @Html.AntiForgeryToken()
                                                 <input type="hidden" name="id" value="@s.Id" />
                                                 <button type="submit" class="btn-action btn-deactivate">
-                                                    <i class="fa-solid fa-circle-pause"></i>Deactivate</button>
+                                                    <i class="fa-solid fa-circle-pause"></i> Deactivate
+                                                </button>
                                             </form>
                                         }
                                         <a class="btn-action btn-results" href="/AdminSession/Results?id=@s.Id">
@@ -159,7 +242,8 @@
                                             @Html.AntiForgeryToken()
                                             <input type="hidden" name="id" value="@s.Id" />
                                             <button type="submit" class="btn-action btn-delete">
-                                                <i class="fa-solid fa-trash"></i> Delete</button>
+                                                <i class="fa-solid fa-trash"></i> Delete
+                                            </button>
                                         </form>
                                     </div>
                                 </td>
@@ -169,7 +253,7 @@
                     else
                     {
                         <tr>
-                            <td colspan="5">
+                            <td colspan="4">
                                 <div class="empty-state">
                                     <div style="font-size:34px;margin-bottom:8px;">📭</div>
                                     No sessions created yet.
@@ -183,7 +267,7 @@
 
         @if (totalPages > 1)
         {
-            <div style="display:flex;align-items:center;gap:6px;margin-top:20px;justify-content:center;">
+            <div style="display:flex;align-items:center;gap:6px;margin-top:20px;justify-content:center;flex-wrap:wrap;">
                 <a href="?page=@(currentPage - 1)" class="page-btn @(currentPage == 1 ? "disabled" : "")">
                     <i class="fa-solid fa-chevron-left"></i>
                 </a>
@@ -199,3 +283,10 @@
 
     </div>
 </div>
+
+<script>
+    function toggleSidebar() {
+        document.getElementById('dashSidebar').classList.toggle('open');
+        document.getElementById('sidebarOverlay').classList.toggle('open');
+    }
+</script>

@@ -2,21 +2,87 @@
 @inject SignInManager<IdentityUser> SignInManager
 @inject UserManager<IdentityUser> UserManager
 
+<style>
+    .auth-wrapper {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+
+    .user-badge {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .user-avatar {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: var(--accent);
+        display: grid;
+        place-items: center;
+        font-size: 13px;
+        font-weight: 700;
+        color: #fff;
+        flex-shrink: 0;
+    }
+
+    .user-name {
+        font-size: 13px;
+        font-weight: 600;
+        color: rgba(255, 255, 255, 0.8);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 120px;
+    }
+
+    .auth-divider {
+        width: 1px;
+        height: 22px;
+        background: rgba(255, 255, 255, 0.1);
+        flex-shrink: 0;
+    }
+
+    .auth-btn-group {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-wrap: wrap;
+    }
+
+    @@media (max-width: 480px) {
+        .user-name {
+            display: none;
+        }
+
+        .auth-divider {
+            display: none;
+        }
+
+        .auth-wrapper {
+            gap: 6px;
+        }
+    }
+</style>
+
 @if (SignInManager.IsSignedIn(User))
 {
-    <div style="display:flex;align-items:center;gap:10px;">
+    <div class="auth-wrapper">
 
         <!-- USER BADGE -->
-        <div style="display:flex;align-items:center;gap:8px;">
-            <div style="width:32px;height:32px;border-radius:50%;background:var(--accent);display:grid;place-items:center;font-size:13px;font-weight:700;color:#fff;">
+        <div class="user-badge">
+            <div class="user-avatar">
                 @UserManager.GetUserName(User)?.Substring(0, 1).ToUpper()
             </div>
-            <span style="font-size:13px;font-weight:600;color:rgba(255,255,255,0.8);">
+            <span class="user-name">
                 @UserManager.GetUserName(User)
             </span>
         </div>
 
-        <div style="width:1px;height:22px;background:rgba(255,255,255,0.1);"></div>
+        <div class="auth-divider"></div>
 
         <!-- LOGOUT -->
         <form asp-area="Identity"
@@ -24,8 +90,10 @@
               asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })"
               method="post"
               style="margin:0;">
-            <button type="submit" class="topbar-btn" style="color:rgba(255,100,100,0.85) !important;border-color:rgba(255,100,100,0.2);">
-                <i class="fa-solid fa-right-from-bracket"></i> Sign Out
+            <button type="submit" class="topbar-btn"
+                    style="color:rgba(255,100,100,0.85) !important;border-color:rgba(255,100,100,0.2);">
+                <i class="fa-solid fa-right-from-bracket"></i>
+                <span class="btn-label">Sign Out</span>
             </button>
         </form>
 
@@ -33,15 +101,17 @@
 }
 else
 {
-    <div style="display:flex;align-items:center;gap:8px;">
+    <div class="auth-btn-group">
 
         <a class="topbar-btn" asp-area="Identity" asp-page="/Account/Register">
-            <i class="fa-solid fa-user-plus"></i> Register
+            <i class="fa-solid fa-user-plus"></i>
+            <span class="btn-label">Register</span>
         </a>
 
         <a class="topbar-btn" asp-area="Identity" asp-page="/Account/Login"
                style="background:var(--accent);border-color:var(--accent);color:#fff !important;box-shadow:0 3px 10px rgba(99,91,255,0.35);">
-            <i class="fa-solid fa-right-to-bracket"></i> Login
+            <i class="fa-solid fa-right-to-bracket"></i>
+            <span class="btn-label">Login</span>
         </a>
 
     </div>

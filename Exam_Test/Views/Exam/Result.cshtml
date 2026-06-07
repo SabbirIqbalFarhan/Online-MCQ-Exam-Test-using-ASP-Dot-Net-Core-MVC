@@ -44,7 +44,7 @@
     .q-status.w { color: #ef4444; }
     .q-image { max-width: 100%; max-height: 200px; border-radius: 8px; border: 1px solid #e5e7eb; margin-bottom: 12px; display: block; }
     .q-text { font-size: 14px; font-weight: 600; color: #1a2236; margin-bottom: 14px; line-height: 1.6; }
-    .option-row { display: flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 10px; border: 1.5px solid #e5e7eb; margin-bottom: 8px; font-size: 13px; color: #374151; }
+    .option-row { display: flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 10px; border: 1.5px solid #e5e7eb; margin-bottom: 8px; font-size: 13px; color: #374151; flex-wrap: wrap; }
     .option-row.opt-correct { background: #dcfce7; border-color: #86efac; color: #166534; font-weight: 700; }
     .option-row.opt-wrong   { background: #fee2e2; border-color: #fca5a5; color: #991b1b; font-weight: 700; }
     .opt-letter { width: 28px; height: 28px; border-radius: 50%; background: #f3f4f6; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 12px; flex-shrink: 0; }
@@ -54,6 +54,20 @@
     .tag-your-correct { background: #dcfce7; color: #166534; }
     .tag-your-wrong   { background: #fee2e2; color: #991b1b; }
     .tag-correct-ans  { background: #dbeafe; color: #1d4ed8; }
+
+    @@media (max-width: 600px) {
+        .page { padding: 20px 12px; }
+        .card { padding: 20px 14px; }
+        .title { font-size: 18px; }
+        .stats { flex-direction: column; gap: 10px; }
+        .box { min-width: unset; }
+        .actions { flex-direction: column; align-items: stretch; }
+        .btn { justify-content: center; }
+        .q-row { padding: 14px 12px; }
+        .opt-tag { margin-left: 0; }
+        .section-title { font-size: 14px; }
+        .q-text { font-size: 13px; }
+    }
 </style>
 
 <div class="page">
@@ -95,11 +109,11 @@
         if (q == null) continue;
 
         var options = new[]
-{
-    new { Letter = "A", Text = q.OptionA },
-    new { Letter = "B", Text = q.OptionB },
-    new { Letter = "C", Text = q.OptionC }
-}.Where(o => !string.IsNullOrEmpty(o.Text)).ToArray();
+        {
+            new { Letter = "A", Text = q.OptionA },
+            new { Letter = "B", Text = q.OptionB },
+            new { Letter = "C", Text = q.OptionC }
+        }.Where(o => !string.IsNullOrEmpty(o.Text)).ToArray();
 
         <div class="q-row @(ans.IsCorrect ? "correct-row" : "wrong-row")">
             <div class="q-status @(ans.IsCorrect ? "c" : "w")">
