@@ -6,6 +6,7 @@
 
         public string? QuestionText { get; set; }
         public string? ImagePath { get; set; }
+        public string? ImgBBDeleteUrl { get; set; }
 
         public string? OptionA { get; set; }
         public string? OptionB { get; set; }
@@ -15,6 +16,6 @@
 
         public int ModuleId { get; set; }
         public Module? Module { get; set; }
-        public string? ImageData { get; set; } // stores base64 image
+        public string? ImageData { get; set; }
     }
 }
