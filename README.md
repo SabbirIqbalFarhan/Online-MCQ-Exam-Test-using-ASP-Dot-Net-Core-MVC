@@ -36,7 +36,6 @@ A web-based multiple choice exam platform built with ASP.NET Core MVC. Administr
 
 ### User Results
 ![User Results](screenshots/localhost_7123_User_Results(Nest Hub Max).png)
-![User View Result](screenshots/localhost_7123_User_ViewResult_sessionId=11&moduleId=1(Nest Hub Max).png)
 
 ### Admin Dashboard
 ![Admin Dashboard](screenshots/localhost_7123_Admin_Dashboard(Nest Hub Max).png)
@@ -49,13 +48,14 @@ A web-based multiple choice exam platform built with ASP.NET Core MVC. Administr
 ### Admin Sessions
 ![Admin Sessions](screenshots/localhost_7123_AdminSession(Nest Hub Max).png)
 ![Session Results](screenshots/localhost_7123_AdminSession_Results_id=11(Nest Hub Max).png)
-![User Result Detail](screenshots/localhost_7123_AdminSession_ViewResult_userId=f1d4f2e9-39e1-44ae-b66e-4e2ad33fe023&sessionId=11&moduleId=1(Nest Hu.png)
 
 ### Admin Users
 ![All Users](screenshots/localhost_7123_AdminUser(Nest Hub Max).png)
 ![User Details](screenshots/localhost_7123_AdminUser_Details_e7f97f29-2a45-4548-bc3f-5bac8f9d5a35(Nest Hub Max).png)
 ![Assign Student ID](screenshots/localhost_7123_AdminUser_AssignStudentId_e7f97f29-2a45-4548-bc3f-5bac8f9d5a35(Nest Hub Max).png)
 ![Reset Password](screenshots/localhost_7123_AdminUser_ResetPassword_e7f97f29-2a45-4548-bc3f-5bac8f9d5a35(Nest Hub Max).png)
+
+---
 
 ## Tech Stack
 
@@ -78,17 +78,18 @@ A web-based multiple choice exam platform built with ASP.NET Core MVC. Administr
 ### Setup Steps
 
 1. Clone the repository
-   git clone https://github.com/YOUR_USERNAME/YOUR_REPO_NAME.git
+git clone https://github.com/SabbirIqbalFarhan/Online-MCQ-Exam-Test-using-ASP-Dot-Net-Core-MVC.git
 
 2. Open the solution file `Exam_Test.slnx` in Visual Studio
 
 3. Update the connection string in `appsettings.json` to point to your SQL Server
 
-4. Open Package Manager Console and run:
+4. Open Package Manager Console and run
+
    Add-Migration Init
    Update-Database
 
-5. Run the project with F5
+5. Run the project with **F5**
 
 ---
 
