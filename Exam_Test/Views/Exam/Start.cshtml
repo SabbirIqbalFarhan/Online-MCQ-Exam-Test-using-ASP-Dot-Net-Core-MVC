@@ -25,17 +25,18 @@
             width: 100%;
         }
 
-        .page-wrapper {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: calc(100vh - 140px);
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-            background: #fff;
-        }
+            .page-wrapper {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100vw;
+                height: calc(100vh - 160px);
+                height: calc(100dvh - 160px);
+                display: flex;
+                flex-direction: column;
+                overflow: hidden;
+                background: #fff;
+            }
 
         .top-bar {
             background: #fff;
@@ -52,7 +53,7 @@
         .top-bar .q-number { font-size: 26px; font-weight: 900; color: #222; }
 
         .progress-box {
-            background: #39ff14;
+            background: #1F8C0C;
             color: #fff;
             font-size: 13px;
             font-weight: 900;
@@ -244,9 +245,9 @@
         }
 
         .q-dot.active {
-            background: #39ff14;
+            background: #1F8C0C;
             color: #fff;
-            border-color: #39ff14;
+            border-color: #1F8C0C;
         }
 
         .q-dot.answered {
@@ -263,13 +264,13 @@
             height: 0;
             border-left: 14px solid transparent;
             border-right: 14px solid transparent;
-            border-bottom: 32px solid #39ff14;
+            border-bottom: 32px solid #1F8C0C;
             pointer-events: none;
             transition: left 0.15s;
         }
 
         .submit-btn {
-            background: #39ff14;
+            background: #1F8C0C;
             color: #fff;
             border: none;
             border-radius: 6px;
@@ -313,7 +314,7 @@
         .popup-btns { display: flex; gap: 10px; justify-content: center; }
 
         .popup-btn-ok {
-            background: #39ff14; color: #fff; border: none;
+            background: #1F8C0C; color: #fff; border: none;
             border-radius: 8px; padding: 10px 22px;
             font-size: 14px; font-weight: 700; cursor: pointer;
         }
@@ -327,8 +328,12 @@
         .popup-btn-ok:hover { background: #32e012; }
         .popup-btn-cancel:hover { background: #e2e8f0; }
 
-        @@media (max-width: 480px) {
-            .page-wrapper { height: calc(100vh - 110px); }
+        @@media (max-width: 480px) 
+                    .page-wrapper {
+                        height: calc(100vh - 126px);
+                        height: calc(100dvh - 126px);
+                    }
+
             .top-bar { padding: 3px 8px; min-height: 34px; }
             .top-bar .q-number { font-size: 16px; }
             .top-bar .info { font-size: 10px; }
@@ -347,11 +352,14 @@
             .arrow-btn svg { width: 48px; height: 48px; }
             .q-dot { height: 20px; font-size: 8px; min-width: 14px; }
             .submit-btn { font-size: 10px; padding: 0 6px; height: 26px; }
-            #activeTriangle { border-left: 8px solid transparent; border-right: 8px solid transparent; border-bottom: 12px solid #39ff14; }
+            #activeTriangle { border-left: 8px solid transparent; border-right: 8px solid transparent; border-bottom: 12px solid #1F8C0C; }
         }
 
         @@media (min-width: 481px) and (max-width: 900px) {
-            .page-wrapper { height: calc(100vh - 120px); }
+                .page-wrapper {
+                    height: calc(100vh - 136px);
+                    height: calc(100dvh - 136px);
+                }
             .top-bar { padding: 4px 10px; min-height: 38px; }
             .top-bar .q-number { font-size: 20px; }
             .top-bar .info { font-size: 11px; }
@@ -370,11 +378,14 @@
             .arrow-btn svg { width: 60px; height: 60px; }
             .q-dot { height: 22px; font-size: 9px; min-width: 16px; }
             .submit-btn { font-size: 11px; padding: 0 8px; height: 28px; }
-            #activeTriangle { border-left: 10px solid transparent; border-right: 10px solid transparent; border-bottom: 12px solid #39ff14; }
+            #activeTriangle { border-left: 10px solid transparent; border-right: 10px solid transparent; border-bottom: 12px solid #1F8C0C; }
         }
 
         @@media (max-height: 500px) {
-            .page-wrapper { height: calc(100vh - 100px); }
+                .page-wrapper {
+                    height: calc(100vh - 120px);
+                    height: calc(100dvh - 120px);
+                }
             .middle-section { flex: 0 0 20vh; max-height: 110px; min-height: 60px; }
             .top-bar { min-height: 30px; padding: 2px 8px; }
             .top-bar .q-number { font-size: 14px; }
@@ -392,7 +403,7 @@
             .arrow-btn svg { width: 44px; height: 44px; }
             .q-dot { height: 18px; font-size: 7px; min-width: 12px; }
             .submit-btn { font-size: 9px; padding: 0 5px; height: 22px; }
-            #activeTriangle { border-left: 7px solid transparent; border-right: 7px solid transparent; border-bottom: 10px solid #39ff14; }
+            #activeTriangle { border-left: 7px solid transparent; border-right: 7px solid transparent; border-bottom: 10px solid #1F8C0C; }
         }
     </style>
 </head>
@@ -485,7 +496,7 @@
             <div class="arrow-btn-wrap" onclick="goPrev()">
                 <button type="button" class="arrow-btn">
                     <svg width="88" height="88" viewBox="0 0 55 60">
-                        <path d="M48,8 C52,8 54,12 52,16 L32,50 C30,54 25,54 23,50 L3,16 C1,12 3,8 7,8 Z" fill="#39ff14" transform="rotate(90,27.5,30)"/>
+                        <path d="M48,8 C52,8 54,12 52,16 L32,50 C30,54 25,54 23,50 L3,16 C1,12 3,8 7,8 Z" fill="#1F8C0C" transform="rotate(90,27.5,30)"/>
                         <text x="27.5" y="30" text-anchor="middle" dominant-baseline="central" font-size="15" font-weight="900" fill="#fff" font-family="Arial" id="prevNum">-</text>
                     </svg>
                 </button>
@@ -501,7 +512,7 @@
             <div class="arrow-btn-wrap" onclick="goNext()">
                 <button type="button" class="arrow-btn">
                     <svg width="88" height="88" viewBox="0 0 55 60">
-                        <path d="M48,8 C52,8 54,12 52,16 L32,50 C30,54 25,54 23,50 L3,16 C1,12 3,8 7,8 Z" fill="#39ff14" transform="rotate(-90,27.5,30)"/>
+                        <path d="M48,8 C52,8 54,12 52,16 L32,50 C30,54 25,54 23,50 L3,16 C1,12 3,8 7,8 Z" fill="#1F8C0C" transform="rotate(-90,27.5,30)"/>
                         <text x="27.5" y="30" text-anchor="middle" dominant-baseline="central" font-size="15" font-weight="900" fill="#fff" font-family="Arial" id="nextNum">-</text>
                     </svg>
                 </button>
