@@ -30,8 +30,8 @@
                 top: 0;
                 left: 0;
                 width: 100vw;
-                height: calc(100vh - 160px);
-                height: calc(100dvh - 160px);
+                height: calc(100vh - 90px);
+                height: calc(100dvh - 90px);
                 display: flex;
                 flex-direction: column;
                 overflow: hidden;
@@ -173,7 +173,7 @@
 .option-row.selected .opt-check { background: #888; border-color: #666; color: #000; }
         .bottom-strip {
             position: fixed;
-            bottom: 70px;
+            bottom: 0px;
             left: 0;
             width: 100vw;
             background: #d0d0d0;
@@ -328,10 +328,10 @@
         .popup-btn-ok:hover { background: #32e012; }
         .popup-btn-cancel:hover { background: #e2e8f0; }
 
-        @@media (max-width: 480px) 
+        @@media (max-width: 480px) {
                     .page-wrapper {
-                        height: calc(100vh - 126px);
-                        height: calc(100dvh - 126px);
+                        height: calc(100vh - 56px);
+                        height: calc(100dvh - 56px);
                     }
 
             .top-bar { padding: 3px 8px; min-height: 34px; }
@@ -346,7 +346,7 @@
             .opt-letter { font-size: 14px; width: 28px; }
             .opt-text { font-size: 12px; }
             .opt-check { width: 20px; height: 20px; font-size: 14px; }
-            .bottom-strip { height: 56px; bottom: 70px; padding: 2px 3px; gap: 2px; }
+            .bottom-strip { height: 56px; bottom: 0px; padding: 2px 3px; gap: 2px; }
             .arrow-btn-wrap { width: 48px; height: 48px; }
             .arrow-btn { width: 48px; height: 48px; }
             .arrow-btn svg { width: 48px; height: 48px; }
@@ -357,8 +357,8 @@
 
         @@media (min-width: 481px) and (max-width: 900px) {
                 .page-wrapper {
-                    height: calc(100vh - 136px);
-                    height: calc(100dvh - 136px);
+                    height: calc(100vh - 66px);
+                    height: calc(100dvh - 66px);
                 }
             .top-bar { padding: 4px 10px; min-height: 38px; }
             .top-bar .q-number { font-size: 20px; }
@@ -372,7 +372,7 @@
             .opt-letter { font-size: 17px; width: 36px; }
             .opt-text { font-size: 14px; }
             .opt-check { width: 24px; height: 24px; font-size: 16px; }
-            .bottom-strip { height: 66px; bottom: 70px; padding: 2px 4px; gap: 3px; }
+            .bottom-strip { height: 66px; bottom: 0px; padding: 2px 4px; gap: 3px; }
             .arrow-btn-wrap { width: 60px; height: 60px; }
             .arrow-btn { width: 60px; height: 60px; }
             .arrow-btn svg { width: 60px; height: 60px; }
@@ -383,8 +383,8 @@
 
         @@media (max-height: 500px) {
                 .page-wrapper {
-                    height: calc(100vh - 120px);
-                    height: calc(100dvh - 120px);
+                    height: calc(100vh - 50px);
+                    height: calc(100dvh - 50px);
                 }
             .middle-section { flex: 0 0 20vh; max-height: 110px; min-height: 60px; }
             .top-bar { min-height: 30px; padding: 2px 8px; }
@@ -397,7 +397,7 @@
             .opt-letter { font-size: 13px; width: 26px; }
             .opt-text { font-size: 11px; }
             .opt-check { width: 18px; height: 18px; font-size: 12px; }
-            .bottom-strip { height: 50px; bottom: 70px; padding: 1px 3px; gap: 2px; }
+            .bottom-strip { height: 50px; bottom: 0px; padding: 1px 3px; gap: 2px; }
             .arrow-btn-wrap { width: 44px; height: 44px; }
             .arrow-btn { width: 44px; height: 44px; }
             .arrow-btn svg { width: 44px; height: 44px; }
